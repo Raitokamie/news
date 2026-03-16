@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useRef, useEffect } from 'react';
 import { NewsItem, ImpactLevel, Region } from '@/lib/types';
 import { cn, timeAgo } from '@/lib/utils';
 import TickerChip from '@/components/tickers/TickerChip';
@@ -59,7 +60,6 @@ interface NewsCardProps {
 
 export default function NewsCard({ item, compact = false }: NewsCardProps) {
   const impact = impactConfig[item.impact];
-  const sourceName = item.source.charAt(0) + item.source.slice(1).toLowerCase();
 
   return (
     <article
@@ -114,17 +114,64 @@ export default function NewsCard({ item, compact = false }: NewsCardProps) {
         ))}
       </div>
 
-      {/* Footer: source + view more */}
+      {/* Footer: sources + view more */}
       <div className="flex items-center justify-between mt-auto pt-4 border-t border-[#2a2a2a]">
         <div className="flex items-center gap-2">
-          <div className={cn('w-5 h-5 rounded-full', sourceColors[item.source] || 'bg-slate-500')} />
-          <span className="text-xs text-slate-400">{sourceName} Reporting</span>
+          <div className="flex -space-x-1.5">
+            {item.sources.map((s) => (
+              <div key={s.name} className={cn('w-6 h-6 rounded-full border-2 border-[#1A1A1A]', sourceColors[s.name] || 'bg-slate-500')} />
+            ))}
+          </div>
+          <span className="text-xs text-slate-400">
+            {item.sources.map((s) => s.name.charAt(0) + s.name.slice(1).toLowerCase()).join(', ')} Reporting
+          </span>
         </div>
-        <button className="text-xs text-cyan-400 font-medium hover:text-cyan-300 underline underline-offset-2 transition-colors">
-          View more
-        </button>
+        <SourcesPopup sources={item.sources} />
       </div>
     </article>
+  );
+}
+
+function SourcesPopup({ sources }: { sources: { name: string; url: string }[] }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [open]);
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
+        className="text-xs font-medium transition-colors text-[#0D7FF2] hover:text-[#3399FF]"
+      >
+        View more
+      </button>
+
+      {open && (
+        <div className="absolute right-0 bottom-full mb-2 w-48 bg-[#222] border border-[#4D4D4D] rounded-lg shadow-xl z-50 py-1">
+          {sources.map((s) => (
+            <a
+              key={s.name}
+              href={s.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center gap-2 px-3 py-2 text-xs text-slate-300 hover:bg-white/5 hover:text-cyan-400 transition-colors"
+            >
+              <div className={cn('w-3 h-3 rounded-full shrink-0', sourceColors[s.name] || 'bg-slate-500')} />
+              {s.name.charAt(0) + s.name.slice(1).toLowerCase()}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 

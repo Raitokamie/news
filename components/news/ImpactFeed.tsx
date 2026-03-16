@@ -1,7 +1,7 @@
 'use client';
 
 import { Fragment, useMemo } from 'react';
-import { mockNews } from '@/lib/mock-data';
+import { mockNews } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
 import NewsCard from './NewsCard';
 import { TrendingDown, TrendingUp } from 'lucide-react';
