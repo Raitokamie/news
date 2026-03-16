@@ -1,46 +1,31 @@
 'use client';
 
-import { CheckCircle2, Zap } from 'lucide-react';
-
-const features = [
-  'Real-time sentiment API',
-  'Institutional flow data',
-  'Priority alert delivery',
-  'Advanced ticker filters',
-];
+import { BadgeCheck } from 'lucide-react';
 
 export default function ImpactProCard() {
   return (
-    <div className="relative rounded-xl overflow-hidden border border-[#4D4D4D]">
-      {/* Gradient bg */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-800 via-[#1a2540] to-[#0d1a35]" />
-      <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/5 via-transparent to-blue-500/10" />
+    <div className="relative rounded-2xl overflow-hidden" style={{ backgroundColor: '#111722' }}>
+      {/* Gradient overlay - blue in top right */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-[#0D7FF2]/60" />
 
       <div className="relative p-4">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-1.5 bg-cyan-500/15 border border-cyan-500/30 rounded-full px-2.5 py-1 mb-3">
-          <CheckCircle2 size={11} className="text-cyan-400" />
-          <span className="text-xs font-bold text-cyan-300 uppercase tracking-wider">Impact Pro</span>
+        {/* Header with icon and title */}
+        <div className="flex items-center gap-3 mb-4">
+          <BadgeCheck size={40} className="text-[#0D7FF2]" strokeWidth={1.5} />
+          <span className="font-bold text-white" style={{ fontFamily: 'var(--font-poppins)', fontSize: '16px' }}>
+            Impact Pro
+          </span>
         </div>
 
-        <h3 className="text-sm font-bold text-white mb-1">
+        {/* Main text */}
+        <p className="font-normal text-white leading-tight mb-4" style={{ fontFamily: 'var(--font-poppins)', fontSize: '14px' }}>
           Unlock real-time sentiment API
-        </h3>
-        <p className="text-sm text-slate-400 mb-3 leading-relaxed">
+          <br />
           and institutional flow
         </p>
 
-        <ul className="space-y-1 mb-4">
-          {features.map((f) => (
-            <li key={f} className="flex items-center gap-1.5 text-xs text-slate-400">
-              <span className="w-1 h-1 rounded-full bg-cyan-500 shrink-0" />
-              {f}
-            </li>
-          ))}
-        </ul>
-
-        <button className="w-full bg-cyan-500 hover:bg-cyan-400 text-[#0c0e14] font-bold text-xs py-2 rounded-lg transition-all duration-150 flex items-center justify-center gap-1.5 shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:shadow-[0_0_25px_rgba(34,211,238,0.5)]">
-          <Zap size={12} />
+        {/* Upgrade button */}
+        <button className="px-8 py-3 border-2 border-[#0D7FF2] rounded-lg text-[#0D7FF2] font-bold hover:bg-[#0D7FF2]/10 transition-colors" style={{ fontSize: '12px' }}>
           UPGRADE NOW
         </button>
       </div>

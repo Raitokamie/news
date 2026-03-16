@@ -17,7 +17,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Right sidebar — สูงเต็มตั้งแต่ TopBar ถึงล่างสุด */}
-      <aside className="hidden xl:flex w-64 shrink-0 border-l border-[#4D4D4D] overflow-y-auto p-4 flex-col gap-4">
+      <aside className="hidden xl:flex w-80 shrink-0 border-l border-[#4D4D4D] overflow-y-auto p-4 flex-col gap-4">
         <ImpactProCard />
         <TickerCloud />
       </aside>
