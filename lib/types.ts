@@ -1,40 +1,34 @@
-// Country-level region from API data
+// ─── Shared enums ───────────────────────────────────────
 export type Region = 'global' | 'us' | 'eu' | 'jp' | 'cn' | 'th' | 'sa' | 'ae' | 'il' | 'tr';
-
-// UI tab groups
 export type RegionTab = 'global' | 'us' | 'eu' | 'asia' | 'mena';
-
 export type ImpactLevel = 'high' | 'medium' | 'low';
 export type Sentiment = 'good' | 'bad' | 'neutral';
 export type SortOrder = 'latest' | 'oldest' | 'impact';
 
-export interface TickerMention {
-  symbol: string;
-  name: string;
-  change: number;
-  changePercent: number;
-  trend: 'up' | 'down' | 'flat';
-}
-
+// ─── Types ──────────────────────────────────────────────
 export interface NewsItem {
   id: string;
   headline: string;
   body: string;
-  source: string;
+  sources: { name: string; url: string }[];
   publishedAt: Date;
-  regionTag: RegionTab;   // กลุ่ม: 'us' | 'eu' | 'asia' | 'mena' | 'global'
-  countryCode: Region;    // ประเทศ: 'us' | 'jp' | 'th' | etc.
+  regionTag: RegionTab;
+  countryCode: Region;
   impact: ImpactLevel;
   sentiment: Sentiment;
-  tickers: { symbol: string; sentiment: 'up' | 'down' | 'flat' }[];
+  tickers: { symbol: string; sentiment: 'up' | 'down' | 'flat'; sentimentScore: number }[];
   narrativeGroupId?: string;
   logoUrl?: string;
 }
 
-export interface NarrativeGroup {
-  id: string;
-  masterHeadline: string;
-  items: NewsItem[];
+export interface StockSentimentRow {
+  symbol: string;
+  impact: ImpactLevel;
+  sentiment: 'up' | 'down' | 'flat';
+  sentimentLabel: 'Positive' | 'Negative' | 'Neutral';
+  mentionCount: number;
+  historical: { positive: number; neutral: number; negative: number };
+  score: number;
 }
 
 export interface TickerData {
@@ -45,4 +39,16 @@ export interface TickerData {
   changePercent: number;
   trend: 'up' | 'down' | 'flat';
   mentionCount: number;
+}
+
+export interface LiveUpdate {
+  headline: string;
+  shortHeadline: string;
+  publishedAt: Date;
+}
+
+export interface NarrativeGroup {
+  id: string;
+  masterHeadline: string;
+  items: NewsItem[];
 }

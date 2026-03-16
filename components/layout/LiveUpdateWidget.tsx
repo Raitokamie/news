@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { X, ArrowUpRight } from 'lucide-react';
-import { liveUpdate } from '@/lib/mock-data';
+import { liveUpdate } from '@/lib/api';
 
 export default function LiveUpdateWidget() {
   const [visible, setVisible] = useState(true);

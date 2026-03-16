@@ -10,12 +10,15 @@ interface TerminalStore {
   activeImpact: ImpactLevel | 'all';
   sortOrder: SortOrder;
   sidebarOpen: boolean;
+  trackedTickers: string[];
   setRegion: (region: RegionTab) => void;
   setCountry: (country: Region | 'all') => void;
   setTicker: (ticker: string | null) => void;
   setImpact: (impact: ImpactLevel | 'all') => void;
   setSortOrder: (order: SortOrder) => void;
   toggleSidebar: () => void;
+  addTicker: (symbol: string) => void;
+  removeTicker: (symbol: string) => void;
 }
 
 export const useTerminalStore = create<TerminalStore>((set) => ({
@@ -33,4 +36,11 @@ export const useTerminalStore = create<TerminalStore>((set) => ({
   setImpact: (impact) => set({ activeImpact: impact }),
   setSortOrder: (order) => set({ sortOrder: order }),
   toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
+  trackedTickers: [],
+  addTicker: (symbol) => set((state) => ({
+    trackedTickers: state.trackedTickers.includes(symbol) ? state.trackedTickers : [...state.trackedTickers, symbol],
+  })),
+  removeTicker: (symbol) => set((state) => ({
+    trackedTickers: state.trackedTickers.filter((t) => t !== symbol),
+  })),
 }));

@@ -1,7 +1,7 @@
 import TopBar from '@/components/layout/TopBar';
 import TickerCloud from '@/components/tickers/TickerCloud';
 import ImpactProCard from '@/components/widgets/ImpactProCard';
-import { mockTickers } from '@/lib/mock-data';
+import { mockTickers } from '@/lib/api';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
