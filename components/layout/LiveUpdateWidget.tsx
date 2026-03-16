@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X, ChevronRight } from 'lucide-react';
+import { X, ArrowUpRight } from 'lucide-react';
 import { liveUpdate } from '@/lib/mock-data';
 
 export default function LiveUpdateWidget() {
@@ -10,22 +10,22 @@ export default function LiveUpdateWidget() {
   if (!visible) return null;
 
   return (
-    <div className="bg-[#1A1A1A] border border-[#4D4D4D] rounded-lg p-3 relative">
+    <div className="bg-[#141414] border border-[#4C4C4C] rounded-2xl p-4 relative">
       <button
         onClick={() => setVisible(false)}
-        className="absolute top-2.5 right-2.5 text-slate-600 hover:text-slate-400 transition-colors"
+        className="absolute top-3 right-3 text-[#B3B3B3] hover:text-white transition-colors"
       >
-        <X size={12} />
+        <X size={16} />
       </button>
-      <div className="flex items-center gap-1.5 mb-1.5">
-        <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+      <div className="flex items-center gap-2 mb-2">
+        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+        <span className="font-bold text-white" style={{ fontSize: '16px' }}>
           Live Update
         </span>
       </div>
-      <p className="text-sm text-slate-400 leading-relaxed pr-3">{liveUpdate.headline}</p>
-      <button className="mt-2 flex items-center gap-1 text-xs font-medium text-cyan-400 hover:text-cyan-300 transition-colors">
-        See more <ChevronRight size={10} />
+      <p className="text-[#B3B3B3] leading-relaxed pr-6 mb-3" style={{ fontSize: '14px' }}>{liveUpdate.headline}</p>
+      <button className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-[#4D4D4D] rounded-lg font-medium text-white hover:bg-white/5 transition-colors" style={{ fontSize: '14px' }}>
+        See more <ArrowUpRight size={14} />
       </button>
     </div>
   );

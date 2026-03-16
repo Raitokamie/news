@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Rss, TrendingUp, Star, KeyRound, Settings, Send, X } from 'lucide-react';
+import { Home, Rss, TrendingUp, Star, KeyRound, Settings, Hash, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import LiveUpdateWidget from './LiveUpdateWidget';
 import { useTerminalStore } from '@/lib/store';
@@ -33,17 +33,17 @@ export default function Sidebar() {
         className={cn(
           'flex flex-col min-h-screen bg-[#141414] border-r border-[#4D4D4D] shrink-0 z-40 transition-all duration-300',
           // Desktop: always visible, fixed width
-          'lg:relative lg:translate-x-0 lg:w-56',
+          'lg:relative lg:translate-x-0 lg:w-64',
           // Mobile: overlay, slide in/out
           'fixed top-0 left-0 h-full w-72',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
         {/* Logo */}
-        <div className="px-5 pt-6 pb-4 flex items-center justify-between">
+        <div className="px-5 pt-6 pb-5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-bold tracking-widest text-[#0D7FF2] uppercase ">
-              Impact Terminal
+            <span className="text-lg font-extrabold tracking-wider text-[#0D7FF2] uppercase">
+              IMPACT TERMINAL
             </span>
           </div>
           {/* Close button on mobile */}
@@ -56,7 +56,7 @@ export default function Sidebar() {
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 px-3 py-2 space-y-0.5">
+        <nav className="flex-1 px-3 py-2 space-y-1">
           {navItems.map(({ href, label, icon: Icon, locked }) => {
             const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
             return (
@@ -65,31 +65,31 @@ export default function Sidebar() {
                 href={href}
                 onClick={() => { if (window.innerWidth < 1024) toggleSidebar(); }}
                 className={cn(
-                  'flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-150',
+                  'flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all duration-150 text-white',
                   active
-                    ? 'bg-white/8 text-white'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+                    ? 'bg-white/10'
+                    : 'hover:bg-white/5'
                 )}
               >
-                <Icon size={16} className={active ? 'text-white' : 'text-slate-500'} />
+                <Icon size={18} className="text-white" strokeWidth={2} />
                 {label}
-                {locked && <KeyRound size={14} className="ml-auto text-slate-500" />}
+                {locked && <KeyRound size={14} className="ml-auto text-[#0D7FF2]" />}
               </Link>
             );
           })}
-        </nav>
 
-        {/* Live Update */}
-        <div className="px-3 pb-3">
-          <LiveUpdateWidget />
-        </div>
+          {/* Live Update - directly under Watchlist */}
+          <div className="pt-2">
+            <LiveUpdateWidget />
+          </div>
+        </nav>
 
         {/* Footer */}
         <div className="px-4 py-4 border-t border-[#4D4D4D]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full bg-cyan-500/20 flex items-center justify-center">
-                <Send size={12} className="text-cyan-400" />
+              <div className="w-7 h-7 rounded-lg bg-[#2A2A2A] flex items-center justify-center">
+                <Hash size={14} className="text-white" />
               </div>
               <div>
                 <div className="text-sm font-medium text-white">Elon Musk</div>

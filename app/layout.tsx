@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Poppins } from 'next/font/google';
 import './globals.css';
 import Sidebar from '@/components/layout/Sidebar';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-poppins' });
 
 export const metadata: Metadata = {
   title: 'Impact Terminal — Financial News Dashboard',
@@ -17,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.variable} font-sans bg-[#141414] text-slate-100 antialiased`}>
+      <body className={`${inter.variable} ${poppins.variable} font-sans bg-[#141414] text-slate-100 antialiased`}>
         <div className="flex h-screen overflow-hidden">
           {/* Sidebar — overlay on mobile, static on desktop */}
           <Sidebar />
