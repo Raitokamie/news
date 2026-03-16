@@ -73,13 +73,13 @@ export default function Sidebar() {
               >
                 <Icon size={18} className="text-white" strokeWidth={2} />
                 {label}
-                {locked && <KeyRound size={14} className="ml-auto text-[#0D7FF2]" />}
+                {locked && <KeyRound size={18} className="ml-auto text-[#0D7FF2]" />}
               </Link>
             );
           })}
 
           {/* Live Update - directly under Watchlist */}
-          <div className="pt-2">
+          <div className="pt-6">
             <LiveUpdateWidget />
           </div>
         </nav>
@@ -93,10 +93,10 @@ export default function Sidebar() {
               </div>
               <div>
                 <div className="text-sm font-medium text-white">Elon Musk</div>
-                <div className="text-xs text-slate-500">Free Plan</div>
+                <div className="text-xs text-[#808080]">Free Plan</div>
               </div>
             </div>
-            <button className="text-slate-500 hover:text-slate-300 transition-colors">
+            <button className="text-white hover:text-slate-300 transition-colors">
               <Settings size={14} />
             </button>
           </div>

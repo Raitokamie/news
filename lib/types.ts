@@ -52,3 +52,24 @@ export interface NarrativeGroup {
   masterHeadline: string;
   items: NewsItem[];
 }
+
+// Market Trends types
+export interface SentimentHistorical {
+  positive: number;
+  negative: number;
+  neutral: number;
+}
+
+export type TrendFilter = 'all' | 'top_positive' | 'top_negative' | 'most_mention';
+
+export interface MarketTrendItem {
+  symbol: string;
+  name: string;
+  impactScore: number;
+  impactLevel: ImpactLevel;
+  sentiment: Sentiment;
+  mentionCount: number;
+  trend: 'up' | 'down' | 'flat';
+  sentimentHistorical: SentimentHistorical;
+  score: number;
+}

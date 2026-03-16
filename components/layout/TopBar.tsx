@@ -7,7 +7,7 @@ export default function TopBar() {
   const { toggleSidebar } = useTerminalStore();
 
   return (
-    <div className="sticky top-0 z-20 bg-[#141414]/90 backdrop-blur-md border-b border-[#4D4D4D] px-4 py-3">
+    <div className="sticky top-0 z-20 bg-[#0d0d0d] backdrop-blur-md border-b border-[#4D4D4D] px-4 py-3">
       <div className="flex items-center gap-3">
         {/* Hamburger — visible on mobile only */}
         <button
