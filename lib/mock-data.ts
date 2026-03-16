@@ -287,6 +287,7 @@ export const mockTickers: TickerData[] = [
 ];
 
 export const liveUpdate = {
-  headline: 'The Federal Reserve keeps interest rates unchanged at 3.50%–3.75% following the latest FOMC meeting.',
+  headline: 'The Federal Reserve keeps interest rates unchanged at 3.50% – 3.75% following the latest FOMC meeting.',
+  shortHeadline: 'Fed holds rates at 3.50%–3.75% after FOMC meeting.',
   time: '2 min ago',
 };
