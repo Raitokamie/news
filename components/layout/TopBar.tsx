@@ -22,19 +22,19 @@ export default function TopBar() {
         <div className="relative flex-1">
           <Search
             size={15}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-white"
           />
           <input
             type="text"
             placeholder="Search symbols, news, or reports"
-            className="w-full bg-white/5 border border-[#4D4D4D] rounded-lg pl-9 pr-4 py-2 text-sm text-slate-300 placeholder:text-slate-600 focus:outline-none focus:border-cyan-500/50 focus:bg-white/8 transition-all"
+            className="w-full bg-[#1A1A1A] rounded-lg pl-9 pr-4 py-2 text-sm text-slate-300 placeholder:text-[#B3B3B3] focus:outline-none transition-all"
           />
         </div>
 
         {/* Bell */}
-        <button className="relative p-2 rounded-lg hover:bg-white/8 transition-colors text-slate-400 hover:text-slate-200">
+        <button className="relative p-2 rounded-lg bg-[#1A1A1A] hover:bg-[#252525] transition-colors text-white">
           <Bell size={17} />
-          <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-cyan-400 rounded-full" />
+          <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full" />
         </button>
       </div>
     </div>
