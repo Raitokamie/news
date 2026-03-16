@@ -19,7 +19,7 @@ const countryLabels: Record<Region, string> = {
   us: 'United States',
   eu: 'European Union',
   jp: 'Japan',
-  ch: 'China',
+  cn: 'China',
   th: 'Thailand',
   sa: 'Saudi Arabia',
   ae: 'UAE',
@@ -27,12 +27,14 @@ const countryLabels: Record<Region, string> = {
   tr: 'Turkey',
 };
 
-// Country dropdown options per tab (จะถูกแทนที่ด้วย API data ในอนาคต)
+const allCountries: Region[] = ['us', 'eu', 'jp', 'cn', 'th', 'sa', 'ae', 'il', 'tr'];
+
+// Country dropdown options per tab
 const tabCountries: Record<RegionTab, Region[]> = {
-  global: [],
+  global: allCountries,
   us: ['us'],
   eu: ['eu'],
-  asia: ['jp', 'ch', 'th'],
+  asia: ['jp', 'cn', 'th'],
   mena: ['sa', 'ae', 'il', 'tr'],
 };
 
@@ -43,10 +45,9 @@ const sortOptions: { value: SortOrder; label: string }[] = [
 ];
 
 export default function RegionRibbon() {
-  const { activeRegion, setRegion, sortOrder, setSortOrder } = useTerminalStore();
+  const { activeRegion, setRegion, activeCountry, setCountry, sortOrder, setSortOrder } = useTerminalStore();
   const [sortOpen, setSortOpen] = useState(false);
   const [countryOpen, setCountryOpen] = useState(false);
-  const [activeCountry, setActiveCountry] = useState<Region | 'all'>('all');
   const sortRef = useRef<HTMLDivElement>(null);
   const countryRef = useRef<HTMLDivElement>(null);
 
@@ -59,16 +60,11 @@ export default function RegionRibbon() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Reset country when tab changes
-  useEffect(() => {
-    setActiveCountry('all');
-  }, [activeRegion]);
-
   const currentSort = sortOptions.find((o) => o.value === sortOrder);
   const countries = tabCountries[activeRegion];
 
   return (
-    <div className="flex items-center gap-2 px-4 py-3 border-b border-[#4D4D4D] bg-[#141414]">
+    <div className="flex items-center gap-3 px-4 py-4 border-b border-[#4D4D4D] bg-[#141414]">
       {/* Region tabs */}
       <div className="flex items-center gap-1">
         {tabs.map((t) => {
@@ -78,7 +74,7 @@ export default function RegionRibbon() {
               key={t.id}
               onClick={() => setRegion(t.id)}
               className={cn(
-                'px-3 py-1.5 rounded-md text-xs font-medium transition-all',
+                'px-3 py-1.5 rounded-md text-sm font-medium transition-all',
                 active
                   ? 'bg-transparent text-white border border-blue-500'
                   : 'bg-white/5 text-slate-400 border border-transparent hover:text-slate-200 hover:bg-white/8'
@@ -94,16 +90,16 @@ export default function RegionRibbon() {
       <div className="relative shrink-0" ref={countryRef}>
         <button
           onClick={() => setCountryOpen(!countryOpen)}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-white/8 border border-white/8 rounded-md text-xs font-medium text-slate-300 transition-all"
+          className="flex items-center gap-2 px-4 py-1.5 bg-white/5 hover:bg-white/8 border border-white/8 rounded-md text-sm font-medium text-slate-300 transition-all"
         >
-          <Globe size={14} className="text-slate-400" />
+          <Globe size={16} className="text-slate-400" />
           <span>{activeCountry === 'all' ? 'All' : countryLabels[activeCountry]}</span>
           <ChevronDown size={12} className={cn('text-slate-500 transition-transform', countryOpen && 'rotate-180')} />
         </button>
         {countryOpen && (
           <div className="absolute top-full mt-1 left-0 z-50 bg-[#1A1A1A] border border-[#4D4D4D] rounded-md shadow-xl overflow-hidden min-w-[150px]">
             <button
-              onClick={() => { setActiveCountry('all'); setCountryOpen(false); }}
+              onClick={() => { setCountry('all'); setCountryOpen(false); }}
               className={cn(
                 'block w-full text-left px-3 py-2 text-xs hover:bg-white/8 transition-colors',
                 activeCountry === 'all' ? 'text-cyan-400' : 'text-slate-400'
@@ -114,7 +110,7 @@ export default function RegionRibbon() {
             {countries.map((c) => (
               <button
                 key={c}
-                onClick={() => { setActiveCountry(c); setCountryOpen(false); }}
+                onClick={() => { setCountry(c); setCountryOpen(false); }}
                 className={cn(
                   'block w-full text-left px-3 py-2 text-xs hover:bg-white/8 transition-colors',
                   activeCountry === c ? 'text-cyan-400' : 'text-slate-400'
@@ -131,9 +127,9 @@ export default function RegionRibbon() {
       <div className="relative ml-auto shrink-0" ref={sortRef}>
         <button
           onClick={() => setSortOpen(!sortOpen)}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-white/8 border border-white/8 rounded-md text-xs font-medium text-slate-300 transition-all"
+          className="flex items-center gap-2 px-4 py-1.5 bg-white/5 hover:bg-white/8 border border-white/8 rounded-md text-sm font-medium text-slate-300 transition-all"
         >
-          <span className="text-slate-500 text-[10px] uppercase tracking-wider">Sort By:</span>
+          <span className="text-slate-500 text-xs uppercase tracking-wider">Sort By:</span>
           <span>{currentSort?.label}</span>
           <ChevronDown size={12} className={cn('text-slate-500 transition-transform', sortOpen && 'rotate-180')} />
         </button>

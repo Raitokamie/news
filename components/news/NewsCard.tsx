@@ -25,18 +25,7 @@ const impactConfig: Record<ImpactLevel, { label: string; bg: string; text: strin
   },
 };
 
-const regionFlags: Record<Region, string> = {
-  global: '🌐',
-  us: '🇺🇸',
-  eu: '🇪🇺',
-  jp: '🇯🇵',
-  ch: '🇨🇳',
-  th: '🇹🇭',
-  sa: '🇸🇦',
-  ae: '🇦🇪',
-  il: '🇮🇱',
-  tr: '🇹🇷',
-};
+import { Globe } from 'lucide-react';
 
 const sourceColors: Record<string, string> = {
   REUTERS: 'bg-orange-500',
@@ -50,6 +39,18 @@ const sourceColors: Record<string, string> = {
   NATURE: 'bg-green-500',
   SEMI: 'bg-slate-500',
 };
+
+function CountryFlag({ code }: { code: Region }) {
+  if (code === 'global') return <Globe size={16} className="text-slate-400" />;
+  return (
+    <img
+      src={`https://flagcdn.com/w40/${code}.png`}
+      srcSet={`https://flagcdn.com/w80/${code}.png 2x`}
+      alt={code}
+      className="w-5 h-auto rounded-sm"
+    />
+  );
+}
 
 interface NewsCardProps {
   item: NewsItem;
@@ -80,14 +81,14 @@ export default function NewsCard({ item, compact = false }: NewsCardProps) {
         </span>
         <div className="flex items-center gap-2">
           <span className="text-xs text-slate-500">{timeAgo(item.publishedAt)}</span>
-          <span className="text-sm">{regionFlags[item.countryCode]}</span>
+          <CountryFlag code={item.countryCode} />
         </div>
       </div>
 
       {/* Headline */}
       <h3
         className={cn(
-          'font-bold text-white leading-snug mb-2 group-hover:text-cyan-50 transition-colors uppercase',
+          'font-bold text-white leading-snug mb-2 group-hover:text-cyan-50 transition-colors uppercase line-clamp-2',
           compact ? 'text-sm' : 'text-base'
         )}
       >
@@ -96,24 +97,22 @@ export default function NewsCard({ item, compact = false }: NewsCardProps) {
 
       {/* Body */}
       {!compact && (
-        <p className="text-sm text-slate-400 leading-relaxed mb-3 line-clamp-3">
+        <p className="text-sm text-slate-400 leading-relaxed mb-3 line-clamp-3 flex-1">
           {highlightTickers(item.body)}
         </p>
       )}
 
       {/* Tickers */}
-      {item.tickers.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mt-2 mb-4">
-          {item.tickers.map((t) => (
-            <TickerChip
-              key={t.symbol}
-              symbol={t.symbol}
-              trend={t.sentiment}
-              showBookmark
-            />
-          ))}
-        </div>
-      )}
+      <div className="flex flex-wrap gap-1.5 mt-2 mb-4">
+        {item.tickers.map((t) => (
+          <TickerChip
+            key={t.symbol}
+            symbol={t.symbol}
+            trend={t.sentiment}
+            showBookmark
+          />
+        ))}
+      </div>
 
       {/* Footer: source + view more */}
       <div className="flex items-center justify-between mt-auto pt-4 border-t border-[#2a2a2a]">

@@ -19,7 +19,7 @@ export default function TopBar() {
         </button>
 
         {/* Search */}
-        <div className="relative flex-1 max-w-lg">
+        <div className="relative flex-1">
           <Search
             size={15}
             className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"

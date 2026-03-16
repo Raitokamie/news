@@ -152,7 +152,7 @@ export const mockNews: NewsItem[] = [
     source: 'CAIXIN',
     publishedAt: new Date(Date.now() - 60 * 60 * 1000),
     regionTag: 'asia',
-    countryCode: 'ch',
+    countryCode: 'cn',
     impact: 'high',
     sentiment: 'bad',
     tickers: [

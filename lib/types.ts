@@ -1,5 +1,5 @@
 // Country-level region from API data
-export type Region = 'global' | 'us' | 'eu' | 'jp' | 'ch' | 'th' | 'sa' | 'ae' | 'il' | 'tr';
+export type Region = 'global' | 'us' | 'eu' | 'jp' | 'cn' | 'th' | 'sa' | 'ae' | 'il' | 'tr';
 
 // UI tab groups
 export type RegionTab = 'global' | 'us' | 'eu' | 'asia' | 'mena';

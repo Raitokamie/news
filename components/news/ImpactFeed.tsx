@@ -9,7 +9,7 @@ import { TrendingDown, TrendingUp } from 'lucide-react';
 const HOURS_24 = 24 * 60 * 60 * 1000;
 
 export default function ImpactFeed() {
-  const { activeRegion, activeTicker, activeImpact, sortOrder } = useTerminalStore();
+  const { activeRegion, activeCountry, activeTicker, activeImpact, sortOrder } = useTerminalStore();
 
   const filtered = useMemo(() => {
     let items = mockNews;
@@ -21,6 +21,10 @@ export default function ImpactFeed() {
     // Filter by region tab (uses regionTag directly from data)
     if (activeRegion !== 'global') {
       items = items.filter((n) => n.regionTag === activeRegion || n.regionTag === 'global');
+    }
+    // Filter by country
+    if (activeCountry !== 'all') {
+      items = items.filter((n) => n.countryCode === activeCountry);
     }
     if (activeTicker) {
       items = items.filter((n) => n.tickers.some((t) => t.symbol === activeTicker));
@@ -39,7 +43,7 @@ export default function ImpactFeed() {
     }
 
     return items;
-  }, [activeRegion, activeTicker, activeImpact, sortOrder]);
+  }, [activeRegion, activeCountry, activeTicker, activeImpact, sortOrder]);
 
   const badItems = filtered.filter((n) => n.sentiment === 'bad' || n.sentiment === 'neutral');
   const goodItems = filtered.filter((n) => n.sentiment === 'good');
@@ -50,15 +54,15 @@ export default function ImpactFeed() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-3">
         {/* Column Headers */}
         <div className="flex items-center gap-2 mb-1">
-          <TrendingDown size={14} className="text-red-400" />
-          <h2 className="text-sm font-bold tracking-widest uppercase text-red-400">Bad Sentiment</h2>
+          <TrendingDown size={18} className="text-red-400" />
+          <h2 className="text-base font-bold tracking-widest uppercase text-red-400">Bad Sentiment</h2>
           <span className="ml-auto text-xs text-slate-600 bg-white/5 px-2 py-0.5 rounded-full">
             {badItems.length}
           </span>
         </div>
         <div className="flex items-center gap-2 mb-1 max-md:mt-6">
-          <TrendingUp size={14} className="text-green-400" />
-          <h2 className="text-sm font-bold tracking-widest uppercase text-green-400">Good Sentiment</h2>
+          <TrendingUp size={18} className="text-green-400" />
+          <h2 className="text-base font-bold tracking-widest uppercase text-green-400">Good Sentiment</h2>
           <span className="ml-auto text-xs text-slate-600 bg-white/5 px-2 py-0.5 rounded-full">
             {goodItems.length}
           </span>
