@@ -36,7 +36,7 @@ export const useTerminalStore = create<TerminalStore>((set) => ({
   setImpact: (impact) => set({ activeImpact: impact }),
   setSortOrder: (order) => set({ sortOrder: order }),
   toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
-  trackedTickers: ['NVDA', 'TSLA', 'ASML', 'AAPL'],
+  trackedTickers: ['GOOG', 'NVDA', 'AAPL', 'MSFT', 'AMZN', 'MA', 'META', 'SPY', 'AMD', 'TSLA'],
   addTicker: (symbol) => set((state) => ({
     trackedTickers: state.trackedTickers.includes(symbol) ? state.trackedTickers : [...state.trackedTickers, symbol],
   })),

@@ -27,12 +27,6 @@ export default function SentimentHistoricalBar({
       {showLabels && (
         <div className="flex text-xs text-white mb-1">
           <span
-            style={{ width: `${positivePercent}%` }}
-            className="text-center font-medium"
-          >
-            {positive > 0 ? positive : ''}
-          </span>
-          <span
             style={{ width: `${negativePercent}%` }}
             className="text-center font-medium"
           >
@@ -44,6 +38,12 @@ export default function SentimentHistoricalBar({
           >
             {neutral > 0 ? neutral : ''}
           </span>
+          <span
+            style={{ width: `${positivePercent}%` }}
+            className="text-center font-medium"
+          >
+            {positive > 0 ? positive : ''}
+          </span>
         </div>
       )}
 
@@ -53,16 +53,16 @@ export default function SentimentHistoricalBar({
         style={{ height: `${height}px` }}
       >
         <div
-          className="bg-[#10B981]"
-          style={{ width: `${positivePercent}%` }}
-        />
-        <div
           className="bg-[#EF4444]"
           style={{ width: `${negativePercent}%` }}
         />
         <div
           className="bg-[#7F7F7F]"
           style={{ width: `${neutralPercent}%` }}
+        />
+        <div
+          className="bg-[#10B981]"
+          style={{ width: `${positivePercent}%` }}
         />
       </div>
     </div>
