@@ -1,6 +1,8 @@
 'use client';
 
+import { useMemo } from 'react';
 import { useTerminalStore } from '@/lib/store';
+import { mockNews } from '@/lib/api';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
 const trendStyle = {
@@ -9,19 +11,62 @@ const trendStyle = {
   flat: { Icon: Minus, bg: 'bg-slate-500/20', text: 'text-slate-400' },
 } as const;
 
-// Static trending tickers data matching design
-const trendingTickers = [
-  { symbol: 'NVDA', name: 'NVIDIA Corporation', score: 9 },    // up (positive)
-  { symbol: 'AAPL', name: 'Apple Inc.', score: -7 },           // down (negative)
-  { symbol: 'TSLA', name: 'Tesla, Inc.', score: 8 },           // up (positive)
-  { symbol: 'GOOGL', name: 'Alphabet Inc.', score: -6 },       // down (negative)
-  { symbol: 'AMZN', name: 'Amazon.com, Inc.', score: 0 },      // flat (neutral)
-];
+const tickerNames: Record<string, string> = {
+  NVDA: 'NVIDIA Corporation',
+  AAPL: 'Apple Inc.',
+  TSLA: 'Tesla, Inc.',
+  GOOGL: 'Alphabet Inc.',
+  AMZN: 'Amazon.com, Inc.',
+  MSFT: 'Microsoft Corporation',
+  COIN: 'Coinbase Global',
+  MSTR: 'MicroStrategy Inc.',
+  EWG: 'iShares MSCI Germany',
+  FXE: 'Invesco CurrencyShares Euro',
+  FXY: 'Invesco CurrencyShares Yen',
+  EWJ: 'iShares MSCI Japan',
+  FXI: 'iShares China Large-Cap',
+  BABA: 'Alibaba Group',
+  PDD: 'PDD Holdings',
+  GULF: 'Gulf Energy Development',
+  CPALL: 'CP ALL Public Company',
+  XOM: 'Exxon Mobil Corporation',
+  CVX: 'Chevron Corporation',
+  META: 'Meta Platforms, Inc.',
+  MA: 'Mastercard Incorporated',
+  AMD: 'Advanced Micro Devices',
+  SPY: 'SPDR S&P 500 ETF',
+  ASML: 'ASML Holding N.V.',
+};
+
+function buildRankedTickers() {
+  // For each ticker, find its latest sentimentScore from the most recent news
+  const latestScoreMap = new Map<string, { score: number; time: number }>();
+
+  for (const news of mockNews) {
+    const time = news.publishedAt.getTime();
+    for (const ticker of news.tickers) {
+      const existing = latestScoreMap.get(ticker.symbol);
+      if (!existing || time > existing.time) {
+        latestScoreMap.set(ticker.symbol, { score: ticker.sentimentScore, time });
+      }
+    }
+  }
+
+  // Sort by absolute score descending, take top 5
+  return Array.from(latestScoreMap.entries())
+    .sort((a, b) => Math.abs(b[1].score) - Math.abs(a[1].score))
+    .slice(0, 5)
+    .map(([symbol, { score }]) => ({
+      symbol,
+      name: tickerNames[symbol] || symbol,
+      score,
+    }));
+}
 
 export default function TickerCloud() {
   const setTicker = useTerminalStore((s) => s.setTicker);
   const activeTicker = useTerminalStore((s) => s.activeTicker);
-  const tickers = trendingTickers;
+  const tickers = useMemo(() => buildRankedTickers(), []);
 
   return (
     <div className="bg-[#1A1A1A] border border-[#4D4D4D] rounded-xl overflow-hidden">

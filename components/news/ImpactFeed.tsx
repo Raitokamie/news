@@ -9,7 +9,7 @@ import { TrendingDown, TrendingUp } from 'lucide-react';
 const HOURS_24 = 24 * 60 * 60 * 1000;
 
 export default function ImpactFeed() {
-  const { activeRegion, activeCountry, activeTicker, activeImpact, sortOrder } = useTerminalStore();
+  const { activeRegion, activeCountry, activeTicker, activeImpact, sortOrder, searchQuery } = useTerminalStore();
 
   const filtered = useMemo(() => {
     let items = mockNews;
@@ -33,6 +33,15 @@ export default function ImpactFeed() {
       items = items.filter((n) => n.impact === activeImpact);
     }
 
+    if (searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase();
+      items = items.filter((n) =>
+        n.headline.toLowerCase().includes(q) ||
+        n.body.toLowerCase().includes(q) ||
+        n.tickers.some((t) => t.symbol.toLowerCase().includes(q))
+      );
+    }
+
     if (sortOrder === 'latest') {
       items = [...items].sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
     } else if (sortOrder === 'oldest') {
@@ -43,7 +52,7 @@ export default function ImpactFeed() {
     }
 
     return items;
-  }, [activeRegion, activeCountry, activeTicker, activeImpact, sortOrder]);
+  }, [activeRegion, activeCountry, activeTicker, activeImpact, sortOrder, searchQuery]);
 
   const badItems = filtered.filter((n) => n.sentiment === 'bad' || n.sentiment === 'neutral');
   const goodItems = filtered.filter((n) => n.sentiment === 'good');

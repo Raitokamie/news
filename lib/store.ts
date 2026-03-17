@@ -10,6 +10,7 @@ interface TerminalStore {
   activeImpact: ImpactLevel | 'all';
   sortOrder: SortOrder;
   sidebarOpen: boolean;
+  searchQuery: string;
   trackedTickers: string[];
   sentimentTickers: string[];
   telegramConnected: boolean;
@@ -23,6 +24,7 @@ interface TerminalStore {
   removeTicker: (symbol: string) => void;
   addSentimentTicker: (symbol: string) => void;
   removeSentimentTicker: (symbol: string) => void;
+  setSearchQuery: (query: string) => void;
   connectTelegram: () => void;
   disconnectTelegram: () => void;
 }
@@ -42,6 +44,8 @@ export const useTerminalStore = create<TerminalStore>((set) => ({
   setImpact: (impact) => set({ activeImpact: impact }),
   setSortOrder: (order) => set({ sortOrder: order }),
   toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
+  searchQuery: '',
+  setSearchQuery: (query) => set({ searchQuery: query }),
   telegramConnected: false,
   connectTelegram: () => set({ telegramConnected: true }),
   disconnectTelegram: () => set({ telegramConnected: false }),

@@ -4,7 +4,7 @@ import { Search, Bell, Menu } from 'lucide-react';
 import { useTerminalStore } from '@/lib/store';
 
 export default function TopBar() {
-  const { toggleSidebar } = useTerminalStore();
+  const { toggleSidebar, searchQuery, setSearchQuery } = useTerminalStore();
 
   return (
     <div className="sticky top-0 z-20 bg-[#0d0d0d] backdrop-blur-md border-b border-[#4D4D4D] px-4 py-3">
@@ -26,6 +26,8 @@ export default function TopBar() {
           />
           <input
             type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search symbols, news, or reports"
             className="w-full bg-[#1A1A1A] rounded-lg pl-9 pr-4 py-2 text-sm text-slate-300 placeholder:text-[#B3B3B3] focus:outline-none transition-all"
           />
