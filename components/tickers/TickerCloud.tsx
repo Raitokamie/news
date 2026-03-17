@@ -11,56 +11,23 @@ const trendStyle = {
   flat: { Icon: Minus, bg: 'bg-slate-500/20', text: 'text-slate-400' },
 } as const;
 
-const tickerNames: Record<string, string> = {
-  NVDA: 'NVIDIA Corporation',
-  AAPL: 'Apple Inc.',
-  TSLA: 'Tesla, Inc.',
-  GOOGL: 'Alphabet Inc.',
-  AMZN: 'Amazon.com, Inc.',
-  MSFT: 'Microsoft Corporation',
-  COIN: 'Coinbase Global',
-  MSTR: 'MicroStrategy Inc.',
-  EWG: 'iShares MSCI Germany',
-  FXE: 'Invesco CurrencyShares Euro',
-  FXY: 'Invesco CurrencyShares Yen',
-  EWJ: 'iShares MSCI Japan',
-  FXI: 'iShares China Large-Cap',
-  BABA: 'Alibaba Group',
-  PDD: 'PDD Holdings',
-  GULF: 'Gulf Energy Development',
-  CPALL: 'CP ALL Public Company',
-  XOM: 'Exxon Mobil Corporation',
-  CVX: 'Chevron Corporation',
-  META: 'Meta Platforms, Inc.',
-  MA: 'Mastercard Incorporated',
-  AMD: 'Advanced Micro Devices',
-  SPY: 'SPDR S&P 500 ETF',
-  ASML: 'ASML Holding N.V.',
-};
-
 function buildRankedTickers() {
-  // For each ticker, find its latest sentimentScore from the most recent news
-  const latestScoreMap = new Map<string, { score: number; time: number }>();
+  const latestMap = new Map<string, { name: string; score: number; time: number }>();
 
   for (const news of mockNews) {
     const time = news.publishedAt.getTime();
     for (const ticker of news.tickers) {
-      const existing = latestScoreMap.get(ticker.symbol);
+      const existing = latestMap.get(ticker.symbol);
       if (!existing || time > existing.time) {
-        latestScoreMap.set(ticker.symbol, { score: ticker.sentimentScore, time });
+        latestMap.set(ticker.symbol, { name: ticker.name, score: ticker.sentimentScore, time });
       }
     }
   }
 
-  // Sort by absolute score descending, take top 5
-  return Array.from(latestScoreMap.entries())
+  return Array.from(latestMap.entries())
     .sort((a, b) => Math.abs(b[1].score) - Math.abs(a[1].score))
     .slice(0, 5)
-    .map(([symbol, { score }]) => ({
-      symbol,
-      name: tickerNames[symbol] || symbol,
-      score,
-    }));
+    .map(([symbol, { name, score }]) => ({ symbol, name, score }));
 }
 
 export default function TickerCloud() {

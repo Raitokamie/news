@@ -16,7 +16,7 @@ export interface NewsItem {
   countryCode: Region;
   impact: ImpactLevel;
   sentiment: Sentiment;
-  tickers: { symbol: string; sentiment: 'up' | 'down' | 'flat'; sentimentScore: number }[];
+  tickers: { symbol: string; name: string; sentiment: 'up' | 'down' | 'flat'; sentimentScore: number }[];
   narrativeGroupId?: string;
   logoUrl?: string;
 }

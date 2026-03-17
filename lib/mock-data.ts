@@ -15,7 +15,7 @@ export const mockNews: NewsItem[] = [
     impact: 'high',
     sentiment: 'bad',
     tickers: [
-      { symbol: 'GOOGL', sentiment: 'down', sentimentScore: -7 },
+      { symbol: 'GOOGL', name: 'Alphabet Inc.', sentiment: 'down', sentimentScore: -7 },
     ],
     narrativeGroupId: 'ng-google-antitrust',
   },
@@ -30,7 +30,7 @@ export const mockNews: NewsItem[] = [
     impact: 'high',
     sentiment: 'good',
     tickers: [
-      { symbol: 'GOOGL', sentiment: 'up', sentimentScore: 8 },
+      { symbol: 'GOOGL', name: 'Alphabet Inc.', sentiment: 'up', sentimentScore: 8 },
     ],
     narrativeGroupId: 'ng-google-cloud',
   },
@@ -45,7 +45,7 @@ export const mockNews: NewsItem[] = [
     impact: 'medium',
     sentiment: 'bad',
     tickers: [
-      { symbol: 'GOOGL', sentiment: 'down', sentimentScore: -4 },
+      { symbol: 'GOOGL', name: 'Alphabet Inc.', sentiment: 'down', sentimentScore: -4 },
     ],
     narrativeGroupId: 'ng-google-ads',
   },
@@ -60,7 +60,7 @@ export const mockNews: NewsItem[] = [
     impact: 'medium',
     sentiment: 'good',
     tickers: [
-      { symbol: 'GOOGL', sentiment: 'up', sentimentScore: 6 },
+      { symbol: 'GOOGL', name: 'Alphabet Inc.', sentiment: 'up', sentimentScore: 6 },
     ],
     narrativeGroupId: 'ng-google-ai',
   },
@@ -78,10 +78,10 @@ export const mockNews: NewsItem[] = [
     impact: 'high',
     sentiment: 'good',
     tickers: [
-      { symbol: 'NVDA', sentiment: 'up', sentimentScore: 9 },
-      { symbol: 'MSFT', sentiment: 'up', sentimentScore: 4 },
-      { symbol: 'GOOGL', sentiment: 'up', sentimentScore: 3 },
-      { symbol: 'AMZN', sentiment: 'up', sentimentScore: 3 },
+      { symbol: 'NVDA', name: 'NVIDIA Corporation', sentiment: 'up', sentimentScore: 9 },
+      { symbol: 'MSFT', name: 'Microsoft Corporation', sentiment: 'up', sentimentScore: 4 },
+      { symbol: 'GOOGL', name: 'Alphabet Inc.', sentiment: 'up', sentimentScore: 3 },
+      { symbol: 'AMZN', name: 'Amazon.com, Inc.', sentiment: 'up', sentimentScore: 3 },
     ],
     narrativeGroupId: 'ng-tech-earnings',
   },
@@ -96,8 +96,8 @@ export const mockNews: NewsItem[] = [
     impact: 'medium',
     sentiment: 'bad',
     tickers: [
-      { symbol: 'MSFT', sentiment: 'down', sentimentScore: -5 },
-      { symbol: 'NVDA', sentiment: 'up', sentimentScore: 3 },
+      { symbol: 'MSFT', name: 'Microsoft Corporation', sentiment: 'down', sentimentScore: -5 },
+      { symbol: 'NVDA', name: 'NVIDIA Corporation', sentiment: 'up', sentimentScore: 3 },
     ],
     narrativeGroupId: 'ng-tech-earnings',
   },
@@ -112,7 +112,7 @@ export const mockNews: NewsItem[] = [
     impact: 'high',
     sentiment: 'bad',
     tickers: [
-      { symbol: 'TSLA', sentiment: 'down', sentimentScore: -8 },
+      { symbol: 'TSLA', name: 'Tesla, Inc.', sentiment: 'down', sentimentScore: -8 },
     ],
   },
   {
@@ -126,8 +126,8 @@ export const mockNews: NewsItem[] = [
     impact: 'low',
     sentiment: 'bad',
     tickers: [
-      { symbol: 'COIN', sentiment: 'down', sentimentScore: -4 },
-      { symbol: 'MSTR', sentiment: 'down', sentimentScore: -3 },
+      { symbol: 'COIN', name: 'Coinbase Global', sentiment: 'down', sentimentScore: -4 },
+      { symbol: 'MSTR', name: 'MicroStrategy Inc.', sentiment: 'down', sentimentScore: -3 },
     ],
   },
 
@@ -143,8 +143,8 @@ export const mockNews: NewsItem[] = [
     impact: 'high',
     sentiment: 'good',
     tickers: [
-      { symbol: 'EWG', sentiment: 'up', sentimentScore: 5 },
-      { symbol: 'FXE', sentiment: 'up', sentimentScore: 4 },
+      { symbol: 'EWG', name: 'iShares MSCI Germany', sentiment: 'up', sentimentScore: 5 },
+      { symbol: 'FXE', name: 'Invesco CurrencyShares Euro', sentiment: 'up', sentimentScore: 4 },
     ],
   },
   {
@@ -158,7 +158,7 @@ export const mockNews: NewsItem[] = [
     impact: 'medium',
     sentiment: 'good',
     tickers: [
-      { symbol: 'AMZN', sentiment: 'up', sentimentScore: 6 },
+      { symbol: 'AMZN', name: 'Amazon.com, Inc.', sentiment: 'up', sentimentScore: 6 },
     ],
   },
 
@@ -174,8 +174,8 @@ export const mockNews: NewsItem[] = [
     impact: 'high',
     sentiment: 'bad',
     tickers: [
-      { symbol: 'FXY', sentiment: 'down', sentimentScore: -6 },
-      { symbol: 'EWJ', sentiment: 'up', sentimentScore: 3 },
+      { symbol: 'FXY', name: 'Invesco CurrencyShares Yen', sentiment: 'down', sentimentScore: -6 },
+      { symbol: 'EWJ', name: 'iShares MSCI Japan', sentiment: 'up', sentimentScore: 3 },
     ],
   },
   {
@@ -189,9 +189,9 @@ export const mockNews: NewsItem[] = [
     impact: 'high',
     sentiment: 'bad',
     tickers: [
-      { symbol: 'FXI', sentiment: 'down', sentimentScore: -7 },
-      { symbol: 'BABA', sentiment: 'down', sentimentScore: -5 },
-      { symbol: 'PDD', sentiment: 'down', sentimentScore: -4 },
+      { symbol: 'FXI', name: 'iShares China Large-Cap', sentiment: 'down', sentimentScore: -7 },
+      { symbol: 'BABA', name: 'Alibaba Group', sentiment: 'down', sentimentScore: -5 },
+      { symbol: 'PDD', name: 'PDD Holdings', sentiment: 'down', sentimentScore: -4 },
     ],
   },
   {
@@ -205,8 +205,8 @@ export const mockNews: NewsItem[] = [
     impact: 'medium',
     sentiment: 'good',
     tickers: [
-      { symbol: 'GULF', sentiment: 'up', sentimentScore: 5 },
-      { symbol: 'CPALL', sentiment: 'up', sentimentScore: 4 },
+      { symbol: 'GULF', name: 'Gulf Energy Development', sentiment: 'up', sentimentScore: 5 },
+      { symbol: 'CPALL', name: 'CP ALL Public Company', sentiment: 'up', sentimentScore: 4 },
     ],
   },
 
@@ -222,7 +222,7 @@ export const mockNews: NewsItem[] = [
     impact: 'medium',
     sentiment: 'good',
     tickers: [
-      { symbol: 'AAPL', sentiment: 'up', sentimentScore: 7 },
+      { symbol: 'AAPL', name: 'Apple Inc.', sentiment: 'up', sentimentScore: 7 },
     ],
   },
   {
@@ -236,7 +236,7 @@ export const mockNews: NewsItem[] = [
     impact: 'medium',
     sentiment: 'good',
     tickers: [
-      { symbol: 'GOOGL', sentiment: 'up', sentimentScore: 6 },
+      { symbol: 'GOOGL', name: 'Alphabet Inc.', sentiment: 'up', sentimentScore: 6 },
     ],
   },
   {
@@ -253,8 +253,8 @@ export const mockNews: NewsItem[] = [
     impact: 'high',
     sentiment: 'neutral',
     tickers: [
-      { symbol: 'XOM', sentiment: 'up', sentimentScore: 6 },
-      { symbol: 'CVX', sentiment: 'up', sentimentScore: 5 },
+      { symbol: 'XOM', name: 'Exxon Mobil Corporation', sentiment: 'up', sentimentScore: 6 },
+      { symbol: 'CVX', name: 'Chevron Corporation', sentiment: 'up', sentimentScore: 5 },
     ],
   },
   {
@@ -268,8 +268,8 @@ export const mockNews: NewsItem[] = [
     impact: 'low',
     sentiment: 'good',
     tickers: [
-      { symbol: 'AAPL', sentiment: 'up', sentimentScore: 4 },
-      { symbol: 'NVDA', sentiment: 'up', sentimentScore: 5 },
+      { symbol: 'AAPL', name: 'Apple Inc.', sentiment: 'up', sentimentScore: 4 },
+      { symbol: 'NVDA', name: 'NVIDIA Corporation', sentiment: 'up', sentimentScore: 5 },
     ],
   },
 ];
