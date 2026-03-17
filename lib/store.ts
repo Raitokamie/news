@@ -11,6 +11,7 @@ interface TerminalStore {
   sortOrder: SortOrder;
   sidebarOpen: boolean;
   trackedTickers: string[];
+  sentimentTickers: string[];
   telegramConnected: boolean;
   setRegion: (region: RegionTab) => void;
   setCountry: (country: Region | 'all') => void;
@@ -20,6 +21,8 @@ interface TerminalStore {
   toggleSidebar: () => void;
   addTicker: (symbol: string) => void;
   removeTicker: (symbol: string) => void;
+  addSentimentTicker: (symbol: string) => void;
+  removeSentimentTicker: (symbol: string) => void;
   connectTelegram: () => void;
   disconnectTelegram: () => void;
 }
@@ -48,5 +51,12 @@ export const useTerminalStore = create<TerminalStore>((set) => ({
   })),
   removeTicker: (symbol) => set((state) => ({
     trackedTickers: state.trackedTickers.filter((t) => t !== symbol),
+  })),
+  sentimentTickers: [],
+  addSentimentTicker: (symbol) => set((state) => ({
+    sentimentTickers: state.sentimentTickers.includes(symbol) ? state.sentimentTickers : [...state.sentimentTickers, symbol],
+  })),
+  removeSentimentTicker: (symbol) => set((state) => ({
+    sentimentTickers: state.sentimentTickers.filter((t) => t !== symbol),
   })),
 }));

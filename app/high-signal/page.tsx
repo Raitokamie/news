@@ -23,7 +23,7 @@ const sentimentConfig = {
 };
 
 export default function StockSentimentPage() {
-  const { trackedTickers, addTicker, removeTicker } = useTerminalStore();
+  const { sentimentTickers, addSentimentTicker, removeSentimentTicker } = useTerminalStore();
   const [page, setPage] = useState(0);
   const rowsPerPage = 10;
   const [addOpen, setAddOpen] = useState(false);
@@ -31,7 +31,7 @@ export default function StockSentimentPage() {
 
   const availableToAdd = mockStockSentiment
     .map((r) => r.symbol)
-    .filter((s) => !trackedTickers.includes(s));
+    .filter((s) => !sentimentTickers.includes(s));
 
   useEffect(() => {
     if (!addOpen) return;
@@ -42,7 +42,7 @@ export default function StockSentimentPage() {
     return () => document.removeEventListener('mousedown', handleClick);
   }, [addOpen]);
 
-  const rows = mockStockSentiment.filter((r) => trackedTickers.includes(r.symbol));
+  const rows = mockStockSentiment.filter((r) => sentimentTickers.includes(r.symbol));
   const totalPages = Math.max(1, Math.ceil(rows.length / rowsPerPage));
   const paged = rows.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
 
@@ -101,7 +101,7 @@ export default function StockSentimentPage() {
                   {availableToAdd.map((symbol) => (
                     <button
                       key={symbol}
-                      onClick={() => { addTicker(symbol); setAddOpen(false); }}
+                      onClick={() => { addSentimentTicker(symbol); setAddOpen(false); }}
                       className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors"
                     >
                       {symbol}
@@ -110,14 +110,14 @@ export default function StockSentimentPage() {
                 </div>
               )}
             </div>
-            {trackedTickers.map((symbol) => (
+            {sentimentTickers.map((symbol) => (
               <div
                 key={symbol}
                 className="flex items-center gap-2 bg-[#2A2A2A] border border-[#4D4D4D] text-white text-sm font-medium px-4 py-2 rounded-full"
               >
                 {symbol}
                 <button
-                  onClick={() => removeTicker(symbol)}
+                  onClick={() => removeSentimentTicker(symbol)}
                   className="text-slate-400 hover:text-white transition-colors"
                 >
                   <X size={14} />
