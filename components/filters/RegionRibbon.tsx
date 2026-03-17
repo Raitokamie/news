@@ -15,21 +15,6 @@ const tabs: { id: RegionTab; label: string }[] = [
   { id: 'mena', label: 'MENA' },
 ];
 
-const countryShortCodes: Record<Region, string> = {
-  global: 'Global',
-  us: 'US',
-  eu: 'EU',
-  jp: 'JP',
-  cn: 'CN',
-  th: 'TH',
-  sa: 'SA',
-  ae: 'AE',
-  il: 'IL',
-  tr: 'TR',
-  in: 'IN',
-  kr: 'KR',
-};
-
 function CountryFlag({ code, size = 20 }: { code: Region | 'all'; size?: number }) {
   if (code === 'all' || code === 'global') {
     return <Globe size={size} className="text-white" />;
@@ -111,7 +96,7 @@ export default function RegionRibbon() {
           className="flex items-center gap-2 px-4 py-2 bg-[#1A1A1A] hover:bg-[#2A2A2A] border border-[#4D4D4D] rounded-lg text-sm font-bold text-white transition-all"
         >
           <CountryFlag code={activeCountry === 'all' ? 'all' : activeCountry} size={16} />
-          <span>{activeCountry === 'all' ? 'All' : countryShortCodes[activeCountry]}</span>
+          <span>{activeCountry === 'all' ? 'All' : activeCountry.toUpperCase()}</span>
           <ChevronDown size={14} className={cn('text-white transition-transform', countryOpen && 'rotate-180')} />
         </button>
         {countryOpen && (
@@ -140,7 +125,7 @@ export default function RegionRibbon() {
                 )}
               >
                 <CountryFlag code={c} size={18} />
-                {countryShortCodes[c]}
+                {c.toUpperCase()}
               </button>
             ))}
           </div>

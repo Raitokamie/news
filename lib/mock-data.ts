@@ -139,7 +139,7 @@ export const mockNews: NewsItem[] = [
     sources: [{ name: 'FT', url: 'https://www.ft.com/content/ecb-rate-pause-signal' }],
     publishedAt: new Date(Date.now() - 30 * 60 * 1000),
     regionTag: 'eu',
-    countryCode: 'eu',
+    countryCode: 'de',
     impact: 'high',
     sentiment: 'good',
     tickers: [
@@ -154,7 +154,7 @@ export const mockNews: NewsItem[] = [
     sources: [{ name: 'REUTERS', url: 'https://www.reuters.com/business/amazon-postnl-acquisition' }],
     publishedAt: new Date(Date.now() - 5 * 60 * 60 * 1000),
     regionTag: 'eu',
-    countryCode: 'eu',
+    countryCode: 'nl',
     impact: 'medium',
     sentiment: 'good',
     tickers: [

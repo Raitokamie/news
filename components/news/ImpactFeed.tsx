@@ -20,7 +20,7 @@ export default function ImpactFeed() {
 
     // Filter by region tab (uses regionTag directly from data)
     if (activeRegion !== 'global') {
-      items = items.filter((n) => n.regionTag === activeRegion || n.regionTag === 'global');
+      items = items.filter((n) => n.regionTag === activeRegion);
     }
     // Filter by country
     if (activeCountry !== 'all') {

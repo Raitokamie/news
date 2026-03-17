@@ -1,5 +1,5 @@
 // ─── Shared enums ───────────────────────────────────────
-export type Region = 'global' | 'us' | 'eu' | 'jp' | 'cn' | 'th' | 'sa' | 'ae' | 'il' | 'tr' | 'in' | 'kr';
+export type Region = 'global' | 'us' | 'de' | 'nl' | 'fr' | 'jp' | 'cn' | 'th' | 'sa' | 'ae' | 'il' | 'tr' | 'in' | 'kr';
 export type RegionTab = 'global' | 'us' | 'eu' | 'asia' | 'mena';
 export type ImpactLevel = 'high' | 'medium' | 'low';
 export type Sentiment = 'good' | 'bad' | 'neutral';
