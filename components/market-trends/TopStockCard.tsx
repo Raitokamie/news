@@ -27,9 +27,9 @@ const trendConfig = {
 };
 
 const sentimentConfig = {
-  good: { label: 'Positive', dotColor: 'bg-[#10B981]', barColor: 'bg-[#10B981]' },
-  bad: { label: 'Negative', dotColor: 'bg-[#EF4444]', barColor: 'bg-[#EF4444]' },
-  neutral: { label: 'Neutral', dotColor: 'bg-[#7F7F7F]', barColor: 'bg-[#7F7F7F]' },
+  good: { label: 'Positive', dotColor: 'bg-[#10B981]', barColor: 'bg-[#10B981]', textColor: 'text-white' },
+  bad: { label: 'NEGATIVE', dotColor: 'bg-[#EF4444]', barColor: 'bg-[#EF4444]', textColor: 'text-[#EF4444]' },
+  neutral: { label: 'Neutral', dotColor: 'bg-[#7F7F7F]', barColor: 'bg-[#7F7F7F]', textColor: 'text-white' },
 };
 
 export default function TopStockCard({ item }: TopStockCardProps) {
@@ -76,7 +76,7 @@ export default function TopStockCard({ item }: TopStockCardProps) {
       {/* Sentiment Badge */}
       <div className="flex items-center gap-2">
         <div className={cn('w-2 h-2 rounded-full', sentiment.dotColor)} />
-        <span className="text-white text-xs font-medium">{sentiment.label}</span>
+        <span className={cn('text-xs font-medium', sentiment.textColor)}>{sentiment.label}</span>
       </div>
     </div>
   );

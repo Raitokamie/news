@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Rss, TrendingUp, Star, KeyRound, Settings, Hash, X } from 'lucide-react';
+import { Home, Rss, TrendingUp, Star, Settings, Hash, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import LiveUpdateWidget from './LiveUpdateWidget';
 import { useTerminalStore } from '@/lib/store';
@@ -11,7 +11,7 @@ const navItems = [
   { href: '/', label: 'Dashboard', icon: Home },
   { href: '/high-signal', label: 'Stock Sentiment', icon: Rss },
   { href: '/market-trends', label: 'Market Trends', icon: TrendingUp },
-  { href: '/watchlist', label: 'Watchlist', icon: Star, locked: true },
+  { href: '/watchlist', label: 'Watchlist', icon: Star },
 ];
 
 export default function Sidebar() {
@@ -57,7 +57,7 @@ export default function Sidebar() {
 
         {/* Nav */}
         <nav className="flex-1 px-3 py-2 space-y-1">
-          {navItems.map(({ href, label, icon: Icon, locked }) => {
+          {navItems.map(({ href, label, icon: Icon }) => {
             const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
             return (
               <Link
@@ -73,7 +73,6 @@ export default function Sidebar() {
               >
                 <Icon size={18} className="text-white" strokeWidth={2} />
                 {label}
-                {locked && <KeyRound size={18} className="ml-auto text-[#0D7FF2]" />}
               </Link>
             );
           })}

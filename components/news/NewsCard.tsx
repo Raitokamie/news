@@ -42,13 +42,13 @@ const sourceColors: Record<string, string> = {
 };
 
 function CountryFlag({ code }: { code: Region }) {
-  if (code === 'global') return <Globe size={16} className="text-slate-400" />;
+  if (code === 'global') return <Globe size={20} className="text-slate-400" />;
   return (
     <img
       src={`https://flagcdn.com/w40/${code}.png`}
       srcSet={`https://flagcdn.com/w80/${code}.png 2x`}
       alt={code}
-      className="w-5 h-auto rounded-sm"
+      className="w-6 h-6 rounded-full object-cover"
     />
   );
 }
@@ -64,7 +64,7 @@ export default function NewsCard({ item, compact = false }: NewsCardProps) {
   return (
     <article
       className={cn(
-        'flex flex-col h-full bg-[#1A1A1A] border border-[#4D4D4D] rounded-xl p-4 transition-all duration-200 hover:border-[#666] hover:bg-[#222222] group cursor-pointer',
+        'flex flex-col h-full bg-[#0d0d0d] border border-[#333333] rounded-xl p-4 transition-all duration-200 hover:border-[#666] hover:bg-[#1A1A1A] group cursor-pointer',
         item.impact === 'high' && 'hover:border-red-500/20',
         compact && 'p-3'
       )}
@@ -115,11 +115,11 @@ export default function NewsCard({ item, compact = false }: NewsCardProps) {
       </div>
 
       {/* Footer: sources + view more */}
-      <div className="flex items-center justify-between mt-auto pt-4 border-t border-[#2a2a2a]">
+      <div className="flex items-center justify-between mt-auto pt-4 border-t border-[#333333]">
         <div className="flex items-center gap-2">
           <div className="flex -space-x-1.5">
             {item.sources.map((s) => (
-              <div key={s.name} className={cn('w-6 h-6 rounded-full border-2 border-[#1A1A1A]', sourceColors[s.name] || 'bg-slate-500')} />
+              <div key={s.name} className={cn('w-6 h-6 rounded-full border-2 border-[#0d0d0d]', sourceColors[s.name] || 'bg-slate-500')} />
             ))}
           </div>
           <span className="text-xs text-slate-400">

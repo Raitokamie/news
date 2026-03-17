@@ -73,3 +73,10 @@ export interface MarketTrendItem {
   sentimentHistorical: SentimentHistorical;
   score: number;
 }
+
+// Telegram notification status for watchlist
+export interface TelegramNotificationStatus {
+  symbol: string;
+  status: 'SENT' | 'FAILED' | 'PROCESSING';
+  timestamp: Date;
+}
