@@ -13,7 +13,7 @@ import {
 } from '@/components/watchlist';
 
 export default function WatchlistPage() {
-  const { trackedTickers, addTicker } = useTerminalStore();
+  const { trackedTickers, addTicker, removeTicker } = useTerminalStore();
   const [addModalOpen, setAddModalOpen] = useState(false);
 
   return (
@@ -37,7 +37,7 @@ export default function WatchlistPage() {
           {/* Main Content */}
           <div className="px-6 pb-6 pt-0 flex flex-col gap-4">
             {/* Stock Cards Row */}
-            <WatchlistStocksRow trackedSymbols={trackedTickers} />
+            <WatchlistStocksRow trackedSymbols={trackedTickers} onRemove={removeTicker} />
 
             {/* Recent Activity Section */}
             <WatchlistActivityFeed trackedSymbols={trackedTickers} />

@@ -12,11 +12,21 @@ interface TickerChipProps {
 }
 
 export default function TickerChip({ symbol, showBookmark = true, trend = 'flat', size = 'sm' }: TickerChipProps) {
-  const { activeTicker, setTicker } = useTerminalStore();
+  const { activeTicker, setTicker, trackedTickers, addTicker, removeTicker } = useTerminalStore();
   const active = activeTicker === symbol;
+  const isTracked = trackedTickers.includes(symbol);
 
   const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus;
   const trendColor = trend === 'up' ? 'text-green-400' : trend === 'down' ? 'text-red-400' : 'text-slate-500';
+
+  function handleStarClick(e: React.MouseEvent) {
+    e.stopPropagation();
+    if (isTracked) {
+      removeTicker(symbol);
+    } else {
+      addTicker(symbol);
+    }
+  }
 
   return (
     <button
@@ -33,7 +43,14 @@ export default function TickerChip({ symbol, showBookmark = true, trend = 'flat'
       <span className="tracking-wide">{symbol}</span>
       <TrendIcon size={14} className={trendColor} />
       {showBookmark && (
-        <Star size={12} className="text-slate-500 hover:text-slate-300 ml-0.5" />
+        <Star
+          size={12}
+          onClick={handleStarClick}
+          className={cn(
+            'ml-0.5 transition-colors',
+            isTracked ? 'text-yellow-400 fill-yellow-400' : 'text-slate-500 hover:text-yellow-400'
+          )}
+        />
       )}
     </button>
   );

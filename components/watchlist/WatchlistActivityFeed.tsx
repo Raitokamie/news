@@ -13,7 +13,14 @@ interface WatchlistActivityFeedProps {
 
 export default function WatchlistActivityFeed({ trackedSymbols }: WatchlistActivityFeedProps) {
   const filtered = useMemo(() => {
+    if (trackedSymbols.length === 0) return [];
+
     let items = mockNews;
+
+    // Only news that mention tracked tickers
+    items = items.filter((n) =>
+      n.tickers.some((t) => trackedSymbols.includes(t.symbol))
+    );
 
     // Only last 24 hours
     const cutoff = new Date(Date.now() - HOURS_24);
@@ -23,7 +30,7 @@ export default function WatchlistActivityFeed({ trackedSymbols }: WatchlistActiv
     items = [...items].sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
 
     return items;
-  }, []);
+  }, [trackedSymbols]);
 
   const badItems = filtered.filter((n) => n.sentiment === 'bad' || n.sentiment === 'neutral');
   const goodItems = filtered.filter((n) => n.sentiment === 'good');

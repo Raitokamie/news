@@ -11,6 +11,7 @@ interface TerminalStore {
   sortOrder: SortOrder;
   sidebarOpen: boolean;
   trackedTickers: string[];
+  telegramConnected: boolean;
   setRegion: (region: RegionTab) => void;
   setCountry: (country: Region | 'all') => void;
   setTicker: (ticker: string | null) => void;
@@ -19,6 +20,8 @@ interface TerminalStore {
   toggleSidebar: () => void;
   addTicker: (symbol: string) => void;
   removeTicker: (symbol: string) => void;
+  connectTelegram: () => void;
+  disconnectTelegram: () => void;
 }
 
 export const useTerminalStore = create<TerminalStore>((set) => ({
@@ -36,7 +39,10 @@ export const useTerminalStore = create<TerminalStore>((set) => ({
   setImpact: (impact) => set({ activeImpact: impact }),
   setSortOrder: (order) => set({ sortOrder: order }),
   toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
-  trackedTickers: ['NVDA', 'TSLA', 'ASML', 'AAPL'],
+  telegramConnected: false,
+  connectTelegram: () => set({ telegramConnected: true }),
+  disconnectTelegram: () => set({ telegramConnected: false }),
+  trackedTickers: [],
   addTicker: (symbol) => set((state) => ({
     trackedTickers: state.trackedTickers.includes(symbol) ? state.trackedTickers : [...state.trackedTickers, symbol],
   })),

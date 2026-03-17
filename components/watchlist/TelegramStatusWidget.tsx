@@ -1,8 +1,9 @@
 'use client';
 
 import { TelegramNotificationStatus } from '@/lib/types';
+import { useTerminalStore } from '@/lib/store';
 import { cn, timeAgo } from '@/lib/utils';
-import { Send, ArrowUpRight } from 'lucide-react';
+import { Send, ArrowUpRight, LogOut } from 'lucide-react';
 
 interface TelegramStatusWidgetProps {
   trackedSymbols: string[];
@@ -31,7 +32,33 @@ export default function TelegramStatusWidget({
   trackedSymbols,
   notifications,
 }: TelegramStatusWidgetProps) {
-  // Get notifications for tracked symbols
+  const { telegramConnected, connectTelegram, disconnectTelegram } = useTerminalStore();
+
+  // Not connected — show connect card
+  if (!telegramConnected) {
+    return (
+      <div className="bg-[#1A1A1A] border border-[#4D4D4D] rounded-xl overflow-hidden">
+        <div className="p-6 text-center">
+          <div className="w-14 h-14 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center mx-auto mb-4">
+            <Send size={24} className="text-cyan-400" />
+          </div>
+          <h3 className="text-white font-bold text-sm mb-1">Connect Telegram</h3>
+          <p className="text-xs text-slate-500 mb-4 leading-relaxed">
+            Get instant alerts when high-impact news hits your tracked tickers.
+          </p>
+          <button
+            onClick={connectTelegram}
+            className="w-full inline-flex items-center justify-center gap-2 bg-cyan-500 hover:bg-cyan-400 text-[#0c0e14] font-bold text-sm px-4 py-2.5 rounded-lg transition-colors"
+          >
+            <Send size={14} />
+            Connect
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Connected — show notification status
   const relevantNotifications = trackedSymbols.map((symbol) => {
     const notification = notifications.find((n) => n.symbol === symbol);
     return notification || { symbol, status: 'PROCESSING' as const, timestamp: new Date() };
@@ -40,9 +67,19 @@ export default function TelegramStatusWidget({
   return (
     <div className="bg-[#1A1A1A] border border-[#4D4D4D] rounded-xl overflow-hidden">
       {/* Header */}
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-[#333333]">
-        <Send size={16} className="text-cyan-400" />
-        <h3 className="text-white font-semibold text-sm">Telegram Status</h3>
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[#333333]">
+        <div className="flex items-center gap-2">
+          <Send size={16} className="text-cyan-400" />
+          <h3 className="text-white font-semibold text-sm">Telegram</h3>
+          <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+        </div>
+        <button
+          onClick={disconnectTelegram}
+          className="text-slate-500 hover:text-red-400 transition-colors"
+          title="Disconnect"
+        >
+          <LogOut size={14} />
+        </button>
       </div>
 
       {/* Notification List */}
@@ -81,7 +118,7 @@ export default function TelegramStatusWidget({
       {/* Empty state */}
       {relevantNotifications.length === 0 && (
         <div className="px-4 py-8 text-center">
-          <p className="text-sm text-slate-500">No notifications yet</p>
+          <p className="text-sm text-slate-500">Add tickers to receive alerts</p>
         </div>
       )}
     </div>

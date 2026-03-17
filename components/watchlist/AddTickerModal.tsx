@@ -1,7 +1,8 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
-import { mockMarketTrends } from '@/lib/api';
+import { useRef, useEffect, useMemo } from 'react';
+import { mockNews } from '@/lib/api';
+import { deriveTickerSummaries } from './WatchlistStocksRow';
 import { cn } from '@/lib/utils';
 
 interface AddTickerModalProps {
@@ -18,9 +19,9 @@ export default function AddTickerModal({
   onAddTicker,
 }: AddTickerModalProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const allSummaries = useMemo(() => deriveTickerSummaries(mockNews), []);
 
-  // Get available tickers (not already tracked)
-  const availableTickers = mockMarketTrends.filter(
+  const availableTickers = allSummaries.filter(
     (item) => !trackedTickers.includes(item.symbol)
   );
 
@@ -66,7 +67,7 @@ export default function AddTickerModal({
                 <span className="text-white font-semibold text-sm">
                   {item.symbol}
                 </span>
-                <p className="text-xs text-slate-500">{item.name}</p>
+                <p className="text-xs text-slate-500">{item.mentionCount} mentions</p>
               </div>
               <span className="text-xs text-[#0D7FF2]">+ Add</span>
             </button>
