@@ -3,6 +3,7 @@
 import { cn } from '@/lib/utils';
 import { RegionTab, Region, SortOrder } from '@/lib/types';
 import { useTerminalStore } from '@/lib/store';
+import { mockNews } from '@/lib/api';
 import { ChevronDown, Globe } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 
@@ -13,21 +14,6 @@ const tabs: { id: RegionTab; label: string }[] = [
   { id: 'asia', label: 'Asia' },
   { id: 'mena', label: 'MENA' },
 ];
-
-const countryLabels: Record<Region, string> = {
-  global: 'Global',
-  us: 'United States',
-  eu: 'European Union',
-  jp: 'Japan',
-  cn: 'China',
-  th: 'Thailand',
-  sa: 'Saudi Arabia',
-  ae: 'UAE',
-  il: 'Israel',
-  tr: 'Turkey',
-  in: 'India',
-  kr: 'Korea',
-};
 
 const countryShortCodes: Record<Region, string> = {
   global: 'Global',
@@ -58,16 +44,14 @@ function CountryFlag({ code, size = 20 }: { code: Region | 'all'; size?: number 
   );
 }
 
-const dropdownCountries: Region[] = ['cn', 'in', 'jp', 'kr'];
-
-// Country dropdown options per tab - all tabs show the same countries
-const tabCountries: Record<RegionTab, Region[]> = {
-  global: dropdownCountries,
-  us: dropdownCountries,
-  eu: dropdownCountries,
-  asia: dropdownCountries,
-  mena: dropdownCountries,
-};
+// Build countries per region from actual news data
+const countriesByRegion: Record<RegionTab, Region[]> = { global: [], us: [], eu: [], asia: [], mena: [] };
+for (const n of mockNews) {
+  const c = n.countryCode as Region;
+  if (c === 'global') continue;
+  if (!countriesByRegion[n.regionTag].includes(c)) countriesByRegion[n.regionTag].push(c);
+  if (!countriesByRegion.global.includes(c)) countriesByRegion.global.push(c);
+}
 
 const sortOptions: { value: SortOrder; label: string }[] = [
   { value: 'latest', label: 'Latest' },
@@ -92,7 +76,7 @@ export default function RegionRibbon() {
   }, []);
 
   const currentSort = sortOptions.find((o) => o.value === sortOrder);
-  const countries = tabCountries[activeRegion];
+  const countries = countriesByRegion[activeRegion];
 
   return (
     <div className="flex items-center gap-3 px-4 py-4 border-b border-[#4D4D4D] bg-[#141414]">
