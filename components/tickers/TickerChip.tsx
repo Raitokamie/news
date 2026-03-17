@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { useTerminalStore } from '@/lib/store';
-import { TrendingUp, TrendingDown, Minus, Bookmark } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, Star } from 'lucide-react';
 
 interface TickerChipProps {
   symbol: string;
@@ -33,7 +33,7 @@ export default function TickerChip({ symbol, showBookmark = true, trend = 'flat'
       <span className="tracking-wide">{symbol}</span>
       <TrendIcon size={14} className={trendColor} />
       {showBookmark && (
-        <Bookmark size={12} className="text-slate-600 hover:text-slate-400 ml-0.5" />
+        <Star size={12} className="text-slate-600 hover:text-slate-400 ml-0.5" />
       )}
     </button>
   );

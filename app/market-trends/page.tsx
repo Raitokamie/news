@@ -2,8 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import TopBar from '@/components/layout/TopBar';
-import ImpactProCard from '@/components/widgets/ImpactProCard';
-import TickerCloud from '@/components/tickers/TickerCloud';
+import RightSidebar from '@/components/layout/RightSidebar';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TrendFilter, MarketTrendItem } from '@/lib/types';
@@ -100,11 +99,7 @@ export default function MarketTrendsPage() {
         </div>
       </div>
 
-      {/* Right sidebar — สูงเต็มตั้งแต่ TopBar ถึงล่างสุด */}
-      <aside className="hidden xl:flex w-80 shrink-0 border-l border-[#4D4D4D] overflow-y-auto p-4 flex-col gap-4">
-        <ImpactProCard />
-        <TickerCloud />
-      </aside>
+      <RightSidebar />
     </div>
   );
 }

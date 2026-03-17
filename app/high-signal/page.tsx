@@ -2,32 +2,30 @@
 
 import { useState, useRef, useEffect } from 'react';
 import TopBar from '@/components/layout/TopBar';
-import TickerCloud from '@/components/tickers/TickerCloud';
-import ImpactProCard from '@/components/widgets/ImpactProCard';
+import RightSidebar from '@/components/layout/RightSidebar';
+import { SentimentHistoricalBar } from '@/components/market-trends';
 import { mockStockSentiment } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import { Rss, X, Plus, TrendingUp, TrendingDown, Minus, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ImpactLevel } from '@/lib/types';
 
-const impactStyle: Record<ImpactLevel, { label: string; bg: string; text: string }> = {
-  high: { label: 'HIGH', bg: 'bg-red-500/15', text: 'text-red-400' },
-  medium: { label: 'MEDIUM', bg: 'bg-amber-500/15', text: 'text-amber-400' },
-  low: { label: 'LOW', bg: 'bg-blue-500/15', text: 'text-blue-400' },
+const impactConfig: Record<ImpactLevel, { label: string; bg: string; text: string; border: string }> = {
+  high: { label: 'HIGH', bg: 'bg-transparent', text: 'text-red-400', border: 'border border-red-400/20' },
+  medium: { label: 'MEDIUM', bg: 'bg-transparent', text: 'text-amber-400', border: 'border border-amber-400/20' },
+  low: { label: 'LOW', bg: 'bg-transparent', text: 'text-blue-400', border: 'border border-blue-400/20' },
 };
 
-const sentimentStyle = {
-  up: { Icon: TrendingUp, bg: 'bg-green-500/15', text: 'text-green-400' },
-  down: { Icon: TrendingDown, bg: 'bg-red-500/15', text: 'text-red-400' },
-  flat: { Icon: Minus, bg: 'bg-slate-500/15', text: 'text-slate-400' },
-} as const;
-
-const ROWS_OPTIONS = [10, 20, 50];
+const sentimentConfig = {
+  up: { label: 'Positive', icon: TrendingUp, textColor: 'text-[#22C55E]', iconColor: 'text-[#10B981]', bg: 'bg-[#17382D]' },
+  down: { label: 'Negative', icon: TrendingDown, textColor: 'text-[#EF4444]', iconColor: 'text-[#EF4444]', bg: 'bg-[#2F1E1E]' },
+  flat: { label: 'Neutral', icon: Minus, textColor: 'text-[#808080]', iconColor: 'text-[#808080]', bg: 'bg-[#262626]' },
+};
 
 export default function StockSentimentPage() {
   const { trackedTickers, addTicker, removeTicker } = useTerminalStore();
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const rowsPerPage = 10;
   const [addOpen, setAddOpen] = useState(false);
   const addRef = useRef<HTMLDivElement>(null);
 
@@ -112,49 +110,50 @@ export default function StockSentimentPage() {
 
         {/* Table */}
         <div className="flex-1 overflow-y-auto p-4">
-          <div className="overflow-x-auto rounded-xl border border-[#4D4D4D]">
-            <table className="w-full text-sm min-w-[800px]">
+          <div className="overflow-x-auto border border-[#333333] rounded-xl overflow-hidden">
+            <table className="w-full min-w-[700px]">
               <thead>
-                <tr className="border-b border-[#4D4D4D] bg-[#1A1A1A]">
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Ticker</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Impact</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Sentiment</th>
-                  <th className="text-center px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Mention</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Sentiment Historical</th>
-                  <th className="text-center px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">Score</th>
+                <tr className="border-b border-[#333333]">
+                  <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Ticker</th>
+                  <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Impact</th>
+                  <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Sentiment</th>
+                  <th className="text-center text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Mention</th>
+                  <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Sentiment Historical</th>
+                  <th className="text-right text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Score</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#4D4D4D] bg-[#1A1A1A]">
+              <tbody>
                 {paged.map((row) => {
-                  const impact = impactStyle[row.impact];
-                  const sent = sentimentStyle[row.sentiment];
-                  const SentIcon = sent.Icon;
-                  const scoreColor = row.score > 0 ? 'text-green-400 bg-green-500/15' : row.score < 0 ? 'text-red-400 bg-red-500/15' : 'text-slate-400 bg-slate-500/15';
+                  const impact = impactConfig[row.impact];
+                  const sent = sentimentConfig[row.sentiment];
+                  const SentIcon = sent.icon;
 
                   return (
-                    <tr key={row.symbol} className="hover:bg-white/3 transition-colors">
-                      <td className="px-4 py-3.5 font-bold text-cyan-400">${row.symbol}</td>
-                      <td className="px-4 py-3.5">
-                        <span className={cn('text-xs font-bold px-2 py-1 rounded-md', impact.bg, impact.text)}>
+                    <tr key={row.symbol} className="border-b border-[#333333] hover:bg-white/5 transition-colors">
+                      <td className="px-4 py-3">
+                        <span className="text-[#0D7FF2] font-bold text-sm">${row.symbol}</span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={cn('text-xs font-bold px-4 py-1.5 rounded-full', impact.bg, impact.text, impact.border)}>
                           {impact.label}
                         </span>
                       </td>
-                      <td className="px-4 py-3.5">
-                        <div className={cn('inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-md', sent.bg, sent.text)}>
-                          <SentIcon size={12} />
-                          {row.sentimentLabel}
-                        </div>
+                      <td className="px-4 py-3">
+                        <span className={cn('inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold', sent.bg)}>
+                          <SentIcon size={14} className={sent.iconColor} />
+                          <span className={sent.textColor}>{sent.label}</span>
+                        </span>
                       </td>
-                      <td className="px-4 py-3.5 text-center text-white font-semibold">{row.mentionCount}</td>
-                      <td className="px-4 py-3.5">
-                        <SentimentBar historical={row.historical} />
+                      <td className="px-4 py-3 text-center">
+                        <span className="text-white text-sm font-bold">{row.mentionCount}</span>
                       </td>
-                      <td className="px-4 py-3.5">
-                        <div className="flex justify-center">
-                          <div className={cn('w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold', scoreColor)}>
-                            {row.score}
-                          </div>
-                        </div>
+                      <td className="px-4 py-3">
+                        <SentimentHistoricalBar data={row.historical} height={6} />
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <span className="inline-flex items-center justify-center min-w-[40px] px-2.5 py-1 rounded-full border border-[#333333] text-white font-bold text-sm">
+                          {row.score}
+                        </span>
                       </td>
                     </tr>
                   );
@@ -164,31 +163,26 @@ export default function StockSentimentPage() {
           </div>
 
           {/* Pagination */}
-          <div className="flex items-center justify-between mt-4 text-xs text-slate-400">
+          <div className="flex items-center justify-between px-4 py-3 mt-0 border-t border-[#333333]">
             <div className="flex items-center gap-2">
-              <span>Rows per page:</span>
-              <select
-                value={rowsPerPage}
-                onChange={(e) => { setRowsPerPage(Number(e.target.value)); setPage(0); }}
-                className="bg-[#1A1A1A] border border-[#4D4D4D] rounded-md px-2 py-1 text-white text-xs"
-              >
-                {ROWS_OPTIONS.map((n) => (
-                  <option key={n} value={n}>{n}</option>
-                ))}
-              </select>
+              <span className="text-sm text-white">Rows per page:</span>
+              <button className="flex items-center gap-1 px-2 py-1 rounded-md bg-[#333333] text-white text-sm">
+                {rowsPerPage}
+                <ChevronDown size={14} />
+              </button>
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setPage((p) => Math.max(0, p - 1))}
                 disabled={page === 0}
-                className="p-1 rounded hover:bg-white/10 disabled:opacity-30 transition-colors"
+                className="p-1 rounded hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed text-slate-400"
               >
                 <ChevronLeft size={16} />
               </button>
               <button
                 onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
                 disabled={page >= totalPages - 1}
-                className="p-1 rounded hover:bg-white/10 disabled:opacity-30 transition-colors"
+                className="p-1 rounded hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed text-slate-400"
               >
                 <ChevronRight size={16} />
               </button>
@@ -197,36 +191,7 @@ export default function StockSentimentPage() {
         </div>
       </div>
 
-      {/* Right sidebar */}
-      <aside className="hidden xl:flex w-64 shrink-0 border-l border-[#4D4D4D] overflow-y-auto p-4 flex-col gap-4">
-        <ImpactProCard />
-        <TickerCloud />
-      </aside>
-    </div>
-  );
-}
-
-function SentimentBar({ historical }: { historical: { positive: number; neutral: number; negative: number } }) {
-  const total = historical.positive + historical.neutral + historical.negative;
-  if (total === 0) return null;
-
-  const segments = [
-    { value: historical.positive, color: 'bg-green-500', label: historical.positive },
-    { value: historical.neutral, color: 'bg-slate-500', label: historical.neutral },
-    { value: historical.negative, color: 'bg-red-500', label: historical.negative },
-  ].filter((s) => s.value > 0);
-
-  return (
-    <div className="flex h-6 rounded-md overflow-hidden min-w-[180px]">
-      {segments.map((seg, i) => (
-        <div
-          key={i}
-          style={{ width: `${(seg.value / total) * 100}%` }}
-          className={cn('flex items-center justify-center text-xs font-semibold text-white', seg.color)}
-        >
-          {seg.label}
-        </div>
-      ))}
+      <RightSidebar />
     </div>
   );
 }
