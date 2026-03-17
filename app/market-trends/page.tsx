@@ -21,11 +21,11 @@ function filterMarketTrends(
     case 'top_positive':
       return items
         .filter((i) => i.sentiment === 'good')
-        .sort((a, b) => b.impactScore - a.impactScore);
+        .sort((a, b) => b.score - a.score);
     case 'top_negative':
       return items
         .filter((i) => i.sentiment === 'bad')
-        .sort((a, b) => b.impactScore - a.impactScore);
+        .sort((a, b) => a.score - b.score);
     case 'most_mention':
       return [...items].sort((a, b) => b.mentionCount - a.mentionCount);
     default:
@@ -54,7 +54,7 @@ export default function MarketTrendsPage() {
             <div className="flex items-center gap-2">
               <TrendingUp size={20} className="text-white" />
               <h1 className="text-lg font-extrabold text-white uppercase tracking-wide">
-                MARKET TRENDS
+                TRENDING
               </h1>
             </div>
 

@@ -25,23 +25,54 @@ const countryLabels: Record<Region, string> = {
   ae: 'UAE',
   il: 'Israel',
   tr: 'Turkey',
+  in: 'India',
+  kr: 'Korea',
 };
 
-const allCountries: Region[] = ['us', 'eu', 'jp', 'cn', 'th', 'sa', 'ae', 'il', 'tr'];
+const countryShortCodes: Record<Region, string> = {
+  global: 'Global',
+  us: 'US',
+  eu: 'EU',
+  jp: 'JP',
+  cn: 'CN',
+  th: 'TH',
+  sa: 'SA',
+  ae: 'AE',
+  il: 'IL',
+  tr: 'TR',
+  in: 'IN',
+  kr: 'KR',
+};
 
-// Country dropdown options per tab
+function CountryFlag({ code, size = 20 }: { code: Region | 'all'; size?: number }) {
+  if (code === 'all' || code === 'global') {
+    return <Globe size={size} className="text-white" />;
+  }
+  return (
+    <img
+      src={`https://flagcdn.com/w40/${code}.png`}
+      srcSet={`https://flagcdn.com/w80/${code}.png 2x`}
+      alt={code}
+      className="w-5 h-5 rounded-full object-cover"
+    />
+  );
+}
+
+const dropdownCountries: Region[] = ['cn', 'in', 'jp', 'kr'];
+
+// Country dropdown options per tab - all tabs show the same countries
 const tabCountries: Record<RegionTab, Region[]> = {
-  global: allCountries,
-  us: ['us'],
-  eu: ['eu'],
-  asia: ['jp', 'cn', 'th'],
-  mena: ['sa', 'ae', 'il', 'tr'],
+  global: dropdownCountries,
+  us: dropdownCountries,
+  eu: dropdownCountries,
+  asia: dropdownCountries,
+  mena: dropdownCountries,
 };
 
 const sortOptions: { value: SortOrder; label: string }[] = [
   { value: 'latest', label: 'Latest' },
+  { value: 'impact', label: 'High Impact' },
   { value: 'oldest', label: 'Oldest' },
-  { value: 'impact', label: 'By Impact' },
 ];
 
 export default function RegionRibbon() {
@@ -74,10 +105,10 @@ export default function RegionRibbon() {
               key={t.id}
               onClick={() => setRegion(t.id)}
               className={cn(
-                'px-3 py-1.5 rounded-md text-sm font-medium transition-all',
+                'px-4 py-2 rounded-lg text-sm font-bold transition-all',
                 active
-                  ? 'bg-transparent text-white border border-blue-500'
-                  : 'bg-white/5 text-slate-400 border border-transparent hover:text-slate-200 hover:bg-white/8'
+                  ? 'bg-transparent text-[#3B82F6] border border-[#3B82F6]'
+                  : 'bg-[#1A1A1A] text-white border border-[#4D4D4D] hover:bg-[#2A2A2A]'
               )}
             >
               {t.label}
@@ -86,25 +117,31 @@ export default function RegionRibbon() {
         })}
       </div>
 
+      {/* Divider */}
+      <div className="h-8 w-px bg-[#4D4D4D]" />
+
       {/* Country dropdown */}
       <div className="relative shrink-0" ref={countryRef}>
         <button
           onClick={() => setCountryOpen(!countryOpen)}
-          className="flex items-center gap-2 px-4 py-1.5 bg-white/5 hover:bg-white/8 border border-white/8 rounded-md text-sm font-medium text-slate-300 transition-all"
+          className="flex items-center gap-2 px-4 py-2 bg-[#1A1A1A] hover:bg-[#2A2A2A] border border-[#4D4D4D] rounded-lg text-sm font-bold text-white transition-all"
         >
-          <Globe size={16} className="text-slate-400" />
-          <span>{activeCountry === 'all' ? 'All' : countryLabels[activeCountry]}</span>
-          <ChevronDown size={12} className={cn('text-slate-500 transition-transform', countryOpen && 'rotate-180')} />
+          <CountryFlag code={activeCountry === 'all' ? 'all' : activeCountry} size={16} />
+          <span>{activeCountry === 'all' ? 'All' : countryShortCodes[activeCountry]}</span>
+          <ChevronDown size={14} className={cn('text-white transition-transform', countryOpen && 'rotate-180')} />
         </button>
         {countryOpen && (
-          <div className="absolute top-full mt-1 left-0 z-50 bg-[#1A1A1A] border border-[#4D4D4D] rounded-md shadow-xl overflow-hidden min-w-[150px]">
+          <div className="absolute top-full mt-1 left-0 right-0 z-50 bg-[#1A1A1A] border border-[#4D4D4D] rounded-md shadow-xl overflow-hidden">
             <button
               onClick={() => { setCountry('all'); setCountryOpen(false); }}
               className={cn(
-                'block w-full text-left px-3 py-2 text-xs hover:bg-white/8 transition-colors',
-                activeCountry === 'all' ? 'text-cyan-400' : 'text-slate-400'
+                'flex items-center gap-3 w-full text-left px-3 py-2.5 text-sm font-bold transition-colors relative',
+                activeCountry === 'all'
+                  ? 'text-white bg-[#3B82F6]/20 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-[#3B82F6]'
+                  : 'text-white hover:bg-white/8'
               )}
             >
+              <CountryFlag code="all" size={18} />
               All
             </button>
             {countries.map((c) => (
@@ -112,11 +149,14 @@ export default function RegionRibbon() {
                 key={c}
                 onClick={() => { setCountry(c); setCountryOpen(false); }}
                 className={cn(
-                  'block w-full text-left px-3 py-2 text-xs hover:bg-white/8 transition-colors',
-                  activeCountry === c ? 'text-cyan-400' : 'text-slate-400'
+                  'flex items-center gap-3 w-full text-left px-3 py-2.5 text-sm font-bold transition-colors relative',
+                  activeCountry === c
+                    ? 'text-white bg-[#3B82F6]/20 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-[#3B82F6]'
+                    : 'text-white hover:bg-white/8'
                 )}
               >
-                {countryLabels[c]}
+                <CountryFlag code={c} size={18} />
+                {countryShortCodes[c]}
               </button>
             ))}
           </div>
@@ -127,21 +167,21 @@ export default function RegionRibbon() {
       <div className="relative ml-auto shrink-0" ref={sortRef}>
         <button
           onClick={() => setSortOpen(!sortOpen)}
-          className="flex items-center gap-2 px-4 py-1.5 bg-white/5 hover:bg-white/8 border border-white/8 rounded-md text-sm font-medium text-slate-300 transition-all"
+          className="flex items-center gap-2 px-4 py-2 bg-[#1A1A1A] hover:bg-[#2A2A2A] border border-[#4D4D4D] rounded-lg text-sm font-bold text-white transition-all"
         >
-          <span className="text-slate-500 text-xs uppercase tracking-wider">Sort By:</span>
+          <span className="text-white text-sm font-bold">Sort By:</span>
           <span>{currentSort?.label}</span>
-          <ChevronDown size={12} className={cn('text-slate-500 transition-transform', sortOpen && 'rotate-180')} />
+          <ChevronDown size={14} className={cn('text-white transition-transform', sortOpen && 'rotate-180')} />
         </button>
         {sortOpen && (
-          <div className="absolute top-full mt-1 right-0 z-50 bg-[#1A1A1A] border border-[#4D4D4D] rounded-md shadow-xl overflow-hidden min-w-[110px]">
+          <div className="absolute top-full mt-1 right-0 z-50 bg-[#1A1A1A] border border-[#4D4D4D] rounded-lg shadow-xl overflow-hidden min-w-[140px]">
             {sortOptions.map((opt) => (
               <button
                 key={opt.value}
                 onClick={() => { setSortOrder(opt.value); setSortOpen(false); }}
                 className={cn(
-                  'block w-full text-left px-3 py-2 text-xs hover:bg-white/8 transition-colors',
-                  sortOrder === opt.value ? 'text-cyan-400' : 'text-slate-400'
+                  'block w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-white/8 transition-colors',
+                  sortOrder === opt.value ? 'text-white bg-white/5' : 'text-white'
                 )}
               >
                 {opt.label}
