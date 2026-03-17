@@ -283,16 +283,16 @@ export const mockTickers: TickerData[] = [
 ];
 
 export const mockStockSentiment: StockSentimentRow[] = [
-  { symbol: 'GOOGL', impact: 'high', sentiment: 'down', sentimentLabel: 'Negative', mentionCount: 25, historical: { positive: 4, neutral: 5, negative: 16 }, score: -12 },
-  { symbol: 'NVDA', impact: 'high', sentiment: 'up', sentimentLabel: 'Positive', mentionCount: 14, historical: { positive: 12, neutral: 2, negative: 4 }, score: 8 },
-  { symbol: 'AAPL', impact: 'medium', sentiment: 'flat', sentimentLabel: 'Neutral', mentionCount: 17, historical: { positive: 3, neutral: 11, negative: 3 }, score: 0 },
-  { symbol: 'MSFT', impact: 'low', sentiment: 'up', sentimentLabel: 'Positive', mentionCount: 18, historical: { positive: 12, neutral: 2, negative: 4 }, score: 8 },
-  { symbol: 'TSLA', impact: 'high', sentiment: 'up', sentimentLabel: 'Positive', mentionCount: 20, historical: { positive: 16, neutral: 4, negative: 2 }, score: 14 },
-  { symbol: 'AMZN', impact: 'low', sentiment: 'up', sentimentLabel: 'Positive', mentionCount: 31, historical: { positive: 4, neutral: 25, negative: 2 }, score: 2 },
-  { symbol: 'MA', impact: 'high', sentiment: 'up', sentimentLabel: 'Positive', mentionCount: 14, historical: { positive: 12, neutral: 1, negative: 1 }, score: 11 },
-  { symbol: 'AMD', impact: 'medium', sentiment: 'flat', sentimentLabel: 'Neutral', mentionCount: 7, historical: { positive: 1, neutral: 5, negative: 1 }, score: 0 },
-  { symbol: 'SPY', impact: 'high', sentiment: 'up', sentimentLabel: 'Positive', mentionCount: 4, historical: { positive: 3, neutral: 0, negative: 1 }, score: 2 },
-  { symbol: 'META', impact: 'high', sentiment: 'up', sentimentLabel: 'Positive', mentionCount: 34, historical: { positive: 24, neutral: 5, negative: 4 }, score: 20 },
+  { symbol: 'GOOG', impact: 'high', sentiment: 'down', sentimentLabel: 'Negative', mentionCount: 25, historical: { positive: 16, neutral: 4, negative: 5 }, score: 40 },
+  { symbol: 'NVDA', impact: 'high', sentiment: 'up', sentimentLabel: 'Positive', mentionCount: 14, historical: { positive: 12, neutral: 4, negative: 2 }, score: 85 },
+  { symbol: 'AAPL', impact: 'medium', sentiment: 'flat', sentimentLabel: 'Neutral', mentionCount: 17, historical: { positive: 12, neutral: 2, negative: 3 }, score: 57 },
+  { symbol: 'MSFT', impact: 'low', sentiment: 'up', sentimentLabel: 'Positive', mentionCount: 18, historical: { positive: 12, neutral: 4, negative: 2 }, score: 75 },
+  { symbol: 'TSLA', impact: 'high', sentiment: 'up', sentimentLabel: 'Positive', mentionCount: 20, historical: { positive: 4, neutral: 2, negative: 14 }, score: 81 },
+  { symbol: 'AMZN', impact: 'low', sentiment: 'flat', sentimentLabel: 'Neutral', mentionCount: 31, historical: { positive: 4, neutral: 2, negative: 25 }, score: 42 },
+  { symbol: 'MA', impact: 'high', sentiment: 'up', sentimentLabel: 'Positive', mentionCount: 14, historical: { positive: 12, neutral: 1, negative: 1 }, score: 90 },
+  { symbol: 'AMD', impact: 'medium', sentiment: 'flat', sentimentLabel: 'Neutral', mentionCount: 7, historical: { positive: 1, neutral: 1, negative: 5 }, score: 45 },
+  { symbol: 'SPY', impact: 'high', sentiment: 'down', sentimentLabel: 'Negative', mentionCount: 4, historical: { positive: 3, neutral: 0, negative: 1 }, score: 23 },
+  { symbol: 'META', impact: 'high', sentiment: 'up', sentimentLabel: 'Positive', mentionCount: 34, historical: { positive: 24, neutral: 4, negative: 5 }, score: 69 },
 ];
 
 export const liveUpdate: LiveUpdate = {
