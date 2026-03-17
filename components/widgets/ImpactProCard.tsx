@@ -11,7 +11,7 @@ export default function ImpactProCard() {
       <div className="relative p-4">
         {/* Header with icon and title */}
         <div className="flex items-center gap-3 mb-4">
-          <BadgeCheck size={40} className="text-[#0D7FF2]" strokeWidth={1.5} />
+          <BadgeCheck size={40} className="text-white" strokeWidth={1.5} />
           <span className="font-bold text-white" style={{ fontFamily: 'var(--font-poppins)', fontSize: '16px' }}>
             Impact Pro
           </span>
@@ -25,8 +25,8 @@ export default function ImpactProCard() {
         </p>
 
         {/* Upgrade button */}
-        <button className="px-8 py-3 border-2 border-[#0D7FF2] rounded-lg text-[#0D7FF2] font-bold hover:bg-[#0D7FF2]/10 transition-colors" style={{ fontSize: '12px' }}>
-          UPGRADE NOW
+        <button className="px-4 py-1.5 border border-[#0D7FF2] rounded-lg text-[#0D7FF2] font-extrabold uppercase hover:bg-[#0D7FF2]/10 transition-colors" style={{ fontSize: '12px', borderRadius: '8px' }}>
+          Upgrade Now
         </button>
       </div>
     </div>
