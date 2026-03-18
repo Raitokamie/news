@@ -62,6 +62,11 @@ export default function MarketTrendsPage() {
     return filterMarketTrends(mockMarketTrends, activeFilter);
   }, [activeFilter]);
 
+  // Sort top stocks by absolute score (highest impact first)
+  const sortedTopStocks = useMemo(() => {
+    return [...topTrendingStocks].sort((a, b) => Math.abs(b.score) - Math.abs(a.score));
+  }, []);
+
   return (
     <div className="flex h-full bg-[#0d0d0d]">
       {/* Left — TopBar + Content */}
@@ -113,7 +118,7 @@ export default function MarketTrendsPage() {
           {/* Content */}
           <div className="px-6 pb-6 pt-0 flex flex-col gap-4">
             {/* Top Stock Cards */}
-            <TopStocksRow items={topTrendingStocks} />
+            <TopStocksRow items={sortedTopStocks} />
 
             {/* Filter Tabs */}
             <TrendFilterTabs

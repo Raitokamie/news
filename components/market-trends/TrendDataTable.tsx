@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { TickerAnalysis, ImpactLevel } from '@/lib/types';
 import { TrendingUp, TrendingDown, Minus, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
+
+const ROWS_PER_PAGE_OPTIONS = [10, 50, 100] as const;
 import { cn } from '@/lib/utils';
 import SentimentHistoricalBar from './SentimentHistoricalBar';
 
@@ -61,14 +63,33 @@ const sentimentConfig = {
 export default function TrendDataTable({ items }: TrendDataTableProps) {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [rowsDropdownOpen, setRowsDropdownOpen] = useState(false);
+  const rowsDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (rowsDropdownRef.current && !rowsDropdownRef.current.contains(e.target as Node)) {
+        setRowsDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleRowsPerPageChange = (value: number) => {
+    setRowsPerPage(value);
+    setCurrentPage(1); // Reset to first page
+    setRowsDropdownOpen(false);
+  };
 
   const totalPages = Math.ceil(items.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
   const paginatedItems = items.slice(startIndex, startIndex + rowsPerPage);
 
   return (
-    <div className="border border-[#222F44] rounded-xl overflow-hidden">
-      <table className="w-full min-w-[700px]">
+    <div className="border border-[#222F44] rounded-xl">
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[700px]">
         <thead>
           <tr className="border-b border-[#222F44]">
             <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">
@@ -156,19 +177,38 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
             );
           })}
         </tbody>
-      </table>
+        </table>
+      </div>
 
       {/* Pagination */}
       <div className="flex items-center justify-between px-4 py-3 border-t border-[#222F44]">
         <div className="flex items-center gap-2">
           <span className="text-sm text-white">Rows per page:</span>
-          <button
-            className="flex items-center gap-1 px-2 py-1 rounded-md bg-[#333333] text-white text-sm"
-            onClick={() => {}}
-          >
-            {rowsPerPage}
-            <ChevronDown size={14} />
-          </button>
+          <div className="relative" ref={rowsDropdownRef}>
+            <button
+              className="flex items-center gap-1 px-2 py-1 rounded-md bg-[#333333] text-white text-sm"
+              onClick={() => setRowsDropdownOpen(!rowsDropdownOpen)}
+            >
+              {rowsPerPage}
+              <ChevronDown size={14} className={cn('transition-transform', rowsDropdownOpen && 'rotate-180')} />
+            </button>
+            {rowsDropdownOpen && (
+              <div className="absolute bottom-full mb-1 left-0 z-50 bg-[#1A1A1A] border border-[#333333] rounded-lg shadow-xl overflow-hidden min-w-[60px]">
+                {ROWS_PER_PAGE_OPTIONS.map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => handleRowsPerPageChange(option)}
+                    className={cn(
+                      'block w-full text-left px-3 py-2 text-sm hover:bg-white/10 transition-colors',
+                      rowsPerPage === option ? 'text-[#0D7FF2] bg-white/5' : 'text-white'
+                    )}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="flex items-center gap-2">

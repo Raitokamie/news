@@ -136,6 +136,22 @@ function SourcesPopup({ sources }: { sources: { name: string; url: string }[] })
     return () => document.removeEventListener('mousedown', handleClick);
   }, [open]);
 
+  // If only one source, go directly to the link
+  if (sources.length === 1) {
+    return (
+      <a
+        href={sources[0].url}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={(e) => e.stopPropagation()}
+        className="text-xs font-medium transition-colors text-[#0D7FF2] hover:text-[#3399FF] underline"
+      >
+        View more
+      </a>
+    );
+  }
+
+  // Multiple sources - show dropdown
   return (
     <div className="relative" ref={ref}>
       <button
