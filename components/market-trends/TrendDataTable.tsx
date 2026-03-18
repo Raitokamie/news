@@ -1,13 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { MarketTrendItem, ImpactLevel } from '@/lib/types';
+import { TickerAnalysis, ImpactLevel } from '@/lib/types';
 import { TrendingUp, TrendingDown, Minus, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import SentimentHistoricalBar from './SentimentHistoricalBar';
 
 interface TrendDataTableProps {
-  items: MarketTrendItem[];
+  items: TickerAnalysis[];
 }
 
 const impactConfig: Record<
@@ -35,21 +35,21 @@ const impactConfig: Record<
 };
 
 const sentimentConfig = {
-  good: {
+  up: {
     label: 'Positive',
     icon: TrendingUp,
     textColor: 'text-[#22C55E]',
     iconColor: 'text-[#10B981]',
     bg: 'bg-[#17382D]',
   },
-  bad: {
+  down: {
     label: 'Negative',
     icon: TrendingDown,
     textColor: 'text-[#EF4444]',
     iconColor: 'text-[#EF4444]',
     bg: 'bg-[#2F1E1E]',
   },
-  neutral: {
+  flat: {
     label: 'Neutral',
     icon: Minus,
     textColor: 'text-[#808080]',

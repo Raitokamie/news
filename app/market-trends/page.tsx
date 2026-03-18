@@ -5,7 +5,7 @@ import TopBar from '@/components/layout/TopBar';
 import RightSidebar from '@/components/layout/RightSidebar';
 import { TrendingUp, TrendingDown, Minus, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { TrendFilter, MarketTrendItem } from '@/lib/types';
+import { TrendFilter, TickerAnalysis } from '@/lib/types';
 import { mockMarketTrends, topTrendingStocks } from '@/lib/mock-data';
 import {
   TopStocksRow,
@@ -23,17 +23,17 @@ const rangeOptions: { value: TimeRange; label: string }[] = [
 ];
 
 function filterMarketTrends(
-  items: MarketTrendItem[],
+  items: TickerAnalysis[],
   filter: TrendFilter
-): MarketTrendItem[] {
+): TickerAnalysis[] {
   switch (filter) {
     case 'top_positive':
       return items
-        .filter((i) => i.sentiment === 'good')
+        .filter((i) => i.sentiment === 'up')
         .sort((a, b) => b.score - a.score);
     case 'top_negative':
       return items
-        .filter((i) => i.sentiment === 'bad')
+        .filter((i) => i.sentiment === 'down')
         .sort((a, b) => a.score - b.score);
     case 'most_mention':
       return [...items].sort((a, b) => b.mentionCount - a.mentionCount);

@@ -1,4 +1,4 @@
-import { NewsItem, StockSentimentRow, LiveUpdate, MarketTrendItem, TelegramNotificationStatus } from './types';
+import { NewsItem, TickerAnalysis, LiveUpdate, TelegramNotificationStatus } from './types';
 
 export const mockNews: NewsItem[] = [
   // ── US ─────────────────────────────────────────────
@@ -275,17 +275,17 @@ export const mockNews: NewsItem[] = [
 ];
 
 
-export const mockStockSentiment: StockSentimentRow[] = [
-  { symbol: 'GOOG', impact: 'high', sentiment: 'down', sentimentLabel: 'Negative', mentionCount: 25, historical: { positive: 16, neutral: 4, negative: 5 }, score: 40 },
-  { symbol: 'NVDA', impact: 'high', sentiment: 'up', sentimentLabel: 'Positive', mentionCount: 14, historical: { positive: 12, neutral: 4, negative: 2 }, score: 85 },
-  { symbol: 'AAPL', impact: 'medium', sentiment: 'flat', sentimentLabel: 'Neutral', mentionCount: 17, historical: { positive: 12, neutral: 2, negative: 3 }, score: 57 },
-  { symbol: 'MSFT', impact: 'low', sentiment: 'up', sentimentLabel: 'Positive', mentionCount: 18, historical: { positive: 12, neutral: 4, negative: 2 }, score: 75 },
-  { symbol: 'TSLA', impact: 'high', sentiment: 'up', sentimentLabel: 'Positive', mentionCount: 20, historical: { positive: 4, neutral: 2, negative: 14 }, score: 81 },
-  { symbol: 'AMZN', impact: 'low', sentiment: 'flat', sentimentLabel: 'Neutral', mentionCount: 31, historical: { positive: 4, neutral: 2, negative: 25 }, score: 42 },
-  { symbol: 'MA', impact: 'high', sentiment: 'up', sentimentLabel: 'Positive', mentionCount: 14, historical: { positive: 12, neutral: 1, negative: 1 }, score: 90 },
-  { symbol: 'AMD', impact: 'medium', sentiment: 'flat', sentimentLabel: 'Neutral', mentionCount: 7, historical: { positive: 1, neutral: 1, negative: 5 }, score: 45 },
-  { symbol: 'SPY', impact: 'high', sentiment: 'down', sentimentLabel: 'Negative', mentionCount: 4, historical: { positive: 3, neutral: 0, negative: 1 }, score: 23 },
-  { symbol: 'META', impact: 'high', sentiment: 'up', sentimentLabel: 'Positive', mentionCount: 34, historical: { positive: 24, neutral: 4, negative: 5 }, score: 69 },
+export const mockStockSentiment: TickerAnalysis[] = [
+  { symbol: 'GOOG', name: 'Alphabet Inc.', impactLevel: 'high', sentiment: 'down', mentionCount: 25, sentimentHistorical: { positive: 16, neutral: 4, negative: 5 }, score: 40 },
+  { symbol: 'NVDA', name: 'NVIDIA Corporation', impactLevel: 'high', sentiment: 'up', mentionCount: 14, sentimentHistorical: { positive: 12, neutral: 4, negative: 2 }, score: 85 },
+  { symbol: 'AAPL', name: 'Apple Inc.', impactLevel: 'medium', sentiment: 'flat', mentionCount: 17, sentimentHistorical: { positive: 12, neutral: 2, negative: 3 }, score: 57 },
+  { symbol: 'MSFT', name: 'Microsoft Corporation', impactLevel: 'low', sentiment: 'up', mentionCount: 18, sentimentHistorical: { positive: 12, neutral: 4, negative: 2 }, score: 75 },
+  { symbol: 'TSLA', name: 'Tesla, Inc.', impactLevel: 'high', sentiment: 'up', mentionCount: 20, sentimentHistorical: { positive: 4, neutral: 2, negative: 14 }, score: 81 },
+  { symbol: 'AMZN', name: 'Amazon.com, Inc.', impactLevel: 'low', sentiment: 'flat', mentionCount: 31, sentimentHistorical: { positive: 4, neutral: 2, negative: 25 }, score: 42 },
+  { symbol: 'MA', name: 'Mastercard Incorporated', impactLevel: 'high', sentiment: 'up', mentionCount: 14, sentimentHistorical: { positive: 12, neutral: 1, negative: 1 }, score: 90 },
+  { symbol: 'AMD', name: 'Advanced Micro Devices', impactLevel: 'medium', sentiment: 'flat', mentionCount: 7, sentimentHistorical: { positive: 1, neutral: 1, negative: 5 }, score: 45 },
+  { symbol: 'SPY', name: 'SPDR S&P 500 ETF Trust', impactLevel: 'high', sentiment: 'down', mentionCount: 4, sentimentHistorical: { positive: 3, neutral: 0, negative: 1 }, score: 23 },
+  { symbol: 'META', name: 'Meta Platforms, Inc.', impactLevel: 'high', sentiment: 'up', mentionCount: 34, sentimentHistorical: { positive: 24, neutral: 4, negative: 5 }, score: 69 },
 ];
 
 export const liveUpdate: LiveUpdate = {
@@ -294,177 +294,27 @@ export const liveUpdate: LiveUpdate = {
   publishedAt: new Date(Date.now() - 2 * 60 * 1000),
 };
 
-// Market Trends data (exact values from screenshot)
-export const mockMarketTrends: MarketTrendItem[] = [
-  {
-    symbol: 'GOOGL',
-    name: 'Alphabet Inc.',
-    impactScore: 6,
-    impactLevel: 'high',
-    sentiment: 'good',
-    mentionCount: 25,
-    trend: 'up',
-    sentimentHistorical: { positive: 16, negative: 5, neutral: 4 },
-    score: 60,
-  },
-  {
-    symbol: 'NVDA',
-    name: 'NVIDIA Corporation',
-    impactScore: 9,
-    impactLevel: 'high',
-    sentiment: 'good',
-    mentionCount: 14,
-    trend: 'up',
-    sentimentHistorical: { positive: 12, negative: 2, neutral: 4 },
-    score: 85,
-  },
-  {
-    symbol: 'AAPL',
-    name: 'Apple Inc. \u2022 Nasdaq GS',
-    impactScore: 7,
-    impactLevel: 'medium',
-    sentiment: 'good',
-    mentionCount: 17,
-    trend: 'up',
-    sentimentHistorical: { positive: 12, negative: 3, neutral: 2 },
-    score: 70,
-  },
-  {
-    symbol: 'MSFT',
-    name: 'Microsoft Corporation',
-    impactScore: 7,
-    impactLevel: 'low',
-    sentiment: 'good',
-    mentionCount: 18,
-    trend: 'up',
-    sentimentHistorical: { positive: 12, negative: 2, neutral: 4 },
-    score: 75,
-  },
-  {
-    symbol: 'TSLA',
-    name: 'Tesla, Inc.',
-    impactScore: -8,
-    impactLevel: 'high',
-    sentiment: 'bad',
-    mentionCount: 20,
-    trend: 'down',
-    sentimentHistorical: { positive: 4, negative: 14, neutral: 2 },
-    score: 20,
-  },
-  {
-    symbol: 'AMZN',
-    name: 'Amazon.com, Inc.',
-    impactScore: 2,
-    impactLevel: 'low',
-    sentiment: 'neutral',
-    mentionCount: 31,
-    trend: 'flat',
-    sentimentHistorical: { positive: 4, negative: 25, neutral: 2 },
-    score: 42,
-  },
-  {
-    symbol: 'MA',
-    name: 'Mastercard Incorporated',
-    impactScore: 9,
-    impactLevel: 'high',
-    sentiment: 'good',
-    mentionCount: 14,
-    trend: 'up',
-    sentimentHistorical: { positive: 12, negative: 1, neutral: 1 },
-    score: 90,
-  },
-  {
-    symbol: 'AMD',
-    name: 'Advanced Micro Devices',
-    impactScore: 4,
-    impactLevel: 'medium',
-    sentiment: 'neutral',
-    mentionCount: 7,
-    trend: 'flat',
-    sentimentHistorical: { positive: 1, negative: 5, neutral: 1 },
-    score: 45,
-  },
-  {
-    symbol: 'SPY',
-    name: 'SPDR S&P 500 ETF Trust',
-    impactScore: 2,
-    impactLevel: 'high',
-    sentiment: 'bad',
-    mentionCount: 4,
-    trend: 'down',
-    sentimentHistorical: { positive: 3, negative: 1, neutral: 0 },
-    score: 23,
-  },
-  {
-    symbol: 'META',
-    name: 'Meta Platforms, Inc.',
-    impactScore: 7,
-    impactLevel: 'high',
-    sentiment: 'good',
-    mentionCount: 34,
-    trend: 'up',
-    sentimentHistorical: { positive: 24, negative: 5, neutral: 4 },
-    score: 69,
-  },
-  {
-    symbol: 'ASML',
-    name: 'ASML Holding N.V.',
-    impactScore: 8,
-    impactLevel: 'high',
-    sentiment: 'good',
-    mentionCount: 12,
-    trend: 'up',
-    sentimentHistorical: { positive: 10, negative: 1, neutral: 1 },
-    score: 78,
-  },
+// Market Trends data
+export const mockMarketTrends: TickerAnalysis[] = [
+  { symbol: 'GOOGL', name: 'Alphabet Inc.', impactLevel: 'high', sentiment: 'up', mentionCount: 25, sentimentHistorical: { positive: 16, negative: 5, neutral: 4 }, score: 60 },
+  { symbol: 'NVDA', name: 'NVIDIA Corporation', impactLevel: 'high', sentiment: 'up', mentionCount: 14, sentimentHistorical: { positive: 12, negative: 2, neutral: 4 }, score: 85 },
+  { symbol: 'AAPL', name: 'Apple Inc. \u2022 Nasdaq GS', impactLevel: 'medium', sentiment: 'up', mentionCount: 17, sentimentHistorical: { positive: 12, negative: 3, neutral: 2 }, score: 70 },
+  { symbol: 'MSFT', name: 'Microsoft Corporation', impactLevel: 'low', sentiment: 'up', mentionCount: 18, sentimentHistorical: { positive: 12, negative: 2, neutral: 4 }, score: 75 },
+  { symbol: 'TSLA', name: 'Tesla, Inc.', impactLevel: 'high', sentiment: 'down', mentionCount: 20, sentimentHistorical: { positive: 4, negative: 14, neutral: 2 }, score: 20 },
+  { symbol: 'AMZN', name: 'Amazon.com, Inc.', impactLevel: 'low', sentiment: 'flat', mentionCount: 31, sentimentHistorical: { positive: 4, negative: 25, neutral: 2 }, score: 42 },
+  { symbol: 'MA', name: 'Mastercard Incorporated', impactLevel: 'high', sentiment: 'up', mentionCount: 14, sentimentHistorical: { positive: 12, negative: 1, neutral: 1 }, score: 90 },
+  { symbol: 'AMD', name: 'Advanced Micro Devices', impactLevel: 'medium', sentiment: 'flat', mentionCount: 7, sentimentHistorical: { positive: 1, negative: 5, neutral: 1 }, score: 45 },
+  { symbol: 'SPY', name: 'SPDR S&P 500 ETF Trust', impactLevel: 'high', sentiment: 'down', mentionCount: 4, sentimentHistorical: { positive: 3, negative: 1, neutral: 0 }, score: 23 },
+  { symbol: 'META', name: 'Meta Platforms, Inc.', impactLevel: 'high', sentiment: 'up', mentionCount: 34, sentimentHistorical: { positive: 24, negative: 5, neutral: 4 }, score: 69 },
+  { symbol: 'ASML', name: 'ASML Holding N.V.', impactLevel: 'high', sentiment: 'up', mentionCount: 12, sentimentHistorical: { positive: 10, negative: 1, neutral: 1 }, score: 78 },
 ];
 
-// Top 4 stocks for cards row (from screenshot)
-export const topTrendingStocks: MarketTrendItem[] = [
-  {
-    symbol: 'NVDA',
-    name: 'NVIDIA Corporation',
-    impactScore: 9,
-    impactLevel: 'high',
-    sentiment: 'good',
-    mentionCount: 14,
-    trend: 'up',
-    sentimentHistorical: { positive: 12, negative: 2, neutral: 4 },
-    score: 85,
-  },
-  {
-    symbol: 'AAPL',
-    name: 'Apple Inc. \u2022 Nasdaq GS',
-    impactScore: 7,
-    impactLevel: 'medium',
-    sentiment: 'good',
-    mentionCount: 17,
-    trend: 'up',
-    sentimentHistorical: { positive: 12, negative: 3, neutral: 2 },
-    score: 70,
-  },
-  {
-    symbol: 'TSLA',
-    name: 'Tesla, Inc.',
-    impactScore: -8,
-    impactLevel: 'high',
-    sentiment: 'bad',
-    mentionCount: 20,
-    trend: 'down',
-    sentimentHistorical: { positive: 4, negative: 14, neutral: 2 },
-    score: 20,
-  },
-  {
-    symbol: 'AMZN',
-    name: 'Amazon.com, Inc.',
-    impactScore: 2,
-    impactLevel: 'low',
-    sentiment: 'neutral',
-    mentionCount: 31,
-    trend: 'flat',
-    sentimentHistorical: { positive: 4, negative: 25, neutral: 2 },
-    score: 42,
-  },
+// Top 4 stocks for cards row
+export const topTrendingStocks: TickerAnalysis[] = [
+  { symbol: 'NVDA', name: 'NVIDIA Corporation', impactLevel: 'high', sentiment: 'up', mentionCount: 14, sentimentHistorical: { positive: 12, negative: 2, neutral: 4 }, score: 85 },
+  { symbol: 'AAPL', name: 'Apple Inc. \u2022 Nasdaq GS', impactLevel: 'medium', sentiment: 'up', mentionCount: 17, sentimentHistorical: { positive: 12, negative: 3, neutral: 2 }, score: 70 },
+  { symbol: 'TSLA', name: 'Tesla, Inc.', impactLevel: 'high', sentiment: 'down', mentionCount: 20, sentimentHistorical: { positive: 4, negative: 14, neutral: 2 }, score: 20 },
+  { symbol: 'AMZN', name: 'Amazon.com, Inc.', impactLevel: 'low', sentiment: 'flat', mentionCount: 31, sentimentHistorical: { positive: 4, negative: 25, neutral: 2 }, score: 42 },
 ];
 
 // Telegram notification status for watchlist
