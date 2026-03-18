@@ -29,7 +29,7 @@ function filterMarketTrends(
     case 'most_mention':
       return [...items].sort((a, b) => b.mentionCount - a.mentionCount);
     default:
-      return items;
+      return [...items].sort((a, b) => b.score - a.score);
   }
 }
 
