@@ -9,7 +9,7 @@ import { useTerminalStore } from '@/lib/store';
 
 const navItems = [
   { href: '/', label: 'Dashboard', icon: Home },
-  { href: '/high-signal', label: 'Stock Sentiment', icon: Rss },
+  { href: '/stock-sentiment', label: 'Stock Sentiment', icon: Rss },
   { href: '/market-trends', label: 'Trending', icon: TrendingUp },
   { href: '/watchlist', label: 'Watchlist', icon: Star },
 ];

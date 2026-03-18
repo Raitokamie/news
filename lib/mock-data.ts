@@ -474,3 +474,18 @@ export const mockTelegramNotifications: TelegramNotificationStatus[] = [
   { symbol: 'AAPL', status: 'SENT', timestamp: new Date(Date.now() - 75 * 60 * 1000) },
   { symbol: 'ASML', status: 'PROCESSING', timestamp: new Date(Date.now() - 75 * 60 * 1000) },
 ];
+
+// AI Intelligence Outlook per stock
+export const mockAIOutlook: Record<string, string> = {
+  GOOG: "Alphabet's aggressive integration of Gemini 1.5 Pro across Workspace and Search is yielding significant engagement gains. With Google Cloud reaching a $36B annual run rate, the company's AI monetization thesis is strengthening. However, ongoing DOJ antitrust proceedings create material regulatory risk that could reshape the search distribution model.",
+  NVDA: "NVIDIA's data center dominance continues to accelerate with Blackwell GPU shipments exceeding expectations. Hyperscaler demand remains robust with all major cloud providers expanding AI infrastructure. Supply constraints are the primary growth limiter, not demand — a strong position heading into FY26.",
+  AAPL: "Apple's Vision Pro 2 announcement at a significantly reduced price point signals serious intent in spatial computing. TSMC's improving 3nm yields should help margin expansion. The stock remains range-bound as investors await clearer AI strategy articulation beyond on-device ML.",
+  MSFT: "Azure growth deceleration to 28% reflects GPU supply constraints rather than demand weakness. Microsoft's Copilot ecosystem is gaining enterprise traction, but elevated capex through FY26 will pressure near-term margins. The long-term AI platform positioning remains best-in-class.",
+  TSLA: "Tesla faces near-term headwinds from the NHTSA FSD recall affecting 350K vehicles. Cold weather software anomalies raise questions about autonomous driving timeline. However, manufacturing efficiency improvements and energy storage growth provide diversification beyond auto sales.",
+  AMZN: "Amazon's European logistics expansion through the PostNL acquisition strengthens last-mile delivery across 12 EU countries. AWS remains the cloud market leader but faces intensifying competition from Azure and GCP. Retail margins continue their structural improvement trajectory.",
+  MA: "Mastercard's cross-border transaction volumes remain exceptionally strong, benefiting from global travel recovery and digital payment adoption. The company's value-added services segment is growing above 20%, providing high-margin revenue diversification beyond core payment processing.",
+  AMD: "AMD's data center GPU portfolio is gaining share against NVIDIA in inference workloads, though training remains dominated by competitors. The Xilinx integration is delivering cost synergies ahead of schedule. Client PC recovery provides cyclical tailwind.",
+  SPY: "Broad market sentiment remains cautious as investors weigh strong earnings against elevated valuations and uncertainty around Federal Reserve policy. Sector rotation from growth to value suggests a maturing bull market cycle.",
+  META: "Meta's ad revenue reacceleration driven by Reels monetization and AI-powered targeting improvements has exceeded expectations. Reality Labs losses remain elevated but the Quest 3 adoption curve is encouraging. Cost discipline under the 'Year of Efficiency' framework continues to drive margin expansion.",
+  GOOGL: "Alphabet's aggressive integration of Gemini 1.5 Pro across Workspace and Search is yielding significant engagement gains. With Google Cloud reaching a $36B annual run rate, the company's AI monetization thesis is strengthening. However, ongoing DOJ antitrust proceedings create material regulatory risk that could reshape the search distribution model.",
+};
