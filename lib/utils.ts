@@ -7,13 +7,15 @@ export function cn(...inputs: ClassValue[]) {
 
 export function timeAgo(date: Date): string {
   const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
-  if (seconds < 60) return `${seconds}S AGO`;
+  if (seconds < 60) return `${seconds} SEC AGO`;
   const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}M AGO`;
+  if (minutes < 60) return `${minutes} MIN AGO`;
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}H AGO`;
+  if (hours < 24) return `${hours} HR AGO`;
   const days = Math.floor(hours / 24);
-  return `${days}D AGO`;
+  if (days < 30) return `${days} DAY${days > 1 ? 'S' : ''} AGO`;
+  const months = Math.floor(days / 30);
+  return `${months} MONTH${months > 1 ? 'S' : ''} AGO`;
 }
 
 export function formatPrice(price: number): string {
