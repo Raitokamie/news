@@ -275,19 +275,6 @@ export const mockNews: NewsItem[] = [
 ];
 
 
-export const mockStockSentiment: TickerAnalysis[] = [
-  { symbol: 'GOOG', name: 'Alphabet Inc.', impactLevel: 'high', sentiment: 'down', mentionCount: 25, sentimentHistorical: { positive: 4, neutral: 5, negative: 16 }, score: 25 },
-  { symbol: 'NVDA', name: 'NVIDIA Corporation', impactLevel: 'high', sentiment: 'up', mentionCount: 18, sentimentHistorical: { positive: 12, neutral: 4, negative: 2 }, score: 85 },
-  { symbol: 'AAPL', name: 'Apple Inc.', impactLevel: 'medium', sentiment: 'flat', mentionCount: 17, sentimentHistorical: { positive: 5, neutral: 8, negative: 4 }, score: 50 },
-  { symbol: 'MSFT', name: 'Microsoft Corporation', impactLevel: 'low', sentiment: 'up', mentionCount: 18, sentimentHistorical: { positive: 12, neutral: 4, negative: 2 }, score: 75 },
-  { symbol: 'TSLA', name: 'Tesla, Inc.', impactLevel: 'high', sentiment: 'up', mentionCount: 20, sentimentHistorical: { positive: 14, neutral: 2, negative: 4 }, score: 81 },
-  { symbol: 'AMZN', name: 'Amazon.com, Inc.', impactLevel: 'low', sentiment: 'down', mentionCount: 31, sentimentHistorical: { positive: 4, neutral: 2, negative: 25 }, score: 20 },
-  { symbol: 'MA', name: 'Mastercard Incorporated', impactLevel: 'high', sentiment: 'up', mentionCount: 14, sentimentHistorical: { positive: 12, neutral: 1, negative: 1 }, score: 90 },
-  { symbol: 'AMD', name: 'Advanced Micro Devices', impactLevel: 'medium', sentiment: 'down', mentionCount: 7, sentimentHistorical: { positive: 1, neutral: 1, negative: 5 }, score: 30 },
-  { symbol: 'SPY', name: 'SPDR S&P 500 ETF Trust', impactLevel: 'high', sentiment: 'down', mentionCount: 10, sentimentHistorical: { positive: 1, neutral: 2, negative: 7 }, score: 23 },
-  { symbol: 'META', name: 'Meta Platforms, Inc.', impactLevel: 'high', sentiment: 'up', mentionCount: 33, sentimentHistorical: { positive: 24, neutral: 4, negative: 5 }, score: 69 },
-];
-
 export const liveUpdate: LiveUpdate = {
   headline: 'The Federal Reserve keeps interest rates unchanged at 3.50% – 3.75% following the latest FOMC meeting.',
   shortHeadline: 'Fed holds rates at 3.50%–3.75% after FOMC meeting.',
@@ -309,13 +296,8 @@ export const mockMarketTrends: TickerAnalysis[] = [
   { symbol: 'ASML', name: 'ASML Holding N.V.', impactLevel: 'high', sentiment: 'up', mentionCount: 12, sentimentHistorical: { positive: 10, neutral: 1, negative: 1 }, score: 78 },
 ];
 
-// Top 4 stocks for cards row (from screenshot)
-export const topTrendingStocks: TickerAnalysis[] = [
-  { symbol: 'NVDA', name: 'NVIDIA Corporation', impactLevel: 'high', sentiment: 'up', mentionCount: 14, sentimentHistorical: { positive: 12, neutral: 4, negative: 2 }, score: 85 },
-  { symbol: 'AAPL', name: 'Apple Inc. • Nasdaq GS', impactLevel: 'medium', sentiment: 'up', mentionCount: 17, sentimentHistorical: { positive: 12, neutral: 2, negative: 3 }, score: 70 },
-  { symbol: 'TSLA', name: 'Tesla, Inc.', impactLevel: 'high', sentiment: 'down', mentionCount: 20, sentimentHistorical: { positive: 4, neutral: 2, negative: 14 }, score: 20 },
-  { symbol: 'AMZN', name: 'Amazon.com, Inc.', impactLevel: 'low', sentiment: 'down', mentionCount: 31, sentimentHistorical: { positive: 4, neutral: 2, negative: 25 }, score: 20 },
-];
+// Stock Sentiment uses the same data as Market Trends (single source of truth)
+export const mockStockSentiment: TickerAnalysis[] = mockMarketTrends;
 
 // Telegram notification status for watchlist
 export const mockTelegramNotifications: TelegramNotificationStatus[] = [
@@ -327,7 +309,6 @@ export const mockTelegramNotifications: TelegramNotificationStatus[] = [
 
 // AI Intelligence Outlook per stock
 export const mockAIOutlook: Record<string, string> = {
-  GOOG: "Alphabet's aggressive integration of Gemini 1.5 Pro across Workspace and Search is yielding significant engagement gains. With Google Cloud reaching a $36B annual run rate, the company's AI monetization thesis is strengthening. However, ongoing DOJ antitrust proceedings create material regulatory risk that could reshape the search distribution model.",
   NVDA: "NVIDIA's data center dominance continues to accelerate with Blackwell GPU shipments exceeding expectations. Hyperscaler demand remains robust with all major cloud providers expanding AI infrastructure. Supply constraints are the primary growth limiter, not demand — a strong position heading into FY26.",
   AAPL: "Apple's Vision Pro 2 announcement at a significantly reduced price point signals serious intent in spatial computing. TSMC's improving 3nm yields should help margin expansion. The stock remains range-bound as investors await clearer AI strategy articulation beyond on-device ML.",
   MSFT: "Azure growth deceleration to 28% reflects GPU supply constraints rather than demand weakness. Microsoft's Copilot ecosystem is gaining enterprise traction, but elevated capex through FY26 will pressure near-term margins. The long-term AI platform positioning remains best-in-class.",

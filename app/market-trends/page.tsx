@@ -6,7 +6,7 @@ import RightSidebar from '@/components/layout/RightSidebar';
 import { TrendingUp, TrendingDown, Minus, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TrendFilter, TickerAnalysis } from '@/lib/types';
-import { mockMarketTrends, topTrendingStocks } from '@/lib/mock-data';
+import { mockMarketTrends } from '@/lib/mock-data';
 import {
   TopStocksRow,
   TrendFilterTabs,
@@ -62,9 +62,9 @@ export default function MarketTrendsPage() {
     return filterMarketTrends(mockMarketTrends, activeFilter);
   }, [activeFilter]);
 
-  // Sort top stocks by absolute score (highest impact first)
+  // Top 4 stocks derived from market trends, sorted by score
   const sortedTopStocks = useMemo(() => {
-    return [...topTrendingStocks].sort((a, b) => Math.abs(b.score) - Math.abs(a.score));
+    return [...mockMarketTrends].sort((a, b) => Math.abs(b.score) - Math.abs(a.score)).slice(0, 4);
   }, []);
 
   return (
