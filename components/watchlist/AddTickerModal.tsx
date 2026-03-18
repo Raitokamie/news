@@ -41,9 +41,9 @@ export default function AddTickerModal({
   return (
     <div
       ref={ref}
-      className="absolute top-full right-0 mt-2 w-64 bg-[#1A1A1A] border border-[#4D4D4D] rounded-xl shadow-xl z-50 overflow-hidden"
+      className="absolute top-full right-0 mt-2 w-64 bg-[#1A1A1A] border border-[#222F44] rounded-xl shadow-xl z-50 overflow-hidden"
     >
-      <div className="px-3 py-2 border-b border-[#333333]">
+      <div className="px-3 py-2 border-b border-[#222F44]">
         <p className="text-xs text-slate-400 font-medium">Add to Watchlist</p>
       </div>
       <div className="max-h-64 overflow-y-auto">

@@ -1,17 +1,21 @@
 'use client';
 
-import { Fragment, useMemo } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import { mockNews } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
 import NewsCard from './NewsCard';
 import { TrendingDown, TrendingUp } from 'lucide-react';
 
 const HOURS_24 = 24 * 60 * 60 * 1000;
+const PAGE_SIZE = 10;
 
 export default function ImpactFeed() {
   const { activeRegion, activeCountry, activeTicker, activeImpact, sortOrder, searchQuery } = useTerminalStore();
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const filtered = useMemo(() => {
+    setVisibleCount(PAGE_SIZE);
+
     let items = mockNews;
 
     // Dashboard: only last 24 hours
@@ -57,6 +61,8 @@ export default function ImpactFeed() {
   const badItems = filtered.filter((n) => n.sentiment === 'bad' || n.sentiment === 'neutral');
   const goodItems = filtered.filter((n) => n.sentiment === 'good');
   const maxRows = Math.max(badItems.length, goodItems.length);
+  const visibleRows = Math.min(visibleCount, maxRows);
+  const hasMore = visibleCount < maxRows;
 
   return (
     <div className="px-4 py-5">
@@ -78,7 +84,7 @@ export default function ImpactFeed() {
         </div>
 
         {/* Paired Cards — same grid row = same height */}
-        {Array.from({ length: maxRows }).map((_, i) => (
+        {Array.from({ length: visibleRows }).map((_, i) => (
           <Fragment key={i}>
             {badItems[i] ? <NewsCard item={badItems[i]} /> : <div />}
             {goodItems[i] ? <NewsCard item={goodItems[i]} /> : <div />}
@@ -93,6 +99,18 @@ export default function ImpactFeed() {
           </>
         )}
       </div>
+
+      {/* Load more */}
+      {hasMore && (
+        <div className="flex justify-center mt-6">
+          <button
+            onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+            className="px-6 py-2 text-sm font-bold text-[#0D7FF2] border border-[#0D7FF2]/30 rounded-lg hover:bg-[#0D7FF2]/10 transition-colors"
+          >
+            Load more ({maxRows - visibleCount} remaining)
+          </button>
+        </div>
+      )}
     </div>
   );
 }

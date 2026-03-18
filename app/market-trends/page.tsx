@@ -61,7 +61,7 @@ export default function MarketTrendsPage() {
             {/* Range selector (static) */}
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-white">Range:</span>
-              <button className="px-3 py-1.5 bg-[#1A1A1A] border border-[#4D4D4D] rounded-lg text-sm text-white hover:bg-[#2A2A2A] transition-colors flex items-center gap-2">
+              <button className="px-3 py-1.5 bg-[#1A1A1A] border border-[#222F44] rounded-lg text-sm text-white hover:bg-[#2A2A2A] transition-colors flex items-center gap-2">
                 {selectedRange}
                 <svg
                   width="12"

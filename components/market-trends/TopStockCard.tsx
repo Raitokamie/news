@@ -39,7 +39,7 @@ export default function TopStockCard({ item }: TopStockCardProps) {
   const scorePercent = (Math.abs(item.impactScore) / 10) * 100;
 
   return (
-    <div className="bg-[#0d0d0d] border border-[#333333] rounded-xl p-4 flex flex-col gap-3 hover:border-[#666] transition-colors">
+    <div className="bg-[#0d0d0d] border border-[#222F44] rounded-xl p-4 flex flex-col gap-3 hover:border-[#666] transition-colors">
       {/* Header: Symbol + Trend Icon */}
       <div className="flex items-start justify-between">
         <div>

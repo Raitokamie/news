@@ -78,7 +78,7 @@ export default function WatchlistActivityFeed({ trackedSymbols }: WatchlistActiv
               <select
                 value={range}
                 onChange={(e) => setRange(e.target.value as RangeOption)}
-                className="appearance-none bg-[#1A1A1A] text-white text-xs font-semibold border border-[#4D4D4D] rounded-lg pl-3 pr-7 py-1.5 cursor-pointer hover:border-[#666] transition-colors focus:outline-none focus:border-[#0D7FF2]"
+                className="appearance-none bg-[#1A1A1A] text-white text-xs font-semibold border border-[#222F44] rounded-lg pl-3 pr-7 py-1.5 cursor-pointer hover:border-[#666] transition-colors focus:outline-none focus:border-[#0D7FF2]"
               >
                 {(['24h', '7d'] as RangeOption[]).map((opt) => (
                   <option key={opt} value={opt}>{RANGE_LABEL[opt]}</option>
@@ -117,10 +117,10 @@ export default function WatchlistActivityFeed({ trackedSymbols }: WatchlistActiv
         {/* Empty state */}
         {maxRows === 0 && (
           <>
-            <div className="text-center py-12 text-slate-600 text-sm bg-[#1A1A1A] rounded-xl border border-[#4D4D4D]">
+            <div className="text-center py-12 text-slate-600 text-sm bg-[#1A1A1A] rounded-xl border border-[#222F44]">
               No bad sentiment news
             </div>
-            <div className="text-center py-12 text-slate-600 text-sm bg-[#1A1A1A] rounded-xl border border-[#4D4D4D]">
+            <div className="text-center py-12 text-slate-600 text-sm bg-[#1A1A1A] rounded-xl border border-[#222F44]">
               No good sentiment news
             </div>
           </>

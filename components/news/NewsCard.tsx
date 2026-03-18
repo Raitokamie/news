@@ -28,18 +28,9 @@ const impactConfig: Record<ImpactLevel, { label: string; bg: string; text: strin
 
 import { Globe } from 'lucide-react';
 
-const sourceColors: Record<string, string> = {
-  REUTERS: 'bg-orange-500',
-  BLOOMBERG: 'bg-blue-500',
-  CNBC: 'bg-yellow-500',
-  WSJ: 'bg-slate-400',
-  FT: 'bg-pink-400',
-  NIKKEI: 'bg-red-500',
-  CAIXIN: 'bg-red-600',
-  BANGKOKPOST: 'bg-blue-400',
-  NATURE: 'bg-green-500',
-  SEMI: 'bg-slate-500',
-};
+function getDomain(url: string) {
+  try { return new URL(url).hostname; } catch { return ''; }
+}
 
 function CountryFlag({ code }: { code: Region }) {
   if (code === 'global') return <Globe size={20} className="text-slate-400" />;
@@ -64,7 +55,7 @@ export default function NewsCard({ item, compact = false }: NewsCardProps) {
   return (
     <article
       className={cn(
-        'flex flex-col h-full bg-[#0d0d0d] border border-[#333333] rounded-xl p-4 transition-all duration-200 hover:border-[#666] hover:bg-[#1A1A1A] group cursor-pointer',
+        'flex flex-col h-full bg-[#0d0d0d] border border-[#222F44] rounded-xl p-4 transition-all duration-200 hover:border-[#666] hover:bg-[#1A1A1A] group cursor-pointer',
         item.impact === 'high' && 'hover:border-red-500/20',
         compact && 'p-3'
       )}
@@ -115,11 +106,11 @@ export default function NewsCard({ item, compact = false }: NewsCardProps) {
       </div>
 
       {/* Footer: sources + view more */}
-      <div className="flex items-center justify-between mt-auto pt-4 border-t border-[#333333]">
+      <div className="flex items-center justify-between mt-auto pt-4 border-t border-[#222F44]">
         <div className="flex items-center gap-2">
           <div className="flex -space-x-1.5">
             {item.sources.map((s) => (
-              <div key={s.name} className={cn('w-6 h-6 rounded-full border-2 border-[#0d0d0d]', sourceColors[s.name] || 'bg-slate-500')} />
+              <img key={s.name} src={`https://www.google.com/s2/favicons?domain=${getDomain(s.url)}&sz=32`} alt={s.name} className="w-6 h-6 rounded-full border-2 border-[#0d0d0d] bg-[#333]" />
             ))}
           </div>
           <span className="text-xs text-slate-400">
@@ -155,7 +146,7 @@ function SourcesPopup({ sources }: { sources: { name: string; url: string }[] })
       </button>
 
       {open && (
-        <div className="absolute right-0 bottom-full mb-2 w-48 bg-[#222] border border-[#4D4D4D] rounded-lg shadow-xl z-50 py-1">
+        <div className="absolute right-0 bottom-full mb-2 w-48 bg-[#222] border border-[#222F44] rounded-lg shadow-xl z-50 py-1">
           {sources.map((s) => (
             <a
               key={s.name}
@@ -165,7 +156,7 @@ function SourcesPopup({ sources }: { sources: { name: string; url: string }[] })
               onClick={(e) => e.stopPropagation()}
               className="flex items-center gap-2 px-3 py-2 text-xs text-slate-300 hover:bg-white/5 hover:text-cyan-400 transition-colors"
             >
-              <div className={cn('w-3 h-3 rounded-full shrink-0', sourceColors[s.name] || 'bg-slate-500')} />
+              <img src={`https://www.google.com/s2/favicons?domain=${getDomain(s.url)}&sz=32`} alt={s.name} className="w-3 h-3 rounded-full shrink-0 bg-[#333]" />
               {s.name.charAt(0) + s.name.slice(1).toLowerCase()}
             </a>
           ))}

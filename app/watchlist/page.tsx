@@ -11,10 +11,22 @@ import {
   TelegramStatusWidget,
   AddTickerModal,
 } from '@/components/watchlist';
+import PremiumLock from '@/components/premium/PremiumLock';
 
 export default function WatchlistPage() {
-  const { trackedTickers, addTicker, removeTicker } = useTerminalStore();
+  const { trackedTickers, addTicker, removeTicker, userPlan } = useTerminalStore();
   const [addModalOpen, setAddModalOpen] = useState(false);
+
+  if (userPlan === 'free') {
+    return (
+      <div className="flex h-full bg-[#0d0d0d]">
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <TopBar />
+          <PremiumLock featureName="Watchlist" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-full bg-[#0d0d0d]">
@@ -46,7 +58,7 @@ export default function WatchlistPage() {
       </div>
 
       {/* Right Sidebar */}
-      <aside className="hidden xl:flex w-80 shrink-0 border-l border-[#4D4D4D] overflow-y-auto p-4 flex-col gap-4 bg-[#0d0d0d]">
+      <aside className="hidden xl:flex w-80 shrink-0 border-l border-[#222F44] overflow-y-auto p-4 flex-col gap-4 bg-[#0d0d0d]">
         <TelegramStatusWidget
           trackedSymbols={trackedTickers}
           notifications={mockTelegramNotifications}

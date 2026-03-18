@@ -1,4 +1,4 @@
-import { NewsItem, TickerData, StockSentimentRow, LiveUpdate, MarketTrendItem, TelegramNotificationStatus } from './types';
+import { NewsItem, StockSentimentRow, LiveUpdate, MarketTrendItem, TelegramNotificationStatus } from './types';
 
 export const mockNews: NewsItem[] = [
   // ── US ─────────────────────────────────────────────
@@ -274,13 +274,6 @@ export const mockNews: NewsItem[] = [
   },
 ];
 
-export const mockTickers: TickerData[] = [
-  { symbol: 'NVDA', name: 'NVIDIA Corporation', price: 875.42, change: 24.13, changePercent: 2.84, trend: 'up', mentionCount: 18 },
-  { symbol: 'AAPL', name: 'Apple Inc.', price: 182.31, change: -1.24, changePercent: -0.68, trend: 'down', mentionCount: 14 },
-  { symbol: 'TSLA', name: 'Tesla, Inc.', price: 241.17, change: -7.83, changePercent: -3.15, trend: 'down', mentionCount: 11 },
-  { symbol: 'GOOGL', name: 'Alphabet Inc.', price: 162.45, change: 0.22, changePercent: 0.14, trend: 'flat', mentionCount: 9 },
-  { symbol: 'AMZN', name: 'Amazon.com, Inc.', price: 198.73, change: -2.11, changePercent: -1.05, trend: 'down', mentionCount: 7 },
-];
 
 export const mockStockSentiment: StockSentimentRow[] = [
   { symbol: 'GOOG', impact: 'high', sentiment: 'down', sentimentLabel: 'Negative', mentionCount: 25, historical: { positive: 16, neutral: 4, negative: 5 }, score: 40 },

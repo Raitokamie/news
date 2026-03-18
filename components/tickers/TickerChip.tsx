@@ -36,7 +36,7 @@ export default function TickerChip({ symbol, showBookmark = true, trend = 'flat'
         size === 'md' && 'px-3.5 py-2 text-base',
         active
           ? 'bg-[#0D7FF2]/20 text-[#0D7FF2] border border-[#0D7FF2]/40 shadow-[0_0_8px_rgba(13,127,242,0.15)]'
-          : 'bg-[#2A2A2A] text-white border border-[#4D4D4D] hover:bg-[#3a3a3a] hover:border-[#0D7FF2]/30'
+          : 'bg-[#2A2A2A] text-white border border-[#222F44] hover:bg-[#3a3a3a] hover:border-[#0D7FF2]/30'
       )}
     >
       <span className="text-slate-400 font-normal">$</span>

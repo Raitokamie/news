@@ -31,7 +31,7 @@ export default function TrendFilterTabs({
               'px-4 py-2 rounded-md text-sm font-medium transition-colors border',
               isActive
                 ? 'bg-[#1a1a1a] text-[#0D7FF2] border-[#0D7FF2]'
-                : 'bg-[#1a1a1a] text-white border-[#333333] hover:border-[#0D7FF2]'
+                : 'bg-[#1a1a1a] text-white border-[#222F44] hover:border-[#0D7FF2]'
             )}
           >
             {filter.label}

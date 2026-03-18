@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Rss, TrendingUp, Star, Settings, Hash, X } from 'lucide-react';
+import { Home, Rss, TrendingUp, Star, Settings, Hash, X, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import LiveUpdateWidget from './LiveUpdateWidget';
 import { useTerminalStore } from '@/lib/store';
@@ -16,7 +16,7 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const { sidebarOpen, toggleSidebar } = useTerminalStore();
+  const { sidebarOpen, toggleSidebar, userPlan } = useTerminalStore();
 
   return (
     <>
@@ -31,7 +31,7 @@ export default function Sidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          'flex flex-col min-h-screen bg-[#141414] border-r border-[#4D4D4D] shrink-0 z-40 transition-all duration-300',
+          'flex flex-col min-h-screen bg-[#0F1924] border-r border-[#222F44] shrink-0 z-40 transition-all duration-300',
           // Desktop: always visible, fixed width
           'lg:relative lg:translate-x-0 lg:w-64',
           // Mobile: overlay, slide in/out
@@ -73,6 +73,9 @@ export default function Sidebar() {
               >
                 <Icon size={18} className="text-white" strokeWidth={2} />
                 {label}
+                {href === '/watchlist' && userPlan === 'free' && (
+                  <Lock size={14} className="ml-auto text-[#808080]" />
+                )}
               </Link>
             );
           })}
@@ -84,7 +87,7 @@ export default function Sidebar() {
         </nav>
 
         {/* Footer */}
-        <div className="px-4 py-4 border-t border-[#4D4D4D]">
+        <div className="px-4 py-4 border-t border-[#222F44]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-lg bg-[#2A2A2A] flex items-center justify-center">

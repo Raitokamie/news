@@ -24,7 +24,7 @@ export default function LiveUpdateWidget() {
         </span>
       </div>
       <p className="text-[#B3B3B3] leading-relaxed pr-6 mb-3" style={{ fontSize: '14px' }}>{liveUpdate.headline}</p>
-      <button className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-[#4D4D4D] rounded-lg font-medium text-white hover:bg-white/5 transition-colors" style={{ fontSize: '14px' }}>
+      <button className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-[#222F44] rounded-lg font-medium text-white hover:bg-white/5 transition-colors" style={{ fontSize: '14px' }}>
         See more <ArrowUpRight size={14} />
       </button>
     </div>

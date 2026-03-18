@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useTerminalStore } from '@/lib/store';
 import { mockNews } from '@/lib/api';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
@@ -11,7 +11,9 @@ const trendStyle = {
   flat: { Icon: Minus, bg: 'bg-slate-500/20', text: 'text-slate-400' },
 } as const;
 
-function buildRankedTickers() {
+type RankedTicker = { symbol: string; name: string; score: number };
+
+function buildRankedTickers(): RankedTicker[] {
   const latestMap = new Map<string, { name: string; score: number; time: number }>();
 
   for (const news of mockNews) {
@@ -33,10 +35,14 @@ function buildRankedTickers() {
 export default function TickerCloud() {
   const setTicker = useTerminalStore((s) => s.setTicker);
   const activeTicker = useTerminalStore((s) => s.activeTicker);
-  const tickers = useMemo(() => buildRankedTickers(), []);
+  const [tickers, setTickers] = useState<RankedTicker[]>([]);
+
+  useEffect(() => {
+    setTickers(buildRankedTickers());
+  }, []);
 
   return (
-    <div className="bg-[#1A1A1A] border border-[#4D4D4D] rounded-xl overflow-hidden">
+    <div className="bg-[#1A1A1A] border border-[#222F44] rounded-xl overflow-hidden">
       <div className="px-4 py-3">
         <h3 className="text-sm font-bold text-white">Trending Ticker</h3>
       </div>

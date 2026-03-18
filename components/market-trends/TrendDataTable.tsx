@@ -67,10 +67,10 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
   const paginatedItems = items.slice(startIndex, startIndex + rowsPerPage);
 
   return (
-    <div className="border border-[#333333] rounded-xl overflow-hidden">
+    <div className="border border-[#222F44] rounded-xl overflow-hidden">
       <table className="w-full min-w-[700px]">
         <thead>
-          <tr className="border-b border-[#333333]">
+          <tr className="border-b border-[#222F44]">
             <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">
               TICKER
             </th>
@@ -100,7 +100,7 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
             return (
               <tr
                 key={item.symbol}
-                className="border-b border-[#333333] hover:bg-white/5 transition-colors"
+                className="border-b border-[#222F44] hover:bg-white/5 transition-colors"
               >
                 {/* Ticker */}
                 <td className="px-4 py-3">
@@ -148,7 +148,7 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
 
                 {/* Score */}
                 <td className="px-4 py-3 text-right">
-                  <span className="inline-flex items-center justify-center min-w-[40px] px-2.5 py-1 rounded-full border border-[#333333] text-white font-bold text-sm">
+                  <span className="inline-flex items-center justify-center min-w-[40px] px-2.5 py-1 rounded-full border border-[#222F44] text-white font-bold text-sm">
                     {item.score}
                   </span>
                 </td>
@@ -159,7 +159,7 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
       </table>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between px-4 py-3 border-t border-[#333333]">
+      <div className="flex items-center justify-between px-4 py-3 border-t border-[#222F44]">
         <div className="flex items-center gap-2">
           <span className="text-sm text-white">Rows per page:</span>
           <button

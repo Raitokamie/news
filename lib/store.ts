@@ -14,6 +14,8 @@ interface TerminalStore {
   trackedTickers: string[];
   sentimentTickers: string[];
   telegramConnected: boolean;
+  userPlan: 'free' | 'premium';
+  setUserPlan: (plan: 'free' | 'premium') => void;
   setRegion: (region: RegionTab) => void;
   setCountry: (country: Region | 'all') => void;
   setTicker: (ticker: string | null) => void;
@@ -47,6 +49,8 @@ export const useTerminalStore = create<TerminalStore>((set) => ({
   searchQuery: '',
   setSearchQuery: (query) => set({ searchQuery: query }),
   telegramConnected: false,
+  userPlan: 'free',
+  setUserPlan: (plan) => set({ userPlan: plan }),
   connectTelegram: () => set({ telegramConnected: true }),
   disconnectTelegram: () => set({ telegramConnected: false }),
   trackedTickers: [],

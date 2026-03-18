@@ -65,7 +65,7 @@ export default function StockSentimentPage() {
             {/* Range selector */}
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-white">Range:</span>
-              <button className="px-3 py-1.5 bg-[#1A1A1A] border border-[#4D4D4D] rounded-lg text-sm text-white hover:bg-[#2A2A2A] transition-colors flex items-center gap-2">
+              <button className="px-3 py-1.5 bg-[#1A1A1A] border border-[#222F44] rounded-lg text-sm text-white hover:bg-[#2A2A2A] transition-colors flex items-center gap-2">
                 Last 24H
                 <svg
                   width="12"
@@ -97,7 +97,7 @@ export default function StockSentimentPage() {
                 ADD
               </button>
               {addOpen && availableToAdd.length > 0 && (
-                <div className="absolute top-full mt-1 left-0 z-50 bg-[#1A1A1A] border border-[#4D4D4D] rounded-lg shadow-xl overflow-hidden max-h-48 overflow-y-auto">
+                <div className="absolute top-full mt-1 left-0 z-50 bg-[#1A1A1A] border border-[#222F44] rounded-lg shadow-xl overflow-hidden max-h-48 overflow-y-auto">
                   {availableToAdd.map((symbol) => (
                     <button
                       key={symbol}
@@ -113,7 +113,7 @@ export default function StockSentimentPage() {
             {sentimentTickers.map((symbol) => (
               <div
                 key={symbol}
-                className="flex items-center gap-2 bg-[#2A2A2A] border border-[#4D4D4D] text-white text-sm font-medium px-4 py-2 rounded-full"
+                className="flex items-center gap-2 bg-[#2A2A2A] border border-[#222F44] text-white text-sm font-medium px-4 py-2 rounded-full"
               >
                 {symbol}
                 <button
@@ -129,10 +129,10 @@ export default function StockSentimentPage() {
           {/* Content */}
           <div className="px-6 pb-6 pt-0 flex flex-col gap-4">
             {/* Table */}
-            <div className="overflow-x-auto border border-[#333333] rounded-xl overflow-hidden">
+            <div className="overflow-x-auto border border-[#222F44] rounded-xl overflow-hidden">
               <table className="w-full min-w-[700px]">
                 <thead>
-                  <tr className="border-b border-[#333333]">
+                  <tr className="border-b border-[#222F44]">
                     <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Ticker</th>
                     <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Impact</th>
                     <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Sentiment</th>
@@ -148,7 +148,7 @@ export default function StockSentimentPage() {
                     const SentIcon = sent.icon;
 
                     return (
-                      <tr key={row.symbol} className="border-b border-[#333333] hover:bg-white/5 transition-colors">
+                      <tr key={row.symbol} className="border-b border-[#222F44] hover:bg-white/5 transition-colors">
                         <td className="px-4 py-3">
                           <span className="text-[#0D7FF2] font-bold text-sm">${row.symbol}</span>
                         </td>
@@ -170,7 +170,7 @@ export default function StockSentimentPage() {
                           <SentimentHistoricalBar data={row.historical} height={6} />
                         </td>
                         <td className="px-4 py-3 text-right">
-                          <span className="inline-flex items-center justify-center min-w-[40px] px-2.5 py-1 rounded-full border border-[#333333] text-white font-bold text-sm">
+                          <span className="inline-flex items-center justify-center min-w-[40px] px-2.5 py-1 rounded-full border border-[#222F44] text-white font-bold text-sm">
                             {row.score}
                           </span>
                         </td>
@@ -181,7 +181,7 @@ export default function StockSentimentPage() {
               </table>
 
               {/* Pagination */}
-              <div className="flex items-center justify-between px-4 py-3 border-t border-[#333333]">
+              <div className="flex items-center justify-between px-4 py-3 border-t border-[#222F44]">
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-white">Rows per page:</span>
                   <button className="flex items-center gap-1 px-2 py-1 rounded-md bg-[#333333] text-white text-sm">

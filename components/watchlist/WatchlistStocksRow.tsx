@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { mockNews } from '@/lib/api';
 import { NewsItem } from '@/lib/types';
 import { Star, X, TrendingUp, TrendingDown, Minus } from 'lucide-react';
@@ -54,6 +55,7 @@ const sentimentConfig = {
 };
 
 export default function WatchlistStocksRow({ trackedSymbols, onRemove }: WatchlistStocksRowProps) {
+  const router = useRouter();
   const allSummaries = useMemo(() => deriveTickerSummaries(mockNews), []);
   const trackedStocks = useMemo(() => {
     return trackedSymbols
@@ -63,7 +65,7 @@ export default function WatchlistStocksRow({ trackedSymbols, onRemove }: Watchli
 
   if (trackedStocks.length === 0) {
     return (
-      <div className="bg-[#1A1A1A] border border-[#4D4D4D] border-dashed rounded-xl p-10 text-center">
+      <div className="bg-[#1A1A1A] border border-[#222F44] border-dashed rounded-xl p-10 text-center">
         <Star size={28} className="text-slate-700 mx-auto mb-3" />
         <p className="text-sm text-slate-600 font-medium">Your watchlist is empty</p>
         <p className="text-xs text-slate-700 mt-1">
@@ -83,7 +85,9 @@ export default function WatchlistStocksRow({ trackedSymbols, onRemove }: Watchli
 
         return (
           <div key={item.symbol} className="relative group">
-            <div className="bg-[#0d0d0d] border border-[#333333] rounded-xl p-4 flex flex-col gap-3 hover:border-[#666] transition-colors">
+            <div
+              onClick={() => router.push(`/ticker/${item.symbol.toLowerCase()}`)}
+              className="bg-[#0d0d0d] border border-[#222F44] rounded-xl p-4 flex flex-col gap-3 hover:border-[#666] transition-colors cursor-pointer">
               <div className="flex items-start justify-between">
                 <div>
                   <h3 className="text-white font-bold text-base">${item.symbol}</h3>
@@ -96,7 +100,7 @@ export default function WatchlistStocksRow({ trackedSymbols, onRemove }: Watchli
 
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-white text-xs font-medium">Avg Score</span>
+                  <span className="text-white text-xs font-medium">Avg Sentiment Score</span>
                   <span className="text-white font-semibold text-sm">{item.avgScore}</span>
                 </div>
                 <div className="h-2 w-full bg-[#2A2A2A] rounded-full overflow-hidden">
@@ -115,7 +119,7 @@ export default function WatchlistStocksRow({ trackedSymbols, onRemove }: Watchli
 
             <button
               onClick={() => onRemove(item.symbol)}
-              className="absolute top-2 right-2 w-6 h-6 rounded-full bg-[#333333] border border-[#4D4D4D] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500/20 hover:border-red-500/40"
+              className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#333333] border border-[#222F44] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500/20 hover:border-red-500/40 z-10"
             >
               <X size={12} className="text-slate-400 group-hover:text-red-400" />
             </button>

@@ -1,5 +1,5 @@
 // ─── Shared enums ───────────────────────────────────────
-export type Region = 'global' | 'us' | 'de' | 'nl' | 'fr' | 'jp' | 'cn' | 'th' | 'sa' | 'ae' | 'il' | 'tr' | 'in' | 'kr';
+export type Region = string;
 export type RegionTab = 'global' | 'us' | 'eu' | 'asia' | 'mena';
 export type ImpactLevel = 'high' | 'medium' | 'low';
 export type Sentiment = 'good' | 'bad' | 'neutral';
@@ -31,15 +31,6 @@ export interface StockSentimentRow {
   score: number;
 }
 
-export interface TickerData {
-  symbol: string;
-  name: string;
-  price: number;
-  change: number;
-  changePercent: number;
-  trend: 'up' | 'down' | 'flat';
-  mentionCount: number;
-}
 
 export interface LiveUpdate {
   headline: string;
