@@ -46,20 +46,29 @@ export default function ImpactFeed() {
       );
     }
 
-    if (sortOrder === 'latest') {
-      items = [...items].sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
-    } else if (sortOrder === 'oldest') {
-      items = [...items].sort((a, b) => a.publishedAt.getTime() - b.publishedAt.getTime());
-    } else if (sortOrder === 'impact') {
-      const order = { high: 0, medium: 1, low: 2 };
-      items = [...items].sort((a, b) => order[a.impact] - order[b.impact]);
-    }
-
     return items;
   }, [activeRegion, activeCountry, activeTicker, activeImpact, sortOrder, searchQuery]);
 
-  const badItems = filtered.filter((n) => n.sentiment === 'bad' || n.sentiment === 'neutral');
-  const goodItems = filtered.filter((n) => n.sentiment === 'good');
+  const sortItems = (list: typeof filtered) => {
+    const impactOrder: Record<string, number> = { high: 0, medium: 1, low: 2 };
+    if (sortOrder === 'latest') {
+      return [...list].sort((a, b) => {
+        const timeDiff = b.publishedAt.getTime() - a.publishedAt.getTime();
+        return timeDiff !== 0 ? timeDiff : impactOrder[a.impact] - impactOrder[b.impact];
+      });
+    } else if (sortOrder === 'oldest') {
+      return [...list].sort((a, b) => {
+        const timeDiff = a.publishedAt.getTime() - b.publishedAt.getTime();
+        return timeDiff !== 0 ? timeDiff : impactOrder[a.impact] - impactOrder[b.impact];
+      });
+    } else if (sortOrder === 'impact') {
+      return [...list].sort((a, b) => impactOrder[a.impact] - impactOrder[b.impact]);
+    }
+    return list;
+  };
+
+  const badItems = sortItems(filtered.filter((n) => n.sentiment === 'bad' || n.sentiment === 'neutral'));
+  const goodItems = sortItems(filtered.filter((n) => n.sentiment === 'good'));
   const maxRows = Math.max(badItems.length, goodItems.length);
   const visibleRows = Math.min(visibleCount, maxRows);
   const hasMore = visibleCount < maxRows;

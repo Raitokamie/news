@@ -27,7 +27,12 @@ function buildRankedTickers(): RankedTicker[] {
   }
 
   return Array.from(latestMap.entries())
-    .sort((a, b) => Math.abs(b[1].score) - Math.abs(a[1].score))
+    .sort((a, b) => {
+      const scoreDiff = Math.abs(b[1].score) - Math.abs(a[1].score);
+      if (scoreDiff !== 0) return scoreDiff;
+      // Secondary sort by symbol for deterministic order
+      return a[0].localeCompare(b[0]);
+    })
     .slice(0, 5)
     .map(([symbol, { name, score }]) => ({ symbol, name, score }));
 }

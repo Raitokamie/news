@@ -71,7 +71,7 @@ export default function NewsCard({ item, compact = false }: NewsCardProps) {
           {impact.label}
         </span>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-slate-500">{timeAgo(item.publishedAt)}</span>
+          <span className="text-xs text-slate-500" suppressHydrationWarning>{timeAgo(item.publishedAt)}</span>
           <CountryFlag code={item.countryCode} />
         </div>
       </div>
@@ -140,7 +140,7 @@ function SourcesPopup({ sources }: { sources: { name: string; url: string }[] })
     <div className="relative" ref={ref}>
       <button
         onClick={(e) => { e.stopPropagation(); setOpen(!open); }}
-        className="text-xs font-medium transition-colors text-[#0D7FF2] hover:text-[#3399FF]"
+        className="text-xs font-medium transition-colors text-[#0D7FF2] hover:text-[#3399FF] underline"
       >
         View more
       </button>
