@@ -42,7 +42,7 @@ export default function TickerCloud() {
   }, []);
 
   return (
-    <div className="bg-[#1A1A1A] border border-[#222F44] rounded-xl overflow-hidden">
+    <div className="bg-[#0F1924] border border-[#222F44] rounded-xl overflow-hidden">
       <div className="px-4 py-3">
         <h3 className="text-sm font-bold text-white">Trending Ticker</h3>
       </div>

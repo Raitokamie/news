@@ -10,7 +10,7 @@ export default function LiveUpdateWidget() {
   if (!visible) return null;
 
   return (
-    <div className="bg-[#141414] border border-[#4C4C4C] rounded-2xl p-4 relative">
+    <div className="bg-[#0F1924] border border-[#222F44] rounded-2xl p-4 relative">
       <button
         onClick={() => setVisible(false)}
         className="absolute top-3 right-3 text-[#B3B3B3] hover:text-white transition-colors"
