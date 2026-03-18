@@ -103,7 +103,7 @@ export default function StockDetailPage() {
             {/* Top row: Donut + Score/AI */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
               <SentimentDonutChart
-                historical={row.historical}
+                historical={row.sentimentHistorical}
                 mentionCount={row.mentionCount}
               />
               <SentimentScoreCard

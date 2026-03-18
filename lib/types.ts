@@ -21,16 +21,22 @@ export interface NewsItem {
   logoUrl?: string;
 }
 
-export interface StockSentimentRow {
-  symbol: string;
-  impact: ImpactLevel;
-  sentiment: 'up' | 'down' | 'flat';
-  sentimentLabel: 'Positive' | 'Negative' | 'Neutral';
-  mentionCount: number;
-  historical: { positive: number; neutral: number; negative: number };
-  score: number;
+export interface SentimentHistorical {
+  positive: number;
+  negative: number;
+  neutral: number;
 }
 
+// Unified ticker analysis — matches GET /tickers/analysis response
+export interface TickerAnalysis {
+  symbol: string;
+  name: string;
+  impactLevel: ImpactLevel;
+  sentiment: 'up' | 'down' | 'flat';
+  mentionCount: number;
+  sentimentHistorical: SentimentHistorical;
+  score: number;
+}
 
 export interface LiveUpdate {
   headline: string;
@@ -44,26 +50,7 @@ export interface NarrativeGroup {
   items: NewsItem[];
 }
 
-// Market Trends types
-export interface SentimentHistorical {
-  positive: number;
-  negative: number;
-  neutral: number;
-}
-
 export type TrendFilter = 'all' | 'top_positive' | 'top_negative' | 'most_mention';
-
-export interface MarketTrendItem {
-  symbol: string;
-  name: string;
-  impactScore: number;
-  impactLevel: ImpactLevel;
-  sentiment: Sentiment;
-  mentionCount: number;
-  trend: 'up' | 'down' | 'flat';
-  sentimentHistorical: SentimentHistorical;
-  score: number;
-}
 
 // Telegram notification status for watchlist
 export interface TelegramNotificationStatus {

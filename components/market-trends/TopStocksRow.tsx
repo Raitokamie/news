@@ -1,10 +1,10 @@
 'use client';
 
-import { MarketTrendItem } from '@/lib/types';
+import { TickerAnalysis } from '@/lib/types';
 import TopStockCard from './TopStockCard';
 
 interface TopStocksRowProps {
-  items: MarketTrendItem[];
+  items: TickerAnalysis[];
 }
 
 export default function TopStocksRow({ items }: TopStocksRowProps) {
