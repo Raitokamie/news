@@ -91,7 +91,7 @@ export default function TickerDetailPage() {
   const TrendIcon = trendConfig[trend].icon;
 
   return (
-    <div className="flex h-full bg-[#0d0d0d]">
+    <div className="flex h-full bg-[#0a1017]">
       <div className="flex-1 flex flex-col overflow-hidden">
         <TopBar />
 
@@ -168,7 +168,7 @@ export default function TickerDetailPage() {
         </div>
       </div>
 
-      <aside className="hidden xl:flex w-80 shrink-0 border-l border-[#222F44] overflow-y-auto p-4 flex-col gap-4 bg-[#0d0d0d]">
+      <aside className="hidden xl:flex w-80 shrink-0 border-l border-[#222F44] overflow-y-auto p-4 flex-col gap-4 bg-[#0a1017]">
         <TelegramStatusWidget
           trackedSymbols={[symbol]}
           notifications={mockTelegramNotifications}

@@ -7,7 +7,7 @@ export default function TopBar() {
   const { toggleSidebar, searchQuery, setSearchQuery } = useTerminalStore();
 
   return (
-    <div className="sticky top-0 z-20 bg-[#0d0d0d] backdrop-blur-md border-b border-[#222F44] px-4 py-3">
+    <div className="sticky top-0 z-20 bg-[#0a1017] backdrop-blur-md border-b border-[#222F44] px-4 py-3">
       <div className="flex items-center gap-3">
         {/* Hamburger — visible on mobile only */}
         <button
@@ -29,12 +29,12 @@ export default function TopBar() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search symbols, news, or reports"
-            className="w-full bg-[#1A1A1A] rounded-lg pl-9 pr-4 py-2 text-sm text-slate-300 placeholder:text-[#B3B3B3] focus:outline-none transition-all"
+            className="w-full bg-[#111722] rounded-lg pl-9 pr-4 py-2 text-sm text-slate-300 placeholder:text-[#B3B3B3] focus:outline-none transition-all"
           />
         </div>
 
         {/* Bell */}
-        <button className="relative p-2 rounded-lg bg-[#1A1A1A] hover:bg-[#252525] transition-colors text-white">
+        <button className="relative p-2 rounded-lg bg-[#111722] hover:bg-[#252525] transition-colors text-white">
           <Bell size={17} />
           <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full" />
         </button>

@@ -63,7 +63,7 @@ export default function StockSentimentPage() {
   const paged = rows.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
 
   return (
-    <div className="flex h-full bg-[#0d0d0d]">
+    <div className="flex h-full bg-[#0a1017]">
       <div className="flex-1 flex flex-col overflow-hidden">
         <TopBar />
 

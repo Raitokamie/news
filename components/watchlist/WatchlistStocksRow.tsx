@@ -87,7 +87,7 @@ export default function WatchlistStocksRow({ trackedSymbols, onRemove }: Watchli
           <div key={item.symbol} className="relative group">
             <div
               onClick={() => router.push(`/ticker/${item.symbol.toLowerCase()}`)}
-              className="bg-[#0d0d0d] border border-[#222F44] rounded-xl p-4 flex flex-col gap-3 hover:border-[#666] transition-colors cursor-pointer">
+              className="bg-[#0a1017] border border-[#222F44] rounded-xl p-4 flex flex-col gap-3 hover:border-[#666] transition-colors cursor-pointer">
               <div className="flex items-start justify-between">
                 <div>
                   <h3 className="text-white font-bold text-base">${item.symbol}</h3>

@@ -42,7 +42,7 @@ export default function StockDetailPage() {
 
   if (!row) {
     return (
-      <div className="flex h-full bg-[#0d0d0d]">
+      <div className="flex h-full bg-[#0a1017]">
         <div className="flex-1 flex flex-col overflow-hidden">
           <TopBar />
           <div className="flex-1 flex items-center justify-center">
@@ -55,7 +55,7 @@ export default function StockDetailPage() {
   }
 
   return (
-    <div className="flex h-full bg-[#0d0d0d]">
+    <div className="flex h-full bg-[#0a1017]">
       <div className="flex-1 flex flex-col overflow-hidden">
         <TopBar />
 

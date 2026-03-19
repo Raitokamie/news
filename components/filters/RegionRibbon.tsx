@@ -64,7 +64,7 @@ export default function RegionRibbon() {
   const countries = countriesByRegion[activeRegion];
 
   return (
-    <div className="flex items-center gap-3 px-4 py-4 border-b border-[#222F44] bg-[#141414]">
+    <div className="flex items-center gap-3 px-4 py-4 border-b border-[#222F44] bg-[#0a1017]">
       {/* Region tabs */}
       <div className="flex items-center gap-1">
         {tabs.map((t) => {

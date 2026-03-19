@@ -46,7 +46,7 @@ export default function SentimentScoreCard({ sentiment, score, aiOutlook }: Sent
           {/* Score */}
           <div className="flex flex-col items-center">
             <h3 className="text-sm font-bold text-white mb-3">Score</h3>
-            <div className="flex items-center justify-center w-full px-4 py-3 rounded-lg border border-[#333333] bg-[#0d0d0d]">
+            <div className="flex items-center justify-center w-full px-4 py-3 rounded-lg border border-[#333333] bg-[#0a1017]">
               <span className="text-xl font-extrabold text-white">{displayScore}</span>
               <span className="text-sm text-slate-400 font-medium">/10</span>
             </div>

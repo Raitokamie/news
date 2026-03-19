@@ -8,7 +8,7 @@ interface PremiumLockProps {
 
 export default function PremiumLock({ featureName = 'Watchlist' }: PremiumLockProps) {
   return (
-    <div className="flex-1 flex items-center justify-center bg-[#0d0d0d]">
+    <div className="flex-1 flex items-center justify-center bg-[#0a1017]">
       <div className="flex flex-col items-center gap-4 max-w-sm text-center px-6">
         <div className="w-16 h-16 rounded-full bg-[#1A1A1A] border border-[#222F44] flex items-center justify-center">
           <Lock size={28} className="text-[#0D7FF2]" />

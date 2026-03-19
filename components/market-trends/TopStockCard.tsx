@@ -26,7 +26,7 @@ export default function TopStockCard({ item }: TopStockCardProps) {
   const scorePercent = item.sentiment === 'down' ? (100 - item.score) : item.score;
 
   return (
-    <div className="bg-[#0d0d0d] border border-[#222F44] rounded-xl p-4 flex flex-col gap-3 hover:border-[#666] transition-colors">
+    <div className="bg-[#0a1017] border border-[#222F44] rounded-xl p-4 flex flex-col gap-3 hover:border-[#666] transition-colors">
       {/* Header: Symbol + Trend Icon */}
       <div className="flex items-start justify-between">
         <div>

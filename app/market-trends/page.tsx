@@ -68,7 +68,7 @@ export default function MarketTrendsPage() {
   }, []);
 
   return (
-    <div className="flex h-full bg-[#0d0d0d]">
+    <div className="flex h-full bg-[#0a1017]">
       {/* Left — TopBar + Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <TopBar />
