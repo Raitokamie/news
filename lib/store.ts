@@ -11,6 +11,8 @@ interface TerminalStore {
   sortOrder: SortOrder;
   sidebarOpen: boolean;
   selectedSymbols: string[];
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
   searchOverlayOpen: boolean;
   trackedTickers: string[];
   sentimentTickers: string[];
@@ -63,6 +65,8 @@ export const useTerminalStore = create<TerminalStore>((set) => ({
     selectedSymbols: state.selectedSymbols.filter((s) => s !== symbol),
   })),
   clearSymbols: () => set({ selectedSymbols: [] }),
+  searchQuery: '',
+  setSearchQuery: (query) => set({ searchQuery: query }),
   searchOverlayOpen: false,
   openSearchOverlay: () => set({ searchOverlayOpen: true }),
   closeSearchOverlay: () => set({ searchOverlayOpen: false }),
