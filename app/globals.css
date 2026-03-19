@@ -57,6 +57,16 @@ body {
   50% { box-shadow: 0 0 0 4px rgba(34, 197, 94, 0); }
 }
 
+/* Search overlay animations */
+@keyframes search-backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes search-overlay-in {
+  from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 .live-dot {
   animation: glow-pulse 2s ease-in-out infinite;
 }

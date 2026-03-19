@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body className={`${inter.variable} ${poppins.variable} font-sans bg-[#0a1017] text-slate-100 antialiased`}>
         <div className="flex h-screen overflow-hidden">
           {/* Sidebar — overlay on mobile, static on desktop */}

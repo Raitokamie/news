@@ -11,6 +11,7 @@ interface TerminalStore {
   sortOrder: SortOrder;
   sidebarOpen: boolean;
   searchQuery: string;
+  searchOverlayOpen: boolean;
   trackedTickers: string[];
   sentimentTickers: string[];
   telegramConnected: boolean;
@@ -27,6 +28,8 @@ interface TerminalStore {
   addSentimentTicker: (symbol: string) => void;
   removeSentimentTicker: (symbol: string) => void;
   setSearchQuery: (query: string) => void;
+  openSearchOverlay: () => void;
+  closeSearchOverlay: () => void;
   connectTelegram: () => void;
   disconnectTelegram: () => void;
 }
@@ -48,6 +51,9 @@ export const useTerminalStore = create<TerminalStore>((set) => ({
   toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
   searchQuery: '',
   setSearchQuery: (query) => set({ searchQuery: query }),
+  searchOverlayOpen: false,
+  openSearchOverlay: () => set({ searchOverlayOpen: true }),
+  closeSearchOverlay: () => set({ searchOverlayOpen: false, searchQuery: '' }),
   telegramConnected: false,
   userPlan: 'free',
   setUserPlan: (plan) => set({ userPlan: plan }),
