@@ -10,20 +10,14 @@ interface TopStockCardProps {
 
 const sentimentConfig = {
   up: { icon: TrendingUp, iconColor: 'text-[#10B981]', bgColor: 'bg-[#17382D]', label: 'Positive', dotColor: 'bg-[#10B981]', barColor: 'bg-[#10B981]', textColor: 'text-white' },
-  down: { icon: TrendingDown, iconColor: 'text-[#EF4444]', bgColor: 'bg-[#592424]', label: 'NEGATIVE', dotColor: 'bg-[#EF4444]', barColor: 'bg-[#EF4444]', textColor: 'text-[#EF4444]' },
+  down: { icon: TrendingDown, iconColor: 'text-[#EF4444]', bgColor: 'bg-[#592424]', label: 'Negative', dotColor: 'bg-[#EF4444]', barColor: 'bg-[#EF4444]', textColor: 'text-[#EF4444]' },
   flat: { icon: Minus, iconColor: 'text-[#808080]', bgColor: 'bg-[#262626]', label: 'Neutral', dotColor: 'bg-[#7F7F7F]', barColor: 'bg-[#7F7F7F]', textColor: 'text-white' },
 };
 
 export default function TopStockCard({ item }: TopStockCardProps) {
   const config = sentimentConfig[item.sentiment];
   const TrendIcon = config.icon;
-  // Derive display score from score (0-100) + direction
-  const displayScore = item.sentiment === 'down'
-    ? -Math.round((100 - item.score) / 10)
-    : item.sentiment === 'up'
-      ? Math.round(item.score / 10)
-      : 0;
-  const scorePercent = item.sentiment === 'down' ? (100 - item.score) : item.score;
+  const scoreNormalized = Math.min(item.score, 100);
 
   return (
     <div className="bg-[#0a1017] border border-[#222F44] rounded-xl p-4 flex flex-col gap-3 hover:border-[#666] transition-colors">
@@ -48,14 +42,14 @@ export default function TopStockCard({ item }: TopStockCardProps) {
         <div className="flex items-center justify-between">
           <span className="text-white text-xs font-medium">Sentiment Score</span>
           <span className="text-white font-semibold text-sm">
-            {displayScore}/10
+            {item.score}
           </span>
         </div>
         {/* Progress bar */}
         <div className="h-2 w-full bg-[#2A2A2A] rounded-full overflow-hidden">
           <div
             className={cn('h-full rounded-full', config.barColor)}
-            style={{ width: `${scorePercent}%` }}
+            style={{ width: `${scoreNormalized}%` }}
           />
         </div>
       </div>

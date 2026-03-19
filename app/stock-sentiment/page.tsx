@@ -8,7 +8,7 @@ import { SentimentHistoricalBar } from '@/components/market-trends';
 import { mockStockSentiment } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
-import { Rss, X, Plus, TrendingUp, TrendingDown, Minus, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Rss, X, Plus, TrendingUp, TrendingDown, Minus, ChevronDown, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { ImpactLevel } from '@/lib/types';
 
 const impactConfig: Record<ImpactLevel, { label: string; bg: string; text: string; border: string }> = {
@@ -27,9 +27,13 @@ export default function StockSentimentPage() {
   const router = useRouter();
   const { sentimentTickers, addSentimentTicker, removeSentimentTicker } = useTerminalStore();
   const [page, setPage] = useState(0);
-  const rowsPerPage = 10;
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rppOpen, setRppOpen] = useState(false);
+  const rppRef = useRef<HTMLDivElement>(null);
   const [addOpen, setAddOpen] = useState(false);
+  const [addSearch, setAddSearch] = useState('');
   const addRef = useRef<HTMLDivElement>(null);
+  const addInputRef = useRef<HTMLInputElement>(null);
 
   // Range dropdown state
   type TimeRange = '24H' | '7D' | '30D' | '3M';
@@ -49,10 +53,15 @@ export default function StockSentimentPage() {
     .map((r) => r.symbol)
     .filter((s) => !sentimentTickers.includes(s));
 
+  const filteredToAdd = addSearch.trim()
+    ? availableToAdd.filter((s) => s.toLowerCase().includes(addSearch.trim().toLowerCase()))
+    : availableToAdd;
+
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (addRef.current && !addRef.current.contains(e.target as Node)) setAddOpen(false);
       if (rangeRef.current && !rangeRef.current.contains(e.target as Node)) setRangeOpen(false);
+      if (rppRef.current && !rppRef.current.contains(e.target as Node)) setRppOpen(false);
     }
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
@@ -113,23 +122,44 @@ export default function StockSentimentPage() {
           <div className="px-6 pb-4 flex flex-wrap items-center gap-2">
             <div className="relative" ref={addRef}>
               <button
-                onClick={() => setAddOpen(!addOpen)}
+                onClick={() => { setAddOpen(!addOpen); setAddSearch(''); setTimeout(() => addInputRef.current?.focus(), 0); }}
                 className="flex items-center gap-2 bg-[#0D7FF2] text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-[#0B6FD4] transition-colors"
               >
                 <Plus size={14} />
                 ADD
               </button>
-              {addOpen && availableToAdd.length > 0 && (
-                <div className="absolute top-full mt-1 left-0 z-50 bg-[#1A1A1A] border border-[#222F44] rounded-lg shadow-xl overflow-hidden max-h-48 overflow-y-auto">
-                  {availableToAdd.map((symbol) => (
-                    <button
-                      key={symbol}
-                      onClick={() => { addSentimentTicker(symbol); setAddOpen(false); }}
-                      className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors"
-                    >
-                      {symbol}
-                    </button>
-                  ))}
+              {addOpen && (
+                <div className="absolute top-full mt-1 left-0 z-50 bg-[#1A1A1A] border border-[#222F44] rounded-lg shadow-xl overflow-hidden w-56">
+                  <div className="px-3 py-2 border-b border-[#222F44]">
+                    <div className="flex items-center gap-2 bg-[#111722] rounded-lg px-2 py-1.5">
+                      <Search size={13} className="text-slate-500 shrink-0" />
+                      <input
+                        ref={addInputRef}
+                        type="text"
+                        value={addSearch}
+                        onChange={(e) => setAddSearch(e.target.value)}
+                        placeholder="Search symbol…"
+                        className="flex-1 bg-transparent text-xs text-white placeholder:text-slate-500 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+                  <div className="max-h-48 overflow-y-auto">
+                    {filteredToAdd.length === 0 ? (
+                      <div className="px-3 py-4 text-center text-xs text-slate-500">
+                        {addSearch.trim() ? 'No matches' : 'No more tickers'}
+                      </div>
+                    ) : (
+                      filteredToAdd.map((symbol) => (
+                        <button
+                          key={symbol}
+                          onClick={() => { addSentimentTicker(symbol); setAddOpen(false); }}
+                          className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors"
+                        >
+                          {symbol}
+                        </button>
+                      ))
+                    )}
+                  </div>
                 </div>
               )}
             </div>
@@ -171,7 +201,7 @@ export default function StockSentimentPage() {
                     const SentIcon = sent.icon;
 
                     return (
-                      <tr key={row.symbol} onClick={() => router.push(`/stock-sentiment/${row.symbol}`)} className="border-b border-[#222F44] hover:bg-white/5 transition-colors cursor-pointer">
+                      <tr key={row.symbol} onClick={() => router.push(`/stock-sentiment/${row.symbol.toLowerCase()}`)} className="border-b border-[#222F44] hover:bg-white/5 transition-colors cursor-pointer">
                         <td className="px-4 py-3">
                           <span className="text-[#0D7FF2] font-bold text-sm">${row.symbol}</span>
                         </td>
@@ -207,10 +237,31 @@ export default function StockSentimentPage() {
               <div className="flex items-center justify-between px-4 py-3 border-t border-[#222F44]">
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-white">Rows per page:</span>
-                  <button className="flex items-center gap-1 px-2 py-1 rounded-md bg-[#333333] text-white text-sm">
-                    {rowsPerPage}
-                    <ChevronDown size={14} />
-                  </button>
+                  <div className="relative" ref={rppRef}>
+                    <button
+                      onClick={() => setRppOpen(!rppOpen)}
+                      className="flex items-center gap-1 px-2 py-1 rounded-md bg-[#333333] text-white text-sm hover:bg-[#444] transition-colors"
+                    >
+                      {rowsPerPage}
+                      <ChevronDown size={14} className={cn('transition-transform', rppOpen && 'rotate-180')} />
+                    </button>
+                    {rppOpen && (
+                      <div className="absolute bottom-full mb-1 left-0 z-50 bg-[#1A1A1A] border border-[#4D4D4D] rounded-lg shadow-xl overflow-hidden">
+                        {[10, 50, 100].map((n) => (
+                          <button
+                            key={n}
+                            onClick={() => { setRowsPerPage(n); setPage(0); setRppOpen(false); }}
+                            className={cn(
+                              'block w-full text-left px-4 py-2 text-sm font-bold hover:bg-white/8 transition-colors',
+                              rowsPerPage === n ? 'text-[#0D7FF2] bg-white/5' : 'text-white'
+                            )}
+                          >
+                            {n}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <button

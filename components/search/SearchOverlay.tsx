@@ -1,26 +1,13 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
-import { Search, X } from 'lucide-react';
+import { Search, X, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { searchableStocks, AssetType, SearchableStock } from '@/lib/search-data';
-import { mockNews } from '@/lib/mock-data';
-import { NewsItem } from '@/lib/types';
+import { mockMarketTrends, mockNews } from '@/lib/api';
+import { TickerAnalysis, NewsItem } from '@/lib/types';
 import { useTerminalStore } from '@/lib/store';
 
 type SearchTab = 'stocks' | 'news';
-
-
-// Exchange dot accent colours — matches TradingView exchange icons
-const EXCHANGE_DOT: Record<string, string> = {
-  NASDAQ: '#2962FF',
-  NYSE:   '#8B5CF6',
-  SET:    '#F59E0B',
-  CRYPTO: '#10B981',
-  LSE:    '#EF4444',
-  TSE:    '#EC4899',
-};
 
 function timeAgo(date: Date): string {
   const diff = Date.now() - date.getTime();
@@ -49,14 +36,15 @@ function fuzzyMatch(query: string, ...targets: string[]): boolean {
 
 // ─── Stock Row ────────────────────────────────────────────────────────────────
 interface StockRowProps {
-  stock: SearchableStock;
+  stock: TickerAnalysis;
   isHighlighted: boolean;
+  isSelected: boolean;
   isLast: boolean;
   onClick: () => void;
   onHover: () => void;
 }
 
-function StockRow({ stock, isHighlighted, isLast, onClick, onHover }: StockRowProps) {
+function StockRow({ stock, isHighlighted, isSelected, isLast, onClick, onHover }: StockRowProps) {
   const color = symbolColor(stock.symbol);
 
   return (
@@ -92,26 +80,27 @@ function StockRow({ stock, isHighlighted, isLast, onClick, onHover }: StockRowPr
         </span>
       </div>
 
-      {/* Type label */}
-      <span className="text-[11px] text-slate-500 shrink-0 w-10 text-right lowercase">
-        {stock.type}
+      {/* Impact level */}
+      <span className="text-[11px] text-slate-500 shrink-0 w-14 text-right uppercase">
+        {stock.impactLevel}
       </span>
 
-      {/* Exchange name */}
-      <span className="text-[12px] text-slate-400 font-medium shrink-0 w-16 text-right">
-        {stock.exchange}
-      </span>
-
-      {/* Sentiment dot */}
-      <div
-        className="w-2.5 h-2.5 rounded-full shrink-0"
-        style={{
-          backgroundColor:
-            stock.sentiment === 'up'   ? '#10B981' :
-            stock.sentiment === 'down' ? '#EF4444' :
-                                         '#475569',
-        }}
-      />
+      {/* Selection checkmark or sentiment dot */}
+      {isSelected ? (
+        <span className="w-5 h-5 rounded-full bg-[#2962FF] flex items-center justify-center shrink-0">
+          <Check size={12} className="text-white" />
+        </span>
+      ) : (
+        <div
+          className="w-2.5 h-2.5 rounded-full shrink-0"
+          style={{
+            backgroundColor:
+              stock.sentiment === 'up'   ? '#10B981' :
+              stock.sentiment === 'down' ? '#EF4444' :
+                                           '#475569',
+          }}
+        />
+      )}
     </button>
   );
 }
@@ -176,8 +165,7 @@ function NewsRow({ item, isHighlighted, isLast, onClick, onHover }: NewsRowProps
 
 // ─── Main overlay ─────────────────────────────────────────────────────────────
 export default function SearchOverlay() {
-  const router = useRouter();
-  const { closeSearchOverlay, setSearchQuery } = useTerminalStore();
+  const { closeSearchOverlay, toggleSymbol, selectedSymbols } = useTerminalStore();
 
   const [query, setQuery]               = useState('');
   const [activeTab, setActiveTab]       = useState<SearchTab>('stocks');
@@ -187,9 +175,9 @@ export default function SearchOverlay() {
   useEffect(() => { inputRef.current?.focus(); }, []);
 
   // ── Filtering ──────────────────────────────────────────────────────────────
-  const filteredStocks = useMemo<SearchableStock[]>(() => {
-    if (!query.trim()) return searchableStocks.filter((s) => s.type === 'stock').slice(0, 20);
-    return searchableStocks.filter((s) => s.type === 'stock' && fuzzyMatch(query, s.symbol, s.name));
+  const filteredStocks = useMemo<TickerAnalysis[]>(() => {
+    if (!query.trim()) return mockMarketTrends;
+    return mockMarketTrends.filter((s) => fuzzyMatch(query, s.symbol, s.name));
   }, [query]);
 
   const filteredNews = useMemo<NewsItem[]>(() => {
@@ -206,15 +194,13 @@ export default function SearchOverlay() {
   const handleClose = useCallback(() => closeSearchOverlay(), [closeSearchOverlay]);
 
   const handleSelectStock = useCallback((symbol: string) => {
-    closeSearchOverlay();
-    router.push(`/ticker/${symbol}`);
-  }, [closeSearchOverlay, router]);
+    toggleSymbol(symbol);
+  }, [toggleSymbol]);
 
   const handleSelectNews = useCallback((item: NewsItem) => {
-    closeSearchOverlay();
-    setSearchQuery(item.tickers[0]?.symbol ?? query);
-    router.push('/');
-  }, [closeSearchOverlay, setSearchQuery, query, router]);
+    const sym = item.tickers[0]?.symbol;
+    if (sym) toggleSymbol(sym);
+  }, [toggleSymbol]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
@@ -280,6 +266,26 @@ export default function SearchOverlay() {
           </button>
         </div>
 
+        {/* ── Selected symbols chips ──────────────────────── */}
+        {selectedSymbols.length > 0 && (
+          <div className="flex items-center gap-1.5 px-4 py-2 border-b border-white/[0.07] flex-wrap">
+            {selectedSymbols.map((sym) => (
+              <span
+                key={sym}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#2962FF]/15 text-[#2962FF] text-[11px] font-semibold"
+              >
+                {sym}
+                <button
+                  onClick={(e) => { e.stopPropagation(); toggleSymbol(sym); }}
+                  className="hover:text-white transition-colors"
+                >
+                  <X size={10} />
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+
         {/* ── Tabs ─────────────────────────────────────────── */}
         <div className="flex items-center px-2 border-b border-white/[0.07]">
           {(['stocks', 'news'] as SearchTab[]).map((tab) => (
@@ -308,14 +314,12 @@ export default function SearchOverlay() {
             </div>
           ) : (
             <>
-              {/* Column header — only for stocks, matches TradingView */}
+              {/* Column header — only for stocks */}
               {activeTab === 'stocks' && (
                 <div className="flex items-center px-4 py-2 border-b border-white/[0.06]">
                   <span className="flex-1 text-[10px] uppercase tracking-widest text-slate-600 font-semibold">Symbol</span>
-                  <span className="text-[10px] uppercase tracking-widest text-slate-600 font-semibold w-10 text-right">Type</span>
-                  <span className="text-[10px] uppercase tracking-widest text-slate-600 font-semibold w-16 text-right">Exch.</span>
+                  <span className="text-[10px] uppercase tracking-widest text-slate-600 font-semibold w-14 text-right">Impact</span>
                   <span className="w-5" />
-                  <span className="w-4" />
                 </div>
               )}
 
@@ -325,6 +329,7 @@ export default function SearchOverlay() {
                       key={stock.symbol}
                       stock={stock}
                       isHighlighted={i === highlightedIdx}
+                      isSelected={selectedSymbols.includes(stock.symbol)}
                       isLast={i === filteredStocks.length - 1}
                       onClick={() => handleSelectStock(stock.symbol)}
                       onHover={() => setHighlighted(i)}

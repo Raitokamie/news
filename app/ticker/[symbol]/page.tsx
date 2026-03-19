@@ -10,6 +10,7 @@ import { TelegramStatusWidget } from '@/components/watchlist';
 import { mockTelegramNotifications } from '@/lib/api';
 import { ArrowLeft, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import PremiumLock from '@/components/premium/PremiumLock';
 
 type RangeOption = '24h' | '7d';
 
@@ -34,7 +35,18 @@ export default function TickerDetailPage() {
   const router = useRouter();
   const symbol = (params.symbol as string).toUpperCase();
   const [range, setRange] = useState<RangeOption>('24h');
-  const searchQuery = useTerminalStore((s) => s.searchQuery);
+  const selectedSymbols = useTerminalStore((s) => s.selectedSymbols);
+  const userPlan = useTerminalStore((s) => s.userPlan);
+
+  if (userPlan === 'free') {
+    return (
+      <div className="flex h-full bg-[#0a1017]">
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <PremiumLock featureName="Ticker Detail" />
+        </div>
+      </div>
+    );
+  }
 
   // Find ticker name from news data
   const tickerName = useMemo(() => {
@@ -70,19 +82,17 @@ export default function TickerDetailPage() {
     const cutoff = new Date(Date.now() - RANGE_MS[range]);
     items = items.filter((n) => n.publishedAt >= cutoff);
 
-    // Search
-    if (searchQuery.trim()) {
-      const q = searchQuery.trim().toLowerCase();
+    // Filter by selected symbols
+    if (selectedSymbols.length > 0) {
       items = items.filter((n) =>
-        n.headline.toLowerCase().includes(q) ||
-        n.body.toLowerCase().includes(q)
+        n.tickers.some((t) => selectedSymbols.includes(t.symbol))
       );
     }
 
     // Sort latest first
     items = [...items].sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
     return items;
-  }, [symbol, range, searchQuery]);
+  }, [symbol, range, selectedSymbols]);
 
   const badItems = filtered.filter((n) => n.sentiment === 'bad' || n.sentiment === 'neutral');
   const goodItems = filtered.filter((n) => n.sentiment === 'good');

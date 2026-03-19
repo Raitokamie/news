@@ -2,8 +2,8 @@
 
 import { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { mockNews } from '@/lib/api';
-import { NewsItem } from '@/lib/types';
+import { mockMarketTrends } from '@/lib/api';
+import { TickerAnalysis } from '@/lib/types';
 import { Star, X, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -12,56 +12,25 @@ interface WatchlistStocksRowProps {
   onRemove: (symbol: string) => void;
 }
 
-export interface TickerSummary {
-  symbol: string;
-  mentionCount: number;
-  avgScore: number;
-  sentiment: 'good' | 'bad' | 'neutral';
-  trend: 'up' | 'down' | 'flat';
-}
-
-export function deriveTickerSummaries(news: NewsItem[]): TickerSummary[] {
-  const map = new Map<string, { scores: number[]; count: number }>();
-  for (const item of news) {
-    for (const t of item.tickers) {
-      const entry = map.get(t.symbol) || { scores: [], count: 0 };
-      entry.scores.push(t.sentimentScore);
-      entry.count++;
-      map.set(t.symbol, entry);
-    }
-  }
-  return Array.from(map.entries()).map(([symbol, { scores, count }]) => {
-    const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
-    return {
-      symbol,
-      mentionCount: count,
-      avgScore: Math.round(avg * 10) / 10,
-      sentiment: avg > 2 ? 'good' : avg < -2 ? 'bad' : 'neutral',
-      trend: avg > 0 ? 'up' : avg < 0 ? 'down' : 'flat',
-    };
-  });
-}
-
 const trendConfig = {
   up: { icon: TrendingUp, iconColor: 'text-[#10B981]', bgColor: 'bg-[#17382D]' },
   down: { icon: TrendingDown, iconColor: 'text-[#EF4444]', bgColor: 'bg-[#592424]' },
   flat: { icon: Minus, iconColor: 'text-[#808080]', bgColor: 'bg-[#262626]' },
 };
 
-const sentimentConfig = {
-  good: { label: 'Positive', dotColor: 'bg-[#10B981]', barColor: 'bg-[#10B981]' },
-  bad: { label: 'Negative', dotColor: 'bg-[#EF4444]', barColor: 'bg-[#EF4444]' },
-  neutral: { label: 'Neutral', dotColor: 'bg-[#7F7F7F]', barColor: 'bg-[#7F7F7F]' },
+const sentimentMap: Record<'up' | 'down' | 'flat', { label: string; dotColor: string; barColor: string }> = {
+  up: { label: 'Positive', dotColor: 'bg-[#10B981]', barColor: 'bg-[#10B981]' },
+  down: { label: 'Negative', dotColor: 'bg-[#EF4444]', barColor: 'bg-[#EF4444]' },
+  flat: { label: 'Neutral', dotColor: 'bg-[#7F7F7F]', barColor: 'bg-[#7F7F7F]' },
 };
 
 export default function WatchlistStocksRow({ trackedSymbols, onRemove }: WatchlistStocksRowProps) {
   const router = useRouter();
-  const allSummaries = useMemo(() => deriveTickerSummaries(mockNews), []);
   const trackedStocks = useMemo(() => {
     return trackedSymbols
-      .map((s) => allSummaries.find((t) => t.symbol === s))
-      .filter(Boolean) as TickerSummary[];
-  }, [trackedSymbols, allSummaries]);
+      .map((s) => mockMarketTrends.find((t) => t.symbol === s))
+      .filter(Boolean) as TickerAnalysis[];
+  }, [trackedSymbols]);
 
   if (trackedStocks.length === 0) {
     return (
@@ -78,10 +47,10 @@ export default function WatchlistStocksRow({ trackedSymbols, onRemove }: Watchli
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {trackedStocks.map((item) => {
-        const trend = trendConfig[item.trend];
-        const sentiment = sentimentConfig[item.sentiment];
+        const trend = trendConfig[item.sentiment];
+        const sentiment = sentimentMap[item.sentiment];
         const TrendIcon = trend.icon;
-        const scoreNormalized = Math.min(Math.abs(item.avgScore) / 10, 1) * 100;
+        const scoreNormalized = Math.min(item.score, 100);
 
         return (
           <div key={item.symbol} className="relative group">
@@ -100,8 +69,8 @@ export default function WatchlistStocksRow({ trackedSymbols, onRemove }: Watchli
 
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-white text-xs font-medium">Avg Sentiment Score</span>
-                  <span className="text-white font-semibold text-sm">{item.avgScore}</span>
+                  <span className="text-white text-xs font-medium">Sentiment Score</span>
+                  <span className="text-white font-semibold text-sm">{item.score}</span>
                 </div>
                 <div className="h-2 w-full bg-[#2A2A2A] rounded-full overflow-hidden">
                   <div

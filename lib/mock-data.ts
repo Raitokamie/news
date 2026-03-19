@@ -272,6 +272,122 @@ export const mockNews: NewsItem[] = [
       { symbol: 'NVDA', name: 'NVIDIA Corporation', sentiment: 'up', sentimentScore: 5 },
     ],
   },
+
+  // ── Added: Coverage for all mockMarketTrends tickers ────
+  {
+    id: '16',
+    headline: 'Meta\'s AI-Powered Ad Targeting Drives Record Q4 Revenue, Shares Jump 8%',
+    body: '$META reports Q4 revenue of $42.3B, beating estimates by 5%. AI-driven ad optimization and Reels monetization fuel the surge. Reality Labs losses narrow to $3.7B as Quest 3 adoption accelerates.',
+    sources: [{ name: 'BLOOMBERG', url: 'https://www.bloomberg.com/news/meta-q4-earnings-beat' }],
+    publishedAt: new Date(Date.now() - 6 * 60 * 1000),
+    regionTag: 'us',
+    countryCode: 'us',
+    impact: 'high',
+    sentiment: 'good',
+    tickers: [
+      { symbol: 'META', name: 'Meta Platforms, Inc.', sentiment: 'up', sentimentScore: 8 },
+    ],
+  },
+  {
+    id: '17',
+    headline: 'S&P 500 Drops 2.1% as Strong Jobs Data Crushes Rate Cut Expectations',
+    body: 'Non-farm payrolls surge past forecasts, sending Treasury yields higher and $SPY to its worst daily loss in three weeks. Fed futures now price in only one cut this year, down from three.',
+    sources: [{ name: 'WSJ', url: 'https://www.wsj.com/markets/sp500-drops-jobs-data' }],
+    publishedAt: new Date(Date.now() - 15 * 60 * 1000),
+    regionTag: 'us',
+    countryCode: 'us',
+    impact: 'high',
+    sentiment: 'bad',
+    tickers: [
+      { symbol: 'SPY', name: 'SPDR S&P 500 ETF Trust', sentiment: 'down', sentimentScore: -6 },
+    ],
+  },
+  {
+    id: '18',
+    headline: 'Mastercard Hits All-Time High on Record Cross-Border Payment Volumes',
+    body: '$MA reports cross-border transaction volumes up 22% YoY, driven by global travel recovery and expanding digital payment adoption in emerging markets. Value-added services revenue grows 24%.',
+    sources: [{ name: 'REUTERS', url: 'https://www.reuters.com/business/mastercard-cross-border-record' }],
+    publishedAt: new Date(Date.now() - 20 * 60 * 1000),
+    regionTag: 'global',
+    countryCode: 'global',
+    impact: 'high',
+    sentiment: 'good',
+    tickers: [
+      { symbol: 'MA', name: 'Mastercard Incorporated', sentiment: 'up', sentimentScore: 8 },
+    ],
+  },
+  {
+    id: '19',
+    headline: 'Amazon Loses $10B Pentagon Cloud Contract to Microsoft Azure',
+    body: '$AMZN loses the JEDI II cloud computing contract to $MSFT Azure, marking a significant setback for AWS in the government sector. Amazon plans to protest the decision.',
+    sources: [{ name: 'CNBC', url: 'https://www.cnbc.com/amazon-pentagon-cloud-contract-loss' }],
+    publishedAt: new Date(Date.now() - 22 * 60 * 1000),
+    regionTag: 'us',
+    countryCode: 'us',
+    impact: 'high',
+    sentiment: 'bad',
+    tickers: [
+      { symbol: 'AMZN', name: 'Amazon.com, Inc.', sentiment: 'down', sentimentScore: -7 },
+      { symbol: 'MSFT', name: 'Microsoft Corporation', sentiment: 'up', sentimentScore: 4 },
+    ],
+  },
+  {
+    id: '20',
+    headline: 'AMD Data Center GPU Revenue Disappoints as Nvidia Maintains AI Training Dominance',
+    body: '$AMD MI300X sales fall 15% short of guidance as hyperscalers consolidate AI training budgets around $NVDA Blackwell architecture. AMD pivots messaging toward inference-optimized workloads.',
+    sources: [{ name: 'FT', url: 'https://www.ft.com/content/amd-data-center-disappoints' }],
+    publishedAt: new Date(Date.now() - 32 * 60 * 1000),
+    regionTag: 'us',
+    countryCode: 'us',
+    impact: 'medium',
+    sentiment: 'bad',
+    tickers: [
+      { symbol: 'AMD', name: 'Advanced Micro Devices', sentiment: 'down', sentimentScore: -6 },
+      { symbol: 'NVDA', name: 'NVIDIA Corporation', sentiment: 'up', sentimentScore: 3 },
+    ],
+  },
+  {
+    id: '21',
+    headline: 'ASML Books Record €18B in EUV Orders as Chip Makers Race to Advanced Nodes',
+    body: '$ASML reports its largest quarterly order book ever, driven by demand from TSMC, Samsung, and Intel for High-NA EUV lithography systems. Shares rise 5% in Amsterdam trading.',
+    sources: [{ name: 'REUTERS', url: 'https://www.reuters.com/technology/asml-record-euv-orders' }],
+    publishedAt: new Date(Date.now() - 40 * 60 * 1000),
+    regionTag: 'eu',
+    countryCode: 'nl',
+    impact: 'high',
+    sentiment: 'good',
+    tickers: [
+      { symbol: 'ASML', name: 'ASML Holding N.V.', sentiment: 'up', sentimentScore: 8 },
+    ],
+  },
+  {
+    id: '22',
+    headline: 'EU Fines Meta €1.2B Over Transatlantic Data Transfer Practices',
+    body: 'The European Commission imposes a record privacy fine on $META for transferring EU user data to US servers without adequate safeguards. Meta says it will appeal the ruling.',
+    sources: [{ name: 'FT', url: 'https://www.ft.com/content/meta-eu-data-fine' }],
+    publishedAt: new Date(Date.now() - 55 * 60 * 1000),
+    regionTag: 'eu',
+    countryCode: 'ie',
+    impact: 'medium',
+    sentiment: 'bad',
+    tickers: [
+      { symbol: 'META', name: 'Meta Platforms, Inc.', sentiment: 'down', sentimentScore: -5 },
+    ],
+  },
+  {
+    id: '23',
+    headline: 'FTC Expands Antitrust Lawsuit Against Amazon Over Marketplace Practices',
+    body: 'Federal Trade Commission adds new allegations to its ongoing antitrust suit against $AMZN, claiming the company forces sellers to use its fulfillment services and penalizes those offering lower prices elsewhere.',
+    sources: [{ name: 'WSJ', url: 'https://www.wsj.com/business/amazon-ftc-antitrust-expansion' }],
+    publishedAt: new Date(Date.now() - 90 * 60 * 1000),
+    regionTag: 'us',
+    countryCode: 'us',
+    impact: 'high',
+    sentiment: 'bad',
+    tickers: [
+      { symbol: 'AMZN', name: 'Amazon.com, Inc.', sentiment: 'down', sentimentScore: -8 },
+    ],
+  },
 ];
 
 
@@ -283,17 +399,32 @@ export const liveUpdate: LiveUpdate = {
 
 // Market Trends data (exact values from screenshot)
 export const mockMarketTrends: TickerAnalysis[] = [
-  { symbol: 'GOOGL', name: 'Alphabet Inc.', impactLevel: 'high', sentiment: 'up', mentionCount: 25, sentimentHistorical: { positive: 16, neutral: 4, negative: 5 }, score: 60 },
-  { symbol: 'NVDA', name: 'NVIDIA Corporation', impactLevel: 'high', sentiment: 'up', mentionCount: 14, sentimentHistorical: { positive: 12, neutral: 4, negative: 2 }, score: 85 },
-  { symbol: 'AAPL', name: 'Apple Inc. • Nasdaq GS', impactLevel: 'medium', sentiment: 'up', mentionCount: 17, sentimentHistorical: { positive: 12, neutral: 2, negative: 3 }, score: 70 },
-  { symbol: 'MSFT', name: 'Microsoft Corporation', impactLevel: 'low', sentiment: 'up', mentionCount: 18, sentimentHistorical: { positive: 12, neutral: 4, negative: 2 }, score: 75 },
-  { symbol: 'TSLA', name: 'Tesla, Inc.', impactLevel: 'high', sentiment: 'down', mentionCount: 20, sentimentHistorical: { positive: 4, neutral: 2, negative: 14 }, score: 20 },
-  { symbol: 'AMZN', name: 'Amazon.com, Inc.', impactLevel: 'low', sentiment: 'down', mentionCount: 31, sentimentHistorical: { positive: 4, neutral: 2, negative: 25 }, score: 20 },
-  { symbol: 'MA', name: 'Mastercard Incorporated', impactLevel: 'high', sentiment: 'up', mentionCount: 14, sentimentHistorical: { positive: 12, neutral: 1, negative: 1 }, score: 90 },
-  { symbol: 'AMD', name: 'Advanced Micro Devices', impactLevel: 'medium', sentiment: 'down', mentionCount: 7, sentimentHistorical: { positive: 1, neutral: 1, negative: 5 }, score: 30 },
-  { symbol: 'SPY', name: 'SPDR S&P 500 ETF Trust', impactLevel: 'high', sentiment: 'down', mentionCount: 10, sentimentHistorical: { positive: 1, neutral: 2, negative: 7 }, score: 23 },
-  { symbol: 'META', name: 'Meta Platforms, Inc.', impactLevel: 'high', sentiment: 'up', mentionCount: 34, sentimentHistorical: { positive: 24, neutral: 4, negative: 5 }, score: 69 },
-  { symbol: 'ASML', name: 'ASML Holding N.V.', impactLevel: 'high', sentiment: 'up', mentionCount: 12, sentimentHistorical: { positive: 10, neutral: 1, negative: 1 }, score: 78 },
+  // score = ((avg_sentimentScore + 10) / 20) × 100  (normalized 0-100 from avg of -10..+10)
+  { symbol: 'GOOGL', name: 'Alphabet Inc.', impactLevel: 'high', sentiment: 'up', mentionCount: 25, sentimentHistorical: { positive: 16, neutral: 4, negative: 5 }, score: 60 },   // avg +2.0
+  { symbol: 'NVDA', name: 'NVIDIA Corporation', impactLevel: 'high', sentiment: 'up', mentionCount: 14, sentimentHistorical: { positive: 10, neutral: 2, negative: 2 }, score: 75 },   // avg +5.0
+  { symbol: 'AAPL', name: 'Apple Inc. • Nasdaq GS', impactLevel: 'medium', sentiment: 'up', mentionCount: 17, sentimentHistorical: { positive: 12, neutral: 2, negative: 3 }, score: 78 },   // avg +5.5
+  { symbol: 'MSFT', name: 'Microsoft Corporation', impactLevel: 'low', sentiment: 'up', mentionCount: 18, sentimentHistorical: { positive: 12, neutral: 4, negative: 2 }, score: 55 },   // avg +1.0
+  { symbol: 'TSLA', name: 'Tesla, Inc.', impactLevel: 'high', sentiment: 'down', mentionCount: 20, sentimentHistorical: { positive: 4, neutral: 2, negative: 14 }, score: 10 },   // avg -8.0
+  { symbol: 'AMZN', name: 'Amazon.com, Inc.', impactLevel: 'low', sentiment: 'down', mentionCount: 31, sentimentHistorical: { positive: 4, neutral: 2, negative: 25 }, score: 43 },   // avg -1.5
+  { symbol: 'MA', name: 'Mastercard Incorporated', impactLevel: 'high', sentiment: 'up', mentionCount: 14, sentimentHistorical: { positive: 12, neutral: 1, negative: 1 }, score: 90 },   // avg +8.0
+  { symbol: 'AMD', name: 'Advanced Micro Devices', impactLevel: 'medium', sentiment: 'down', mentionCount: 7, sentimentHistorical: { positive: 1, neutral: 1, negative: 5 }, score: 20 },   // avg -6.0
+  { symbol: 'SPY', name: 'SPDR S&P 500 ETF Trust', impactLevel: 'high', sentiment: 'down', mentionCount: 10, sentimentHistorical: { positive: 1, neutral: 2, negative: 7 }, score: 20 },   // avg -6.0
+  { symbol: 'META', name: 'Meta Platforms, Inc.', impactLevel: 'high', sentiment: 'up', mentionCount: 34, sentimentHistorical: { positive: 24, neutral: 5, negative: 5 }, score: 58 },   // avg +1.5
+  { symbol: 'ASML', name: 'ASML Holding N.V.', impactLevel: 'high', sentiment: 'up', mentionCount: 12, sentimentHistorical: { positive: 10, neutral: 1, negative: 1 }, score: 90 },   // avg +8.0
+  // ── Regional & Sector tickers (referenced in mockNews) ──
+  { symbol: 'COIN', name: 'Coinbase Global, Inc.', impactLevel: 'medium', sentiment: 'down', mentionCount: 8, sentimentHistorical: { positive: 2, neutral: 1, negative: 5 }, score: 30 },   // avg -4.0
+  { symbol: 'MSTR', name: 'MicroStrategy Incorporated', impactLevel: 'low', sentiment: 'down', mentionCount: 5, sentimentHistorical: { positive: 1, neutral: 1, negative: 3 }, score: 35 },   // avg -3.0
+  { symbol: 'BABA', name: 'Alibaba Group Holding Ltd.', impactLevel: 'high', sentiment: 'down', mentionCount: 11, sentimentHistorical: { positive: 2, neutral: 2, negative: 7 }, score: 25 },   // avg -5.0
+  { symbol: 'PDD', name: 'PDD Holdings Inc.', impactLevel: 'medium', sentiment: 'down', mentionCount: 7, sentimentHistorical: { positive: 1, neutral: 1, negative: 5 }, score: 30 },   // avg -4.0
+  { symbol: 'XOM', name: 'Exxon Mobil Corporation', impactLevel: 'medium', sentiment: 'up', mentionCount: 8, sentimentHistorical: { positive: 5, neutral: 2, negative: 1 }, score: 80 },   // avg +6.0
+  { symbol: 'CVX', name: 'Chevron Corporation', impactLevel: 'medium', sentiment: 'up', mentionCount: 6, sentimentHistorical: { positive: 4, neutral: 1, negative: 1 }, score: 75 },   // avg +5.0
+  { symbol: 'FXI', name: 'iShares China Large-Cap ETF', impactLevel: 'high', sentiment: 'down', mentionCount: 9, sentimentHistorical: { positive: 1, neutral: 2, negative: 6 }, score: 15 },   // avg -7.0
+  { symbol: 'EWG', name: 'iShares MSCI Germany ETF', impactLevel: 'medium', sentiment: 'up', mentionCount: 6, sentimentHistorical: { positive: 4, neutral: 1, negative: 1 }, score: 75 },   // avg +5.0
+  { symbol: 'FXE', name: 'Invesco CurrencyShares Euro Trust', impactLevel: 'low', sentiment: 'up', mentionCount: 4, sentimentHistorical: { positive: 3, neutral: 1, negative: 0 }, score: 70 },   // avg +4.0
+  { symbol: 'FXY', name: 'Invesco CurrencyShares Yen Trust', impactLevel: 'medium', sentiment: 'down', mentionCount: 6, sentimentHistorical: { positive: 1, neutral: 1, negative: 4 }, score: 20 },   // avg -6.0
+  { symbol: 'EWJ', name: 'iShares MSCI Japan ETF', impactLevel: 'low', sentiment: 'up', mentionCount: 5, sentimentHistorical: { positive: 3, neutral: 1, negative: 1 }, score: 65 },   // avg +3.0
+  { symbol: 'GULF', name: 'Gulf Energy Development PCL', impactLevel: 'low', sentiment: 'up', mentionCount: 4, sentimentHistorical: { positive: 3, neutral: 1, negative: 0 }, score: 75 },   // avg +5.0
+  { symbol: 'CPALL', name: 'CP ALL Public Company Ltd.', impactLevel: 'low', sentiment: 'up', mentionCount: 5, sentimentHistorical: { positive: 3, neutral: 1, negative: 1 }, score: 70 },   // avg +4.0
 ];
 
 // Stock Sentiment uses the same data as Market Trends (single source of truth)
@@ -319,4 +450,18 @@ export const mockAIOutlook: Record<string, string> = {
   SPY: "Broad market sentiment remains cautious as investors weigh strong earnings against elevated valuations and uncertainty around Federal Reserve policy. Sector rotation from growth to value suggests a maturing bull market cycle.",
   META: "Meta's ad revenue reacceleration driven by Reels monetization and AI-powered targeting improvements has exceeded expectations. Reality Labs losses remain elevated but the Quest 3 adoption curve is encouraging. Cost discipline under the 'Year of Efficiency' framework continues to drive margin expansion.",
   GOOGL: "Alphabet's aggressive integration of Gemini 1.5 Pro across Workspace and Search is yielding significant engagement gains. With Google Cloud reaching a $36B annual run rate, the company's AI monetization thesis is strengthening. However, ongoing DOJ antitrust proceedings create material regulatory risk that could reshape the search distribution model.",
+  ASML: "ASML's record €18B EUV order book reflects the semiconductor industry's accelerating push toward advanced nodes. As the sole supplier of extreme ultraviolet lithography systems, ASML holds an unmatched monopoly position. High-NA EUV adoption by TSMC and Intel for 2nm processes should drive a multi-year revenue expansion cycle, though geopolitical export restrictions to China remain a key risk factor.",
+  COIN: "Coinbase faces regulatory headwinds as the SEC intensifies scrutiny of crypto listing practices. Trading volumes remain depressed compared to 2021 peaks, but the company's institutional custody business and Base L2 chain provide diversification. Regulatory clarity remains the key catalyst.",
+  MSTR: "MicroStrategy's Bitcoin-treasury strategy continues to polarize investors. The company's leveraged BTC exposure amplifies both upside and downside volatility. Enterprise software revenue provides minimal fundamental support at current valuations.",
+  BABA: "Alibaba's restructuring into six business units is progressing but market confidence remains low amid China's property crisis and weak consumer spending. Cloud Intelligence Group's planned IPO could unlock value, though geopolitical tensions and regulatory uncertainty weigh on foreign investor sentiment.",
+  PDD: "PDD Holdings' Temu platform is aggressively expanding in Western markets with ultra-low pricing, but mounting losses and regulatory scrutiny over product safety and labor practices pose risks. Domestic Pinduoduo business remains profitable with strong agricultural e-commerce growth.",
+  XOM: "Exxon Mobil benefits from OPEC+ production cuts supporting crude prices above $80/barrel. The Pioneer Natural Resources acquisition strengthens Permian Basin positioning. Capital discipline and shareholder returns remain priorities, with buybacks running at $17.5B annually.",
+  CVX: "Chevron's Hess acquisition adds Guyana assets providing long-duration production growth. Higher oil prices from OPEC+ cuts support near-term earnings, though downstream margins face seasonal pressure. The company maintains one of the strongest balance sheets among integrated oils.",
+  FXI: "Chinese large-cap equities face persistent headwinds from property sector deleveraging, deflationary pressures, and disappointing fiscal stimulus. Foreign capital outflows continue as investors seek clarity on Beijing's economic policy direction. Valuations are historically cheap but lack a near-term catalyst.",
+  EWG: "German equities benefit from ECB rate pause signals as the manufacturing-heavy DAX index is particularly sensitive to monetary policy shifts. However, structural challenges in the auto sector's EV transition and energy cost competitiveness remain medium-term headwinds.",
+  FXE: "The euro finds support from ECB's relatively hawkish stance compared to other major central banks. However, diverging growth trajectories within the eurozone and political uncertainty in France and Germany limit upside potential against the dollar.",
+  FXY: "The yen remains under pressure as the BOJ maintains ultra-loose monetary policy while other central banks hold rates higher. Intervention risk rises as USDJPY pushes above 150, but fundamental policy divergence continues to favor yen weakness.",
+  EWJ: "Japanese equities benefit paradoxically from yen weakness, boosting exporters' earnings when repatriated. Corporate governance reforms under the Tokyo Stock Exchange's push for higher ROE are attracting foreign capital. The BOJ's eventual policy normalization remains the key risk event.",
+  GULF: "Gulf Energy Development benefits from Thailand's tourism recovery and growing electricity demand. The company's renewable energy portfolio expansion aligns with government decarbonization targets. Foreign investor inflows to Thai equities provide additional tailwind.",
+  CPALL: "CP ALL's convenience store network dominance in Thailand continues to drive steady same-store sales growth. The Lotus's integration is delivering synergies in supply chain and private label products. Rising tourist spending in urban locations provides cyclical upside.",
 };
