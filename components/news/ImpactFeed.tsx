@@ -10,7 +10,7 @@ const HOURS_24 = 24 * 60 * 60 * 1000;
 const PAGE_SIZE = 10;
 
 export default function ImpactFeed() {
-  const { activeRegion, activeCountry, activeTicker, activeImpact, sortOrder, searchQuery } = useTerminalStore();
+  const { activeRegion, activeCountry, activeTicker, activeImpact, sortOrder, selectedSymbols } = useTerminalStore();
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const filtered = useMemo(() => {
@@ -37,17 +37,14 @@ export default function ImpactFeed() {
       items = items.filter((n) => n.impact === activeImpact);
     }
 
-    if (searchQuery.trim()) {
-      const q = searchQuery.trim().toLowerCase();
+    if (selectedSymbols.length > 0) {
       items = items.filter((n) =>
-        n.headline.toLowerCase().includes(q) ||
-        n.body.toLowerCase().includes(q) ||
-        n.tickers.some((t) => t.symbol.toLowerCase().includes(q))
+        n.tickers.some((t) => selectedSymbols.includes(t.symbol))
       );
     }
 
     return items;
-  }, [activeRegion, activeCountry, activeTicker, activeImpact, sortOrder, searchQuery]);
+  }, [activeRegion, activeCountry, activeTicker, activeImpact, sortOrder, selectedSymbols]);
 
   const sortItems = (list: typeof filtered) => {
     const impactOrder: Record<string, number> = { high: 0, medium: 1, low: 2 };

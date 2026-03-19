@@ -2,7 +2,6 @@
 
 import { Fragment, useMemo, useState } from 'react';
 import { mockNews } from '@/lib/api';
-import { useTerminalStore } from '@/lib/store';
 import NewsCard from '@/components/news/NewsCard';
 import { TrendingDown, TrendingUp, ChevronDown } from 'lucide-react';
 
@@ -24,7 +23,6 @@ interface WatchlistActivityFeedProps {
 
 export default function WatchlistActivityFeed({ trackedSymbols }: WatchlistActivityFeedProps) {
   const [range, setRange] = useState<RangeOption>('24h');
-  const searchQuery = useTerminalStore((s) => s.searchQuery);
 
   const filtered = useMemo(() => {
     if (trackedSymbols.length === 0) return [];
@@ -40,21 +38,11 @@ export default function WatchlistActivityFeed({ trackedSymbols }: WatchlistActiv
     const cutoff = new Date(Date.now() - RANGE_MS[range]);
     items = items.filter((n) => n.publishedAt >= cutoff);
 
-    // Filter by search query
-    if (searchQuery.trim()) {
-      const q = searchQuery.trim().toLowerCase();
-      items = items.filter((n) =>
-        n.headline.toLowerCase().includes(q) ||
-        n.body.toLowerCase().includes(q) ||
-        n.tickers.some((t) => t.symbol.toLowerCase().includes(q))
-      );
-    }
-
     // Sort by latest
     items = [...items].sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
 
     return items;
-  }, [trackedSymbols, range, searchQuery]);
+  }, [trackedSymbols, range]);
 
   const badItems = filtered.filter((n) => n.sentiment === 'bad' || n.sentiment === 'neutral');
   const goodItems = filtered.filter((n) => n.sentiment === 'good');

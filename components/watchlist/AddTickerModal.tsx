@@ -1,8 +1,8 @@
 'use client';
 
-import { useRef, useEffect, useMemo } from 'react';
-import { mockNews } from '@/lib/api';
-import { deriveTickerSummaries } from './WatchlistStocksRow';
+import { useRef, useEffect, useState } from 'react';
+import { Search } from 'lucide-react';
+import { mockMarketTrends } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
 interface AddTickerModalProps {
@@ -19,11 +19,22 @@ export default function AddTickerModal({
   onAddTicker,
 }: AddTickerModalProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const allSummaries = useMemo(() => deriveTickerSummaries(mockNews), []);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [search, setSearch] = useState('');
 
-  const availableTickers = allSummaries.filter(
+  const availableTickers = mockMarketTrends.filter(
     (item) => !trackedTickers.includes(item.symbol)
   );
+
+  const filtered = search.trim()
+    ? availableTickers.filter((item) =>
+        item.symbol.toLowerCase().includes(search.trim().toLowerCase())
+      )
+    : availableTickers;
+
+  useEffect(() => {
+    if (isOpen) { setSearch(''); setTimeout(() => inputRef.current?.focus(), 0); }
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -43,16 +54,27 @@ export default function AddTickerModal({
       ref={ref}
       className="absolute top-full right-0 mt-2 w-64 bg-[#1A1A1A] border border-[#222F44] rounded-xl shadow-xl z-50 overflow-hidden"
     >
-      <div className="px-3 py-2 border-b border-[#222F44]">
+      <div className="px-3 py-2 border-b border-[#222F44] flex flex-col gap-2">
         <p className="text-xs text-slate-400 font-medium">Add to Watchlist</p>
+        <div className="flex items-center gap-2 bg-[#111722] rounded-lg px-2 py-1.5">
+          <Search size={13} className="text-slate-500 shrink-0" />
+          <input
+            ref={inputRef}
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search symbol…"
+            className="flex-1 bg-transparent text-xs text-white placeholder:text-slate-500 focus:outline-none"
+          />
+        </div>
       </div>
       <div className="max-h-64 overflow-y-auto">
-        {availableTickers.length === 0 ? (
+        {filtered.length === 0 ? (
           <div className="px-3 py-4 text-center text-sm text-slate-500">
-            No more tickers available
+            {search.trim() ? 'No matches' : 'No more tickers available'}
           </div>
         ) : (
-          availableTickers.map((item) => (
+          filtered.map((item) => (
             <button
               key={item.symbol}
               onClick={() => {

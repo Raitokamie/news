@@ -62,10 +62,10 @@ export default function MarketTrendsPage() {
     return filterMarketTrends(mockMarketTrends, activeFilter);
   }, [activeFilter]);
 
-  // Top 4 stocks derived from market trends, sorted by score
+  // Top 4 cards follow the active filter
   const sortedTopStocks = useMemo(() => {
-    return [...mockMarketTrends].sort((a, b) => Math.abs(b.score) - Math.abs(a.score)).slice(0, 4);
-  }, []);
+    return filteredTrends.slice(0, 4);
+  }, [filteredTrends]);
 
   return (
     <div className="flex h-full bg-[#0a1017]">

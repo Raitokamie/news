@@ -10,7 +10,7 @@ interface TerminalStore {
   activeImpact: ImpactLevel | 'all';
   sortOrder: SortOrder;
   sidebarOpen: boolean;
-  searchQuery: string;
+  selectedSymbols: string[];
   searchOverlayOpen: boolean;
   trackedTickers: string[];
   sentimentTickers: string[];
@@ -27,7 +27,9 @@ interface TerminalStore {
   removeTicker: (symbol: string) => void;
   addSentimentTicker: (symbol: string) => void;
   removeSentimentTicker: (symbol: string) => void;
-  setSearchQuery: (query: string) => void;
+  toggleSymbol: (symbol: string) => void;
+  removeSymbol: (symbol: string) => void;
+  clearSymbols: () => void;
   openSearchOverlay: () => void;
   closeSearchOverlay: () => void;
   connectTelegram: () => void;
@@ -49,11 +51,19 @@ export const useTerminalStore = create<TerminalStore>((set) => ({
   setImpact: (impact) => set({ activeImpact: impact }),
   setSortOrder: (order) => set({ sortOrder: order }),
   toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
-  searchQuery: '',
-  setSearchQuery: (query) => set({ searchQuery: query }),
+  selectedSymbols: [],
+  toggleSymbol: (symbol) => set((state) => ({
+    selectedSymbols: state.selectedSymbols.includes(symbol)
+      ? state.selectedSymbols.filter((s) => s !== symbol)
+      : [...state.selectedSymbols, symbol],
+  })),
+  removeSymbol: (symbol) => set((state) => ({
+    selectedSymbols: state.selectedSymbols.filter((s) => s !== symbol),
+  })),
+  clearSymbols: () => set({ selectedSymbols: [] }),
   searchOverlayOpen: false,
   openSearchOverlay: () => set({ searchOverlayOpen: true }),
-  closeSearchOverlay: () => set({ searchOverlayOpen: false, searchQuery: '' }),
+  closeSearchOverlay: () => set({ searchOverlayOpen: false }),
   telegramConnected: false,
   userPlan: 'free',
   setUserPlan: (plan) => set({ userPlan: plan }),

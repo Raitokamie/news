@@ -19,13 +19,6 @@ export default function SentimentScoreCard({ sentiment, score, aiOutlook }: Sent
   const sent = sentimentConfig[sentiment];
   const SentIcon = sent.icon;
 
-  // Convert score (0-100) to a -10 to 10 scale for display
-  const displayScore = sentiment === 'down'
-    ? `-${Math.round((100 - score) / 10)}`
-    : sentiment === 'up'
-      ? `${Math.round(score / 10)}`
-      : '0';
-
   return (
     <div className="flex flex-col gap-4 h-full">
       {/* Top row: Sentiment + Score */}
@@ -47,8 +40,7 @@ export default function SentimentScoreCard({ sentiment, score, aiOutlook }: Sent
           <div className="flex flex-col items-center">
             <h3 className="text-sm font-bold text-white mb-3">Score</h3>
             <div className="flex items-center justify-center w-full px-4 py-3 rounded-lg border border-[#333333] bg-[#0a1017]">
-              <span className="text-xl font-extrabold text-white">{displayScore}</span>
-              <span className="text-sm text-slate-400 font-medium">/10</span>
+              <span className="text-xl font-extrabold text-white">{score}</span>
             </div>
           </div>
         </div>

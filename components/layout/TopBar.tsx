@@ -1,13 +1,11 @@
 'use client';
 
-import { Search, Bell, Menu } from 'lucide-react';
+import { Search, Bell, Menu, X } from 'lucide-react';
 import { useTerminalStore } from '@/lib/store';
-import dynamic from 'next/dynamic';
-
-const SearchOverlay = dynamic(() => import('@/components/search/SearchOverlay'), { ssr: false });
+import SearchOverlay from '@/components/search/SearchOverlay';
 
 export default function TopBar() {
-  const { toggleSidebar, searchOverlayOpen, openSearchOverlay } = useTerminalStore();
+  const { toggleSidebar, searchOverlayOpen, openSearchOverlay, selectedSymbols, removeSymbol, clearSymbols } = useTerminalStore();
 
   return (
     <>
@@ -30,12 +28,40 @@ export default function TopBar() {
             aria-label="Open search"
           >
             <Search size={15} className="text-slate-400 shrink-0 group-hover:text-slate-300 transition-colors" />
-            <span className="flex-1 text-sm text-slate-500 group-hover:text-slate-400 transition-colors">
-              Search symbols, news, or reports…
-            </span>
-            <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-mono text-slate-600 bg-white/6 rounded border border-white/10">
-              /
-            </kbd>
+            {selectedSymbols.length > 0 ? (
+              <div className="flex-1 flex items-center gap-1.5 flex-wrap">
+                {selectedSymbols.map((sym) => (
+                  <span
+                    key={sym}
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#2962FF]/15 text-[#2962FF] text-[12px] font-semibold"
+                  >
+                    {sym}
+                    <button
+                      onClick={(e) => { e.stopPropagation(); removeSymbol(sym); }}
+                      className="hover:text-white transition-colors"
+                    >
+                      <X size={10} />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <span className="flex-1 text-sm text-slate-500 group-hover:text-slate-400 transition-colors">
+                Search symbols, news, or reports…
+              </span>
+            )}
+            {selectedSymbols.length > 0 ? (
+              <button
+                onClick={(e) => { e.stopPropagation(); clearSymbols(); }}
+                className="text-[11px] text-slate-400 hover:text-white px-2 py-0.5 rounded border border-white/10 hover:border-white/20 transition-colors"
+              >
+                Clear
+              </button>
+            ) : (
+              <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-mono text-slate-600 bg-white/6 rounded border border-white/10">
+                /
+              </kbd>
+            )}
           </button>
 
           {/* Bell */}
