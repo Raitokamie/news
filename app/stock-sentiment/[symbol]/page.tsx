@@ -44,7 +44,7 @@ export default function StockDetailPage() {
     return (
       <div className="flex h-full bg-[#0a1017]">
         <div className="flex-1 flex flex-col overflow-hidden">
-          <TopBar />
+          <TopBar showBack />
           <div className="flex-1 flex items-center justify-center">
             <p className="text-slate-400 text-sm">No sentiment data found for <span className="text-[#0D7FF2] font-bold">${symbol}</span></p>
           </div>
@@ -57,7 +57,7 @@ export default function StockDetailPage() {
   return (
     <div className="flex h-full bg-[#0a1017]">
       <div className="flex-1 flex flex-col overflow-hidden">
-        <TopBar />
+        <TopBar showBack />
 
         {/* Center content area */}
         <div className="flex-1 overflow-y-auto">

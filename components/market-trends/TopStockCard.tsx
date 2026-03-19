@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { TickerAnalysis } from '@/lib/types';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -15,12 +16,15 @@ const sentimentConfig = {
 };
 
 export default function TopStockCard({ item }: TopStockCardProps) {
+  const router = useRouter();
   const config = sentimentConfig[item.sentiment];
   const TrendIcon = config.icon;
   const scoreNormalized = Math.min(item.score, 100);
 
   return (
-    <div className="bg-[#0a1017] border border-[#222F44] rounded-xl p-4 flex flex-col gap-3 hover:border-[#666] transition-colors">
+    <div
+      onClick={() => router.push(`/stock-sentiment/${item.symbol.toLowerCase()}`)}
+      className="bg-[#0a1017] border border-[#222F44] rounded-xl p-4 flex flex-col gap-3 hover:border-[#666] transition-colors cursor-pointer">
       {/* Header: Symbol + Trend Icon */}
       <div className="flex items-start justify-between">
         <div>

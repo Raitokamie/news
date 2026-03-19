@@ -1,16 +1,33 @@
 'use client';
 
-import { Search, Bell, Menu, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Search, Bell, Menu, X, ArrowLeft } from 'lucide-react';
 import { useTerminalStore } from '@/lib/store';
 import SearchOverlay from '@/components/search/SearchOverlay';
 
-export default function TopBar() {
+interface TopBarProps {
+  showBack?: boolean;
+}
+
+export default function TopBar({ showBack }: TopBarProps) {
+  const router = useRouter();
   const { toggleSidebar, searchOverlayOpen, openSearchOverlay, selectedSymbols, removeSymbol, clearSymbols } = useTerminalStore();
 
   return (
     <>
       <div className="sticky top-0 z-20 bg-[#0a1017] backdrop-blur-md border-b border-[#222F44] px-4 py-3">
         <div className="flex items-center gap-3">
+          {/* Back button — visible on detail pages */}
+          {showBack && (
+            <button
+              onClick={() => router.back()}
+              className="p-2 rounded-lg hover:bg-white/8 transition-colors text-slate-400 hover:text-slate-200"
+              aria-label="Go back"
+            >
+              <ArrowLeft size={18} />
+            </button>
+          )}
+
           {/* Hamburger — visible on mobile only */}
           <button
             onClick={toggleSidebar}

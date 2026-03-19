@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { TickerAnalysis, ImpactLevel } from '@/lib/types';
 import { TrendingUp, TrendingDown, Minus, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 
@@ -61,6 +62,7 @@ const sentimentConfig = {
 };
 
 export default function TrendDataTable({ items }: TrendDataTableProps) {
+  const router = useRouter();
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsDropdownOpen, setRowsDropdownOpen] = useState(false);
@@ -121,7 +123,8 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
             return (
               <tr
                 key={item.symbol}
-                className="border-b border-[#222F44] hover:bg-white/5 transition-colors"
+                onClick={() => router.push(`/stock-sentiment/${item.symbol.toLowerCase()}`)}
+                className="border-b border-[#222F44] hover:bg-white/5 transition-colors cursor-pointer"
               >
                 {/* Ticker */}
                 <td className="px-4 py-3">
