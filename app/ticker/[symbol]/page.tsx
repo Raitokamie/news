@@ -105,7 +105,7 @@ export default function TickerDetailPage() {
       <div className="flex-1 flex flex-col overflow-hidden">
         <TopBar />
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto pb-28 md:pb-0">
           {/* Ticker Header */}
           <div className="px-6 py-5">
             <div className="flex items-center justify-between">

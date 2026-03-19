@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter, Poppins } from 'next/font/google';
 import './globals.css';
 import Sidebar from '@/components/layout/Sidebar';
+import MobileBottomNav from '@/components/layout/MobileBottomNav';
 import PlanToggle from '@/components/dev/PlanToggle';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -20,13 +21,14 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body className={`${inter.variable} ${poppins.variable} font-sans bg-[#0a1017] text-slate-100 antialiased`}>
-        <div className="flex h-screen overflow-hidden">
+        <div className="flex h-screen overflow-hidden bg-[#0a1017]">
           {/* Sidebar — overlay on mobile, static on desktop */}
           <Sidebar />
           {/* Main content fills remaining width on desktop; full width on mobile */}
-          <main className="flex-1 overflow-y-auto w-full">
+          <main className="flex-1 relative w-full">
             {children}
           </main>
+          <MobileBottomNav />
           <PlanToggle />
         </div>
       </body>
