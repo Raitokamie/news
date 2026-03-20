@@ -67,12 +67,13 @@ export default function TopBar({ showBack }: TopBarProps) {
                     className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#2962FF]/15 text-[#2962FF] text-[12px] font-semibold"
                   >
                     {sym}
-                    <button
+                    <span
+                      role="button"
                       onClick={(e) => { e.stopPropagation(); removeSymbol(sym); }}
-                      className="hover:text-white transition-colors"
+                      className="hover:text-white transition-colors cursor-pointer"
                     >
                       <X size={10} />
-                    </button>
+                    </span>
                   </span>
                 ))}
               </div>
@@ -82,12 +83,13 @@ export default function TopBar({ showBack }: TopBarProps) {
               </span>
             )}
             {selectedSymbols.length > 0 ? (
-              <button
+              <span
+                role="button"
                 onClick={(e) => { e.stopPropagation(); clearSymbols(); }}
-                className="text-[11px] text-slate-400 hover:text-white px-2 py-0.5 rounded border border-white/10 hover:border-white/20 transition-colors"
+                className="text-[11px] text-slate-400 hover:text-white px-2 py-0.5 rounded border border-white/10 hover:border-white/20 transition-colors cursor-pointer"
               >
                 Clear
-              </button>
+              </span>
             ) : (
               <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-mono text-slate-600 bg-white/6 rounded border border-white/10">
                 /
