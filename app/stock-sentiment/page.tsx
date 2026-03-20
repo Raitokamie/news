@@ -182,58 +182,60 @@ export default function StockSentimentPage() {
           {/* Content */}
           <div className="px-6 pb-6 pt-0 flex flex-col gap-4">
             {/* Table */}
-            <div className="overflow-x-auto border border-[#222F44] rounded-xl overflow-hidden">
-              <table className="w-full min-w-[700px]">
-                <thead>
-                  <tr className="border-b border-[#222F44]">
-                    <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Ticker</th>
-                    <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Impact</th>
-                    <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Sentiment</th>
-                    <th className="text-center text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Mention</th>
-                    <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Sentiment Historical</th>
-                    <th className="text-right text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Score</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {paged.map((row) => {
-                    const impact = impactConfig[row.impactLevel];
-                    const sent = sentimentConfig[row.sentiment];
-                    const SentIcon = sent.icon;
+            <div className="border border-[#222F44] rounded-xl">
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[700px]">
+                  <thead>
+                    <tr className="border-b border-[#222F44]">
+                      <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Ticker</th>
+                      <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Impact</th>
+                      <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Sentiment</th>
+                      <th className="text-center text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Mention</th>
+                      <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Sentiment Historical</th>
+                      <th className="text-right text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {paged.map((row) => {
+                      const impact = impactConfig[row.impactLevel];
+                      const sent = sentimentConfig[row.sentiment];
+                      const SentIcon = sent.icon;
 
-                    return (
-                      <tr key={row.symbol} onClick={() => router.push(`/stock-sentiment/${row.symbol.toLowerCase()}`)} className="border-b border-[#222F44] hover:bg-white/5 transition-colors cursor-pointer">
-                        <td className="px-4 py-3">
-                          <span className="text-[#0D7FF2] font-bold text-sm">${row.symbol}</span>
-                        </td>
-                        <td className="px-4 py-3">
-                          <span className={cn('text-xs font-bold px-4 py-1.5 rounded-full', impact.bg, impact.text, impact.border)}>
-                            {impact.label}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3">
-                          <span className={cn('inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold', sent.bg)}>
-                            <SentIcon size={14} className={sent.iconColor} />
-                            <span className={sent.textColor}>{sent.label}</span>
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <span className="text-white text-sm font-bold">{row.mentionCount}</span>
-                        </td>
-                        <td className="px-4 py-3">
-                          <SentimentHistoricalBar data={row.sentimentHistorical} height={6} />
-                        </td>
-                        <td className="px-4 py-3 text-right">
-                          <span className="inline-flex items-center justify-center min-w-[40px] px-2.5 py-1 rounded-full border border-[#222F44] text-white font-bold text-sm">
-                            {row.score}
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                      return (
+                        <tr key={row.symbol} onClick={() => router.push(`/stock-sentiment/${row.symbol.toLowerCase()}`)} className="border-b border-[#222F44] hover:bg-white/5 transition-colors cursor-pointer">
+                          <td className="px-4 py-3">
+                            <span className="text-[#0D7FF2] font-bold text-sm">${row.symbol}</span>
+                          </td>
+                          <td className="px-4 py-3">
+                            <span className={cn('text-xs font-bold px-4 py-1.5 rounded-full', impact.bg, impact.text, impact.border)}>
+                              {impact.label}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3">
+                            <span className={cn('inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold', sent.bg)}>
+                              <SentIcon size={14} className={sent.iconColor} />
+                              <span className={sent.textColor}>{sent.label}</span>
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-center">
+                            <span className="text-white text-sm font-bold">{row.mentionCount}</span>
+                          </td>
+                          <td className="px-4 py-3">
+                            <SentimentHistoricalBar data={row.sentimentHistorical} height={6} />
+                          </td>
+                          <td className="px-4 py-3 text-right">
+                            <span className="inline-flex items-center justify-center min-w-[40px] px-2.5 py-1 rounded-full border border-[#222F44] text-white font-bold text-sm">
+                              {row.score}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
 
-              {/* Pagination */}
+              {/* Pagination — outside overflow-x-auto so dropdown is not clipped */}
               <div className="flex items-center justify-between px-4 py-3 border-t border-[#222F44]">
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-white">Rows per page:</span>
@@ -246,7 +248,7 @@ export default function StockSentimentPage() {
                       <ChevronDown size={14} className={cn('transition-transform', rppOpen && 'rotate-180')} />
                     </button>
                     {rppOpen && (
-                      <div className="absolute bottom-full mb-1 left-0 z-50 bg-[#1A1A1A] border border-[#4D4D4D] rounded-lg shadow-xl overflow-hidden">
+                      <div className="absolute top-full mt-1 left-0 z-50 bg-[#1A1A1A] border border-[#4D4D4D] rounded-lg shadow-xl overflow-hidden">
                         {[10, 50, 100].map((n) => (
                           <button
                             key={n}

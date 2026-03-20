@@ -196,7 +196,7 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
               <ChevronDown size={14} className={cn('transition-transform', rowsDropdownOpen && 'rotate-180')} />
             </button>
             {rowsDropdownOpen && (
-              <div className="absolute bottom-full mb-1 left-0 z-50 bg-[#1A1A1A] border border-[#333333] rounded-lg shadow-xl overflow-hidden min-w-[60px]">
+              <div className="absolute top-full mt-1 left-0 z-50 bg-[#1A1A1A] border border-[#333333] rounded-lg shadow-xl overflow-hidden min-w-[60px]">
                 {ROWS_PER_PAGE_OPTIONS.map((option) => (
                   <button
                     key={option}

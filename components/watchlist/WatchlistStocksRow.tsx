@@ -53,7 +53,7 @@ export default function WatchlistStocksRow({ trackedSymbols, onRemove }: Watchli
     return (
       <div key={item.symbol} className="relative group">
         <div
-          onClick={() => router.push(`/ticker/${item.symbol.toLowerCase()}`)}
+          onClick={() => router.push(`/stock-sentiment/${item.symbol.toLowerCase()}`)}
           className="bg-[#0a1017] border border-[#222F44] rounded-xl p-4 flex flex-col gap-3 hover:border-[#666] transition-colors cursor-pointer h-full">
           <div className="flex items-start justify-between">
             <div>
@@ -68,12 +68,12 @@ export default function WatchlistStocksRow({ trackedSymbols, onRemove }: Watchli
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <span className="text-white text-xs font-medium">Sentiment Score</span>
-              <span className="text-white font-semibold text-sm">{item.score}/10</span>
+              <span className="text-white font-semibold text-sm">{item.score}</span>
             </div>
             <div className="h-2 w-full bg-[#2A2A2A] rounded-full overflow-hidden">
               <div
                 className={cn('h-full rounded-full', sentiment.barColor)}
-                style={{ width: `${scoreNormalized * 10}%` }}
+                style={{ width: `${scoreNormalized}%` }}
               />
             </div>
           </div>
