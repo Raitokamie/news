@@ -19,7 +19,7 @@ export default function MobileBottomNav() {
   const isPremium = userPlan === 'premium';
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
       {/* Plan Badge - floating above nav bar, top right */}
       <div className="flex justify-end px-3 pb-2">
         <button
