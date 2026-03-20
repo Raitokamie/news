@@ -60,7 +60,7 @@ export default function StockDetailPage() {
         <TopBar showBack />
 
         {/* Center content area */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto pb-28 md:pb-0">
           {/* Header */}
           <div className="px-6 py-5 flex items-center justify-between">
             <h1 className="text-lg font-extrabold text-white uppercase tracking-wide">

@@ -16,6 +16,20 @@ export default function TopBar({ showBack }: TopBarProps) {
   return (
     <>
       <div className="sticky top-0 z-20 bg-[#0a1017] backdrop-blur-md border-b border-[#222F44] px-4 py-3">
+        {/* Mobile Header - branding left, hamburger right */}
+        <div className="flex items-center justify-between mb-3 md:hidden">
+          <span className="text-lg font-extrabold tracking-wider text-[#0D7FF2]">
+            Impact Terminal
+          </span>
+          <button
+            onClick={toggleSidebar}
+            className="p-2 rounded-lg hover:bg-white/8 transition-colors text-slate-400 hover:text-slate-200"
+            aria-label="Open menu"
+          >
+            <Menu size={18} />
+          </button>
+        </div>
+
         <div className="flex items-center gap-3">
           {/* Back button — visible on detail pages */}
           {showBack && (
@@ -28,10 +42,10 @@ export default function TopBar({ showBack }: TopBarProps) {
             </button>
           )}
 
-          {/* Hamburger — visible on mobile only */}
+          {/* Hamburger — visible on desktop (lg:hidden hides it, but we show on md-lg) */}
           <button
             onClick={toggleSidebar}
-            className="lg:hidden p-2 rounded-lg hover:bg-white/8 transition-colors text-slate-400 hover:text-slate-200"
+            className="hidden md:block lg:hidden p-2 rounded-lg hover:bg-white/8 transition-colors text-slate-400 hover:text-slate-200"
             aria-label="Open menu"
           >
             <Menu size={18} />

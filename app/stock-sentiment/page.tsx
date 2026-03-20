@@ -77,19 +77,19 @@ export default function StockSentimentPage() {
         <TopBar />
 
         {/* Center content area */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto pb-28 md:pb-0">
           {/* Header */}
-          <div className="px-6 py-5 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Rss size={20} className="text-white" />
-              <h1 className="text-lg font-extrabold text-white uppercase tracking-wide">
+          <div className="px-4 md:px-6 py-5 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 shrink-0">
+              <Rss size={18} className="text-white md:w-5 md:h-5" />
+              <h1 className="text-base md:text-lg font-extrabold text-white uppercase tracking-wide whitespace-nowrap">
                 STOCK SENTIMENT
               </h1>
             </div>
 
             {/* Range selector */}
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-white">Range:</span>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-sm font-medium text-white hidden sm:inline">Range:</span>
               <div className="relative" ref={rangeRef}>
                 <button
                   onClick={() => setRangeOpen(!rangeOpen)}
