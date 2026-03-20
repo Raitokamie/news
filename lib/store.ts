@@ -46,7 +46,7 @@ export const useTerminalStore = create<TerminalStore>((set) => ({
   activeTicker: null,
   activeImpact: 'all',
   sortOrder: 'latest',
-  sidebarOpen: true,
+  sidebarOpen: false,
   setRegion: (region) => set({ activeRegion: region, activeCountry: 'all', activeTicker: null }),
   setCountry: (country) => set({ activeCountry: country }),
   setTicker: (ticker) => set((state) => ({

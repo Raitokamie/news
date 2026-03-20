@@ -52,11 +52,11 @@ export default function MobileBottomNav() {
                 )}
               >
                 <Icon
-                  size={20}
-                  strokeWidth={active ? 2.5 : 2}
+                  size={24}
+                  strokeWidth={active ? 2.5 : 2.25}
                   fill={active ? 'currentColor' : 'none'}
                 />
-                <span className={cn('text-[10px]', active ? 'font-bold' : 'font-medium')}>
+                <span className={cn('text-xs', active ? 'font-bold' : 'font-semibold')}>
                   {label}
                 </span>
               </Link>

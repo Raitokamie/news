@@ -18,7 +18,7 @@ export default function TopBar({ showBack }: TopBarProps) {
       <div className="sticky top-0 z-20 bg-[#0a1017] backdrop-blur-md border-b border-[#222F44] px-4 py-3">
         {/* Mobile Header - branding left, hamburger right */}
         <div className="flex items-center justify-between mb-3 md:hidden">
-          <span className="text-lg font-extrabold tracking-wider text-[#0D7FF2]">
+          <span className="text-xl font-extrabold tracking-wider text-[#0D7FF2]">
             Impact Terminal
           </span>
           <button
