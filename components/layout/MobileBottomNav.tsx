@@ -9,7 +9,7 @@ import { useTerminalStore } from '@/lib/store';
 const navItems = [
   { href: '/', label: 'Dashboard', icon: Home },
   { href: '/stock-sentiment', label: 'Sentiment', icon: Rss },
-  { href: '/market-trends', label: 'Trading', icon: TrendingUp },
+  { href: '/market-trends', label: 'Trending', icon: TrendingUp },
   { href: '/watchlist', label: 'Watchlist', icon: Star },
 ];
 
@@ -35,24 +35,34 @@ export default function MobileBottomNav() {
           {isPremium ? 'Premium' : 'Free'}
         </button>
       </div>
-      {/* Nav bar */}
-      <div className="flex items-center justify-around h-16 px-2 bg-[#0F1924] border-t border-[#222F44]">
-        {navItems.map(({ href, label, icon: Icon }) => {
-          const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={cn(
-                'flex flex-col items-center justify-center gap-1 flex-1 py-2',
-                active ? 'text-white' : 'text-slate-400'
-              )}
-            >
-              <Icon size={20} strokeWidth={active ? 2.5 : 2} />
-              <span className="text-[10px] font-medium">{label}</span>
-            </Link>
-          );
-        })}
+      <div 
+        className="bg-[#0F1924] border-t border-[#222F44]"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)', marginBottom: '-1px' }}
+      >
+        <div className="flex items-center justify-around px-2 pt-2 pb-1">
+          {navItems.map(({ href, label, icon: Icon }) => {
+            const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={cn(
+                  'flex flex-col items-center justify-center gap-1 flex-1 py-2',
+                  active ? 'text-white' : 'text-slate-400'
+                )}
+              >
+                <Icon
+                  size={20}
+                  strokeWidth={active ? 2.5 : 2}
+                  fill={active ? 'currentColor' : 'none'}
+                />
+                <span className={cn('text-[10px]', active ? 'font-bold' : 'font-medium')}>
+                  {label}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </nav>
   );

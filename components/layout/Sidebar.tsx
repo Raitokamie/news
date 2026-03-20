@@ -5,6 +5,8 @@ import { usePathname } from 'next/navigation';
 import { Home, Rss, TrendingUp, Star, Settings, Hash, X, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import LiveUpdateWidget from './LiveUpdateWidget';
+import ImpactProCard from '@/components/widgets/ImpactProCard';
+import TickerCloud from '@/components/tickers/TickerCloud';
 import { useTerminalStore } from '@/lib/store';
 
 const navItems = [
@@ -28,15 +30,38 @@ export default function Sidebar() {
         />
       )}
 
-      {/* Sidebar */}
+      {/* Mobile Sidebar - slides from right with widget content */}
       <aside
         className={cn(
-          'flex flex-col min-h-screen bg-[#0F1924] border-r border-[#222F44] shrink-0 z-40 transition-all duration-300',
-          // Desktop: always visible, fixed width
-          'lg:relative lg:translate-x-0 lg:w-64',
-          // Mobile: overlay, slide in/out
-          'fixed top-0 left-0 h-full w-72',
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          'lg:hidden fixed top-0 right-0 h-full w-72 z-40 transition-all duration-300',
+          'flex flex-col bg-[#0F1924] border-l border-[#222F44]',
+          sidebarOpen ? 'translate-x-0' : 'translate-x-full'
+        )}
+      >
+        {/* Header */}
+        <div className="px-5 pt-6 pb-5 flex items-center justify-between">
+          <span className="text-lg font-semibold text-white">Sidebar</span>
+          <button
+            onClick={toggleSidebar}
+            className="p-1 rounded text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Widget Content */}
+        <div className="flex-1 px-4 py-2 space-y-4 overflow-y-auto">
+          <ImpactProCard />
+          <TickerCloud />
+          <LiveUpdateWidget />
+        </div>
+      </aside>
+
+      {/* Desktop Sidebar - left side with navigation */}
+      <aside
+        className={cn(
+          'hidden lg:flex flex-col min-h-screen bg-[#0F1924] border-r border-[#222F44] shrink-0 z-40',
+          'lg:relative lg:w-64'
         )}
       >
         {/* Logo */}
@@ -46,13 +71,6 @@ export default function Sidebar() {
               IMPACT TERMINAL
             </span>
           </div>
-          {/* Close button on mobile */}
-          <button
-            onClick={toggleSidebar}
-            className="lg:hidden p-1 rounded text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
-          >
-            <X size={18} />
-          </button>
         </div>
 
         {/* Nav */}
@@ -63,7 +81,6 @@ export default function Sidebar() {
               <Link
                 key={href}
                 href={href}
-                onClick={() => { if (window.innerWidth < 1024) toggleSidebar(); }}
                 className={cn(
                   'flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all duration-150 text-white',
                   active
