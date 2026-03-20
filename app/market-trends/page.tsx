@@ -13,13 +13,13 @@ import {
   TrendDataTable,
 } from '@/components/market-trends';
 
-type TimeRange = '24H' | '7D' | '30D' | '3M';
+type TimeRange = '24H' | '7D' | '30D' | 'All';
 
 const rangeOptions: { value: TimeRange; label: string }[] = [
   { value: '24H', label: 'Last 24H' },
   { value: '7D', label: 'Last 7D' },
   { value: '30D', label: 'Last 30D' },
-  { value: '3M', label: 'Last 3M' },
+  { value: 'All', label: 'All' },
 ];
 
 function filterMarketTrends(
