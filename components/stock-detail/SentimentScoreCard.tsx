@@ -22,7 +22,7 @@ export default function SentimentScoreCard({ sentiment, score, aiOutlook }: Sent
   return (
     <div className="flex flex-col gap-4 h-full">
       {/* Top row: Sentiment + Score */}
-      <div className="bg-[#1A1A1A] border border-[#333333] rounded-xl p-5">
+      <div className="bg-[#0a1017] border border-[#333333] rounded-xl p-5">
         <div className="grid grid-cols-2 gap-4">
           {/* Sentiment */}
           <div className="flex flex-col items-center">
@@ -47,7 +47,7 @@ export default function SentimentScoreCard({ sentiment, score, aiOutlook }: Sent
       </div>
 
       {/* AI Intelligence Outlook */}
-      <div className="bg-[#1A1A1A] border border-[#333333] rounded-xl p-5 flex-1">
+      <div className="bg-[#0a1017] border border-[#333333] rounded-xl p-5 flex-1">
         <div className="flex items-center gap-2 mb-3">
           <Sparkles size={18} className="text-[#0D7FF2]" />
           <h3 className="text-lg font-bold bg-gradient-to-r from-[#0D7FF2] to-[#60A5FA] bg-clip-text text-transparent">AI Intelligence Outlook</h3>

@@ -119,8 +119,9 @@ export default function StockSentimentPage() {
           </div>
 
           {/* Ticker Filter Bar */}
-          <div className="px-6 pb-4 flex flex-wrap items-center gap-2">
-            <div className="relative" ref={addRef}>
+          <div className="px-4 md:px-6 pb-4 flex items-center gap-2">
+            {/* ADD button - fixed position to avoid dropdown clipping */}
+            <div className="relative shrink-0" ref={addRef}>
               <button
                 onClick={() => { setAddOpen(!addOpen); setAddSearch(''); setTimeout(() => addInputRef.current?.focus(), 0); }}
                 className="flex items-center gap-2 bg-[#0D7FF2] text-white text-sm font-medium px-4 py-2 rounded-full hover:bg-[#0B6FD4] transition-colors"
@@ -163,20 +164,24 @@ export default function StockSentimentPage() {
                 </div>
               )}
             </div>
-            {sentimentTickers.map((symbol) => (
-              <div
-                key={symbol}
-                className="flex items-center gap-2 bg-[#2A2A2A] border border-[#222F44] text-white text-sm font-medium px-4 py-2 rounded-full"
-              >
-                {symbol}
-                <button
-                  onClick={() => removeSentimentTicker(symbol)}
-                  className="text-slate-400 hover:text-white transition-colors"
+
+            {/* Scrollable ticker chips */}
+            <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pr-4 md:pr-0">
+              {sentimentTickers.map((symbol) => (
+                <div
+                  key={symbol}
+                  className="flex items-center gap-2 bg-[#2A2A2A] border border-[#222F44] text-white text-sm font-medium px-4 py-2 rounded-full shrink-0"
                 >
-                  <X size={14} />
-                </button>
-              </div>
-            ))}
+                  {symbol}
+                  <button
+                    onClick={() => removeSentimentTicker(symbol)}
+                    className="text-slate-400 hover:text-white transition-colors"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Content */}
