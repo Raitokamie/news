@@ -62,10 +62,15 @@ export default function MarketTrendsPage() {
     return filterMarketTrends(mockMarketTrends, activeFilter);
   }, [activeFilter]);
 
-  // Top 4 cards follow the active filter
+  // Top 4 cards: "All" shows most extreme scores (furthest from 50), others follow filter
   const sortedTopStocks = useMemo(() => {
+    if (activeFilter === 'all') {
+      return [...mockMarketTrends]
+        .sort((a, b) => Math.abs(b.score - 50) - Math.abs(a.score - 50))
+        .slice(0, 4);
+    }
     return filteredTrends.slice(0, 4);
-  }, [filteredTrends]);
+  }, [activeFilter, filteredTrends]);
 
   return (
     <div className="flex h-full bg-[#0a1017]">
