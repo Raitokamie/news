@@ -49,7 +49,7 @@ export default function SentimentDonutChart({ historical, mentionCount }: Sentim
   });
 
   return (
-    <div className="bg-[#1A1A1A] border border-[#333333] rounded-xl p-5 flex flex-col h-full">
+    <div className="bg-[#0a1017] border border-[#333333] rounded-xl p-5 flex flex-col h-full">
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <h3 className="text-base font-bold text-white">Historical Sentiment</h3>
