@@ -3,7 +3,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { TickerAnalysis, ImpactLevel } from '@/lib/types';
-import { TrendingUp, TrendingDown, Minus, ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, ChevronLeft, ChevronRight, ChevronDown, ArrowUp, ArrowDown } from 'lucide-react';
+
+type SortColumn = 'symbol' | 'impact' | 'sentiment' | 'mention' | 'score';
+type SortDirection = 'asc' | 'desc';
+
+const impactOrder: Record<ImpactLevel, number> = { high: 3, medium: 2, low: 1 };
+const sentimentOrder: Record<'up' | 'down' | 'flat', number> = { up: 3, flat: 2, down: 1 };
 
 const ROWS_PER_PAGE_OPTIONS = [10, 50, 100] as const;
 import { cn } from '@/lib/utils';
@@ -67,6 +73,42 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsDropdownOpen, setRowsDropdownOpen] = useState(false);
   const rowsDropdownRef = useRef<HTMLDivElement>(null);
+  const [sortColumn, setSortColumn] = useState<SortColumn | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+
+  const handleSort = (column: SortColumn) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+    setCurrentPage(1);
+  };
+
+  const sortedItems = [...items].sort((a, b) => {
+    if (!sortColumn) return 0;
+
+    let comparison = 0;
+    switch (sortColumn) {
+      case 'symbol':
+        comparison = a.symbol.localeCompare(b.symbol);
+        break;
+      case 'impact':
+        comparison = impactOrder[a.impactLevel] - impactOrder[b.impactLevel];
+        break;
+      case 'sentiment':
+        comparison = sentimentOrder[a.sentiment] - sentimentOrder[b.sentiment];
+        break;
+      case 'mention':
+        comparison = a.mentionCount - b.mentionCount;
+        break;
+      case 'score':
+        comparison = a.score - b.score;
+        break;
+    }
+    return sortDirection === 'asc' ? comparison : -comparison;
+  });
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -84,9 +126,16 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
     setRowsDropdownOpen(false);
   };
 
-  const totalPages = Math.ceil(items.length / rowsPerPage);
+  const totalPages = Math.ceil(sortedItems.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
-  const paginatedItems = items.slice(startIndex, startIndex + rowsPerPage);
+  const paginatedItems = sortedItems.slice(startIndex, startIndex + rowsPerPage);
+
+  const SortIcon = ({ column }: { column: SortColumn }) => {
+    if (sortColumn !== column) return <ArrowUp size={12} className="text-slate-600" />;
+    return sortDirection === 'asc'
+      ? <ArrowUp size={12} className="text-[#3B82F6]" />
+      : <ArrowDown size={12} className="text-[#3B82F6]" />;
+  };
 
   return (
     <div className="border border-[#222F44] rounded-xl">
@@ -94,23 +143,48 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
         <table className="w-full min-w-[700px]">
         <thead>
           <tr className="border-b border-[#222F44]">
-            <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">
-              TICKER
+            <th
+              onClick={() => handleSort('symbol')}
+              className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
+            >
+              <span className="inline-flex items-center gap-1">
+                TICKER <SortIcon column="symbol" />
+              </span>
             </th>
-            <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">
-              IMPACT
+            <th
+              onClick={() => handleSort('impact')}
+              className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
+            >
+              <span className="inline-flex items-center gap-1">
+                IMPACT <SortIcon column="impact" />
+              </span>
             </th>
-            <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">
-              SENTIMENT
+            <th
+              onClick={() => handleSort('sentiment')}
+              className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
+            >
+              <span className="inline-flex items-center gap-1">
+                SENTIMENT <SortIcon column="sentiment" />
+              </span>
             </th>
-            <th className="text-center text-xs font-bold text-white uppercase tracking-wider px-4 py-3">
-              MENTION
+            <th
+              onClick={() => handleSort('mention')}
+              className="text-center text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
+            >
+              <span className="inline-flex items-center gap-1 justify-center">
+                MENTION <SortIcon column="mention" />
+              </span>
             </th>
             <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">
               SENTIMENT HISTORICAL
             </th>
-            <th className="text-right text-xs font-bold text-white uppercase tracking-wider px-4 py-3">
-              SCORE
+            <th
+              onClick={() => handleSort('score')}
+              className="text-right text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
+            >
+              <span className="inline-flex items-center gap-1 justify-end">
+                SCORE <SortIcon column="score" />
+              </span>
             </th>
           </tr>
         </thead>

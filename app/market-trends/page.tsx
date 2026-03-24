@@ -3,7 +3,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import TopBar from '@/components/layout/TopBar';
 import RightSidebar from '@/components/layout/RightSidebar';
-import { TrendingUp, TrendingDown, Minus, ChevronDown } from 'lucide-react';
+import { TrendingUp, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TrendFilter, TickerAnalysis } from '@/lib/types';
 import { mockMarketTrends } from '@/lib/mock-data';
