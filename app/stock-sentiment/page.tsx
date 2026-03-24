@@ -8,8 +8,15 @@ import { SentimentHistoricalBar } from '@/components/market-trends';
 import { mockStockSentiment } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
-import { Rss, X, Plus, TrendingUp, TrendingDown, Minus, ChevronDown, ChevronLeft, ChevronRight, Search } from 'lucide-react';
-import { ImpactLevel } from '@/lib/types';
+import { Rss, X, Plus, TrendingUp, TrendingDown, Minus, ChevronDown, ChevronLeft, ChevronRight, Search, ArrowUp, ArrowDown } from 'lucide-react';
+import { ImpactLevel, TrendFilter } from '@/lib/types';
+import SentimentFilterRibbon from '@/components/filters/SentimentFilterRibbon';
+
+type SortColumn = 'symbol' | 'impact' | 'sentiment' | 'mention' | 'score';
+type SortDirection = 'asc' | 'desc';
+
+const impactOrder: Record<ImpactLevel, number> = { high: 3, medium: 2, low: 1 };
+const sentimentOrder: Record<'up' | 'down' | 'flat', number> = { up: 3, flat: 2, down: 1 };
 
 const impactConfig: Record<ImpactLevel, { label: string; bg: string; text: string; border: string }> = {
   high: { label: 'HIGH', bg: 'bg-transparent', text: 'text-red-400', border: 'border border-red-400/20' },
@@ -46,6 +53,26 @@ export default function StockSentimentPage() {
   const [selectedRange, setSelectedRange] = useState<TimeRange>('24H');
   const [rangeOpen, setRangeOpen] = useState(false);
   const rangeRef = useRef<HTMLDivElement>(null);
+  const [activeFilter, setActiveFilter] = useState<TrendFilter>('all');
+  const [sortColumn, setSortColumn] = useState<SortColumn | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+
+  const handleSort = (column: SortColumn) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+    setPage(0);
+  };
+
+  const SortIcon = ({ column }: { column: SortColumn }) => {
+    if (sortColumn !== column) return <ArrowUp size={12} className="text-slate-600" />;
+    return sortDirection === 'asc'
+      ? <ArrowUp size={12} className="text-[#3B82F6]" />
+      : <ArrowDown size={12} className="text-[#3B82F6]" />;
+  };
 
   const currentLabel = rangeOptions.find((o) => o.value === selectedRange)?.label ?? 'Last 24H';
 
@@ -67,7 +94,54 @@ export default function StockSentimentPage() {
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
 
-  const rows = mockStockSentiment.filter((r) => sentimentTickers.includes(r.symbol));
+  const baseRows = mockStockSentiment.filter((r) => sentimentTickers.includes(r.symbol));
+
+  // Apply sentiment filter
+  const filteredRows = (() => {
+    let filtered = [...baseRows];
+    switch (activeFilter) {
+      case 'top_positive':
+        filtered = filtered.filter((r) => r.sentiment === 'up');
+        filtered.sort((a, b) => b.score - a.score);
+        break;
+      case 'top_negative':
+        filtered = filtered.filter((r) => r.sentiment === 'down');
+        filtered.sort((a, b) => a.score - b.score);
+        break;
+      case 'most_mention':
+        filtered.sort((a, b) => b.mentionCount - a.mentionCount);
+        break;
+      default:
+        break;
+    }
+    return filtered;
+  })();
+
+  // Apply column sorting
+  const rows = [...filteredRows].sort((a, b) => {
+    if (!sortColumn) return 0;
+
+    let comparison = 0;
+    switch (sortColumn) {
+      case 'symbol':
+        comparison = a.symbol.localeCompare(b.symbol);
+        break;
+      case 'impact':
+        comparison = impactOrder[a.impactLevel] - impactOrder[b.impactLevel];
+        break;
+      case 'sentiment':
+        comparison = sentimentOrder[a.sentiment] - sentimentOrder[b.sentiment];
+        break;
+      case 'mention':
+        comparison = a.mentionCount - b.mentionCount;
+        break;
+      case 'score':
+        comparison = a.score - b.score;
+        break;
+    }
+    return sortDirection === 'asc' ? comparison : -comparison;
+  });
+
   const totalPages = Math.max(1, Math.ceil(rows.length / rowsPerPage));
   const paged = rows.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
 
@@ -184,6 +258,14 @@ export default function StockSentimentPage() {
             </div>
           </div>
 
+          {/* Sentiment Filter Ribbon */}
+          <div className="px-4 md:px-6 pt-2 pb-6">
+            <SentimentFilterRibbon
+              activeFilter={activeFilter}
+              onFilterChange={(filter) => { setActiveFilter(filter); setPage(0); }}
+            />
+          </div>
+
           {/* Content */}
           <div className="px-6 pb-6 pt-0 flex flex-col gap-4">
             {/* Table */}
@@ -192,12 +274,47 @@ export default function StockSentimentPage() {
                 <table className="w-full min-w-[700px]">
                   <thead>
                     <tr className="border-b border-[#222F44]">
-                      <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Ticker</th>
-                      <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Impact</th>
-                      <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Sentiment</th>
-                      <th className="text-center text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Mention</th>
+                      <th
+                        onClick={() => handleSort('symbol')}
+                        className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
+                      >
+                        <span className="inline-flex items-center gap-1">
+                          Ticker <SortIcon column="symbol" />
+                        </span>
+                      </th>
+                      <th
+                        onClick={() => handleSort('impact')}
+                        className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
+                      >
+                        <span className="inline-flex items-center gap-1">
+                          Impact <SortIcon column="impact" />
+                        </span>
+                      </th>
+                      <th
+                        onClick={() => handleSort('sentiment')}
+                        className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
+                      >
+                        <span className="inline-flex items-center gap-1">
+                          Sentiment <SortIcon column="sentiment" />
+                        </span>
+                      </th>
+                      <th
+                        onClick={() => handleSort('mention')}
+                        className="text-center text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
+                      >
+                        <span className="inline-flex items-center gap-1 justify-center">
+                          Mention <SortIcon column="mention" />
+                        </span>
+                      </th>
                       <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Sentiment Historical</th>
-                      <th className="text-right text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Score</th>
+                      <th
+                        onClick={() => handleSort('score')}
+                        className="text-right text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
+                      >
+                        <span className="inline-flex items-center gap-1 justify-end">
+                          Score <SortIcon column="score" />
+                        </span>
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
