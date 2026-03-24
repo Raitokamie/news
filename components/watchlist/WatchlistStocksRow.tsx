@@ -48,7 +48,7 @@ export default function WatchlistStocksRow({ trackedSymbols, onRemove }: Watchli
     const trend = trendConfig[item.sentiment];
     const sentiment = sentimentMap[item.sentiment];
     const TrendIcon = trend.icon;
-    const barWidth = Math.round(((item.score + 10) / 20) * 100);
+    const barWidth = Math.round((Math.abs(item.score) / 10) * 100);
 
     return (
       <div key={item.symbol} className="relative group">

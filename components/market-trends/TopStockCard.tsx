@@ -19,7 +19,7 @@ export default function TopStockCard({ item }: TopStockCardProps) {
   const router = useRouter();
   const config = sentimentConfig[item.sentiment];
   const TrendIcon = config.icon;
-  const barWidth = Math.round(((item.score + 10) / 20) * 100);
+  const barWidth = Math.round((Math.abs(item.score) / 10) * 100);
 
   return (
     <div

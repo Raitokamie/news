@@ -5,15 +5,16 @@ import { mockNews } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
 import NewsCard from './NewsCard';
 import MobileSentimentToggle from './MobileSentimentToggle';
-import { TrendingDown, TrendingUp, Globe } from 'lucide-react';
+import { TrendingDown, TrendingUp, Globe, ChevronDown } from 'lucide-react';
 import { NewsItem } from '@/lib/types';
 
 const HOURS_24 = 24 * 60 * 60 * 1000;
 const PAGE_SIZE = 10;
+const COUNTRY_INITIAL_ROWS = 4;
 
 // Country ordering from big to small (major markets first)
 const COUNTRY_ORDER: string[] = [
-  'us', 'cn', 'jp', 'de', 'gb', 'fr', 'in', 'it', 'br', 'ca',
+  'us', 'cn', 'eu', 'jp', 'de', 'gb', 'fr', 'in', 'it', 'br', 'ca',
   'kr', 'au', 'es', 'mx', 'nl', 'ch', 'tw', 'th', 'sg', 'ie',
   'global'
 ];
@@ -61,9 +62,18 @@ function CountryFlag({ code, size = 20 }: { code: string; size?: number }) {
 export default function ImpactFeed() {
   const { activeCountry, activeCategory, activeTicker, activeImpact, sortOrder, selectedSymbols, mobileSentiment } = useTerminalStore();
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [countryVisibleRows, setCountryVisibleRows] = useState<Record<string, number>>({});
+
+  const loadMoreCountryRows = (country: string) => {
+    setCountryVisibleRows(prev => ({
+      ...prev,
+      [country]: (prev[country] || COUNTRY_INITIAL_ROWS) + COUNTRY_INITIAL_ROWS
+    }));
+  };
 
   const filtered = useMemo(() => {
     setVisibleCount(PAGE_SIZE);
+    setCountryVisibleRows({});
 
     let items = mockNews;
 
@@ -72,7 +82,13 @@ export default function ImpactFeed() {
     items = items.filter((n) => n.publishedAt >= cutoff);
 
     // Filter by category
-    items = items.filter((n) => n.category === activeCategory);
+    if (activeCategory !== 'all') {
+      if (activeCategory === 'green') {
+        items = items.filter((n) => n.category === 'green' || n.category === 'energy');
+      } else {
+        items = items.filter((n) => n.category === activeCategory);
+      }
+    }
 
     // Filter by country
     if (activeCountry !== 'all') {
@@ -94,10 +110,8 @@ export default function ImpactFeed() {
     return items;
   }, [activeCategory, activeCountry, activeTicker, activeImpact, sortOrder, selectedSymbols]);
 
-  // Group news by country when viewing all countries
+  // Group news by country
   const groupedByCountry = useMemo(() => {
-    if (activeCountry !== 'all') return null;
-
     const groups: Record<string, NewsItem[]> = {};
     for (const item of filtered) {
       const country = item.countryCode;
@@ -154,13 +168,18 @@ export default function ImpactFeed() {
     <div className="px-4">
       {/* Mobile View: Single column with sentiment toggle */}
       <div className="md:hidden">
-        {/* Grouped by country when viewing all */}
-        {groupedByCountry ? (
-          <div>
-            {groupedByCountry.map(({ country, name, items: countryItems }) => {
+        {/* Sentiment Toggle — once at top */}
+        <div className="py-3">
+          <MobileSentimentToggle />
+        </div>
+
+        {groupedByCountry.map(({ country, name, items: countryItems }) => {
               const countryBad = sortItems(countryItems.filter((n) => n.sentiment === 'bad' || n.sentiment === 'neutral'));
               const countryGood = sortItems(countryItems.filter((n) => n.sentiment === 'good'));
               const countryFiltered = mobileSentiment === 'bad' ? countryBad : countryGood;
+              const currentLimit = countryVisibleRows[country] || COUNTRY_INITIAL_ROWS;
+              const visibleItems = countryFiltered.slice(0, currentLimit);
+              const hasMoreItems = countryFiltered.length > currentLimit;
 
               if (countryItems.length === 0) return null;
 
@@ -175,66 +194,63 @@ export default function ImpactFeed() {
                     </span>
                   </div>
 
-                  {/* Sentiment Toggle under country */}
-                  <div className="py-3">
-                    <MobileSentimentToggle />
-                  </div>
-
-                  <div className="space-y-3 pb-6">
-                    {countryFiltered.length > 0 ? (
-                      countryFiltered.map((item) => (
+                  <div className="space-y-3 py-4">
+                    {visibleItems.length > 0 ? (
+                      visibleItems.map((item) => (
                         <NewsCard key={item.id} item={item} />
                       ))
                     ) : (
                       <div className="text-center py-6 text-slate-600 text-sm">No {mobileSentiment} sentiment news</div>
                     )}
                   </div>
+
+                  {/* Per-country load more */}
+                  {hasMoreItems && (
+                    <div className="flex justify-center pb-4">
+                      <button
+                        onClick={() => loadMoreCountryRows(country)}
+                        className="flex items-center gap-1 px-4 py-1.5 text-xs font-bold text-[#0D7FF2] border border-[#0D7FF2]/30 rounded-lg hover:bg-[#0D7FF2]/10 transition-colors"
+                      >
+                        Show more ({countryFiltered.length - currentLimit})
+                        <ChevronDown size={14} />
+                      </button>
+                    </div>
+                  )}
                 </div>
               );
             })}
             {groupedByCountry.length === 0 && (
               <div className="text-center py-12 text-slate-600 text-sm">No news matching filters</div>
             )}
-          </div>
-        ) : (
-          /* Single country view */
-          <>
-            {/* Sentiment Toggle */}
-            <div className="py-3">
-              <MobileSentimentToggle />
-            </div>
-
-            <div className="space-y-3 pb-6">
-              {mobileVisibleItems.map((item) => (
-                <NewsCard key={item.id} item={item} />
-              ))}
-              {mobileItems.length === 0 && (
-                <div className="text-center py-12 text-slate-600 text-sm">No news matching filters</div>
-              )}
-            </div>
-            {mobileHasMore && (
-              <div className="flex justify-center mt-6 pb-6">
-                <button
-                  onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
-                  className="px-6 py-2 text-sm font-bold text-[#0D7FF2] border border-[#0D7FF2]/30 rounded-lg hover:bg-[#0D7FF2]/10 transition-colors"
-                >
-                  Load more ({mobileItems.length - visibleCount} remaining)
-                </button>
-              </div>
-            )}
-          </>
-        )}
       </div>
 
       {/* Desktop View: Two-column grid */}
       <div className="hidden md:block">
-        {/* Grouped by country when viewing all */}
-        {groupedByCountry ? (
-          <div className="space-y-8">
+            {/* Global sentiment column headers — shown once */}
+            <div className="grid grid-cols-2 gap-x-5 pt-4 pb-2">
+              <div className="flex items-center gap-2">
+                <TrendingDown size={18} className="text-red-400" />
+                <h2 className="text-base font-bold tracking-widest uppercase text-red-400">Bad Sentiment</h2>
+                <span className="ml-auto text-xs font-medium text-red-500 bg-red-500/10 border border-red-500/30 px-3 py-1 rounded-full min-w-[2rem] text-center">
+                  {badItems.length}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <TrendingUp size={18} className="text-green-400" />
+                <h2 className="text-base font-bold tracking-widest uppercase text-green-400">Good Sentiment</h2>
+                <span className="ml-auto text-xs font-medium text-green-500 bg-green-500/10 border border-green-500/30 px-3 py-1 rounded-full min-w-[2rem] text-center">
+                  {goodItems.length}
+                </span>
+              </div>
+            </div>
+
             {groupedByCountry.map(({ country, name, items: countryItems }) => {
               const countryBad = sortItems(countryItems.filter((n) => n.sentiment === 'bad' || n.sentiment === 'neutral'));
               const countryGood = sortItems(countryItems.filter((n) => n.sentiment === 'good'));
               const countryMaxRows = Math.max(countryBad.length, countryGood.length);
+              const currentLimit = countryVisibleRows[country] || COUNTRY_INITIAL_ROWS;
+              const showRows = Math.min(currentLimit, countryMaxRows);
+              const hasMoreRows = countryMaxRows > showRows;
 
               if (countryMaxRows === 0) return null;
 
@@ -249,25 +265,40 @@ export default function ImpactFeed() {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-x-5 gap-y-3 mt-4">
-                    {/* Column Headers */}
-                    <div className="flex items-center gap-2 mb-1">
-                      <TrendingDown size={18} className="text-red-400" />
-                      <h3 className="text-sm font-bold tracking-widest uppercase text-red-400">Bad Sentiment</h3>
-                    </div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <TrendingUp size={18} className="text-green-400" />
-                      <h3 className="text-sm font-bold tracking-widest uppercase text-green-400">Good Sentiment</h3>
-                    </div>
-
+                  <div className="grid grid-cols-2 gap-x-5 gap-y-3 mt-4 mb-2">
                     {/* Paired Cards */}
-                    {Array.from({ length: countryMaxRows }).map((_, i) => (
+                    {Array.from({ length: showRows }).map((_, i) => (
                       <Fragment key={i}>
-                        {countryBad[i] ? <NewsCard item={countryBad[i]} /> : <div />}
-                        {countryGood[i] ? <NewsCard item={countryGood[i]} /> : <div />}
+                        {countryBad[i] ? (
+                          <NewsCard item={countryBad[i]} />
+                        ) : (
+                          <div className="flex items-center justify-center p-6 border-2 border-dashed border-[#1A2332] rounded-xl bg-[#0B1017]/50 h-full min-h-[120px]">
+                            <span className="text-sm font-medium tracking-wide text-slate-600">No bad sentiment news</span>
+                          </div>
+                        )}
+                        {countryGood[i] ? (
+                          <NewsCard item={countryGood[i]} />
+                        ) : (
+                          <div className="flex items-center justify-center p-6 border-2 border-dashed border-[#1A2332] rounded-xl bg-[#0B1017]/50 h-full min-h-[120px]">
+                            <span className="text-sm font-medium tracking-wide text-slate-600">No good sentiment news</span>
+                          </div>
+                        )}
                       </Fragment>
                     ))}
                   </div>
+
+                  {/* Per-country load more */}
+                  {hasMoreRows && (
+                    <div className="flex justify-center py-3">
+                      <button
+                        onClick={() => loadMoreCountryRows(country)}
+                        className="flex items-center gap-1 px-4 py-1.5 text-xs font-bold text-[#0D7FF2] border border-[#0D7FF2]/30 rounded-lg hover:bg-[#0D7FF2]/10 transition-colors"
+                      >
+                        Show more ({countryMaxRows - showRows} more)
+                        <ChevronDown size={14} />
+                      </button>
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -276,57 +307,6 @@ export default function ImpactFeed() {
             {groupedByCountry.length === 0 && (
               <div className="text-center py-12 text-slate-600 text-sm">No news matching filters</div>
             )}
-          </div>
-        ) : (
-          /* Single country view */
-          <>
-            <div className="grid grid-cols-2 gap-x-5 gap-y-3">
-              {/* Column Headers */}
-              <div className="flex items-center gap-2 mb-1">
-                <TrendingDown size={18} className="text-red-400" />
-                <h2 className="text-base font-bold tracking-widest uppercase text-red-400">Bad Sentiment</h2>
-                <span className="ml-auto text-xs text-slate-600 bg-white/5 px-2 py-0.5 rounded-full">
-                  {badItems.length}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 mb-1">
-                <TrendingUp size={18} className="text-green-400" />
-                <h2 className="text-base font-bold tracking-widest uppercase text-green-400">Good Sentiment</h2>
-                <span className="ml-auto text-xs text-slate-600 bg-white/5 px-2 py-0.5 rounded-full">
-                  {goodItems.length}
-                </span>
-              </div>
-
-              {/* Paired Cards — same grid row = same height */}
-              {Array.from({ length: visibleRows }).map((_, i) => (
-                <Fragment key={i}>
-                  {badItems[i] ? <NewsCard item={badItems[i]} /> : <div />}
-                  {goodItems[i] ? <NewsCard item={goodItems[i]} /> : <div />}
-                </Fragment>
-              ))}
-
-              {/* Empty state */}
-              {maxRows === 0 && (
-                <>
-                  <div className="text-center py-12 text-slate-600 text-sm">No news matching filters</div>
-                  <div className="text-center py-12 text-slate-600 text-sm">No news matching filters</div>
-                </>
-              )}
-            </div>
-
-            {/* Load more */}
-            {hasMore && (
-              <div className="flex justify-center mt-6">
-                <button
-                  onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
-                  className="px-6 py-2 text-sm font-bold text-[#0D7FF2] border border-[#0D7FF2]/30 rounded-lg hover:bg-[#0D7FF2]/10 transition-colors"
-                >
-                  Load more ({maxRows - visibleCount} remaining)
-                </button>
-              </div>
-            )}
-          </>
-        )}
       </div>
     </div>
   );

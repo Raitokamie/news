@@ -1,7 +1,7 @@
 // ─── Shared enums ───────────────────────────────────────
 export type Region = string;
 export type RegionTab = 'global' | 'us' | 'eu' | 'asia' | 'mena';
-export type Category = 'markets' | 'economic' | 'politics' | 'tech' | 'industry' | 'commodities' | 'crypto' | 'energy' | 'healthcare' | 'real-estate' | 'ai' | 'green';
+export type Category = 'all' | 'markets' | 'economic' | 'politics' | 'tech' | 'industry' | 'ai' | 'green' | 'energy' | 'crypto' | 'healthcare' | 'commodities' | 'real-estate' | 'other';
 export type ImpactLevel = 'high' | 'medium' | 'low';
 export type Sentiment = 'good' | 'bad' | 'neutral';
 export type SortOrder = 'latest' | 'oldest' | 'impact';
@@ -53,6 +53,7 @@ export interface NarrativeGroup {
 }
 
 export type TrendFilter = 'all' | 'top_positive' | 'top_negative' | 'most_mention';
+export type TrendSort = 'highest_score' | 'lowest_score' | 'most_mention';
 
 // Telegram notification status for watchlist
 export interface TelegramNotificationStatus {

@@ -130,7 +130,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 35 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
-    category: 'crypto',
+    category: 'markets',
     impact: 'low',
     sentiment: 'bad',
     tickers: [
@@ -223,15 +223,15 @@ export const mockNews: NewsItem[] = [
     ],
   },
 
-  // ── Global ─────────────────────────────────────────
+  // ── EU ─────────────────────────────────────────────
   {
     id: '12',
-    headline: 'Apple Unveils Next-Gen Vision Pro With 40% Cost Reduction',
-    body: '$AAPL announces Vision Pro 2 at $2,499 targeting mainstream adoption. Analysts upgrade price targets citing spatial computing growth runway.',
-    sources: [{ name: 'BLOOMBERG', url: 'https://www.bloomberg.com/news/apple-vision-pro-2' }],
+    headline: 'Apple to Open Up NFC Payments in EU to Settle Antitrust Probe',
+    body: '$AAPL bows to European Commission pressure, allowing third-party mobile wallets access to iPhone\'s tap-to-pay tech. Analysts view this as a major shift in iOS ecosystem control.',
+    sources: [{ name: 'BLOOMBERG', url: 'https://www.bloomberg.com/news/apple-eu-nfc-payments' }],
     publishedAt: new Date(Date.now() - 3 * 60 * 60 * 1000),
-    regionTag: 'global',
-    countryCode: 'global',
+    regionTag: 'eu',
+    countryCode: 'eu',
     category: 'tech',
     impact: 'medium',
     sentiment: 'good',
@@ -241,13 +241,13 @@ export const mockNews: NewsItem[] = [
   },
   {
     id: '13',
-    headline: 'Google DeepMind Achieves Breakthrough in Protein Structure Prediction',
-    body: '$GOOGL DeepMind\'s latest model predicts drug-protein interactions with 99.2% accuracy, potentially shortcutting years of pharmaceutical R&D pipeline.',
-    sources: [{ name: 'NATURE', url: 'https://www.nature.com/articles/deepmind-protein-prediction' }],
+    headline: 'Google Reaches Preliminary Settlement in Multi-Billion EU Privacy Lawsuit',
+    body: '$GOOGL agrees to revise targeted advertising practices in Europe under the Digital Markets Act, mitigating the risk of a record-breaking fine from Brussels regulators.',
+    sources: [{ name: 'REUTERS', url: 'https://www.reuters.com/technology/google-eu-privacy-deal' }],
     publishedAt: new Date(Date.now() - 4 * 60 * 60 * 1000),
-    regionTag: 'global',
-    countryCode: 'global',
-    category: 'healthcare',
+    regionTag: 'eu',
+    countryCode: 'eu',
+    category: 'politics',
     impact: 'medium',
     sentiment: 'good',
     tickers: [
@@ -256,15 +256,15 @@ export const mockNews: NewsItem[] = [
   },
   {
     id: '14',
-    headline: 'Oil Prices Surge as OPEC+ Announces Deeper Production Cuts',
-    body: 'Brent crude jumps 4.2% after Saudi Arabia leads coalition in surprise 1.5M barrel/day reduction. Energy stocks $XOM $CVX rally while airlines $DAL $UAL face margin pressure.',
+    headline: 'European Natural Gas Prices Spike Amid Norwegian Facilities Outage',
+    body: 'Benchmark Dutch gas futures jump 4% as unexpected maintenance at key North Sea infrastructure tightens European energy supply ahead of the winter season.',
     sources: [
-      { name: 'REUTERS', url: 'https://www.reuters.com/business/energy/opec-production-cuts' },
-      { name: 'BLOOMBERG', url: 'https://www.bloomberg.com/news/opec-deeper-cuts' },
+      { name: 'REUTERS', url: 'https://www.reuters.com/business/energy/eu-gas-spike' },
+      { name: 'BLOOMBERG', url: 'https://www.bloomberg.com/news/norway-gas-outage' },
     ],
     publishedAt: new Date(Date.now() - 50 * 60 * 1000),
-    regionTag: 'global',
-    countryCode: 'global',
+    regionTag: 'eu',
+    countryCode: 'eu',
     category: 'energy',
     impact: 'high',
     sentiment: 'neutral',
@@ -275,12 +275,12 @@ export const mockNews: NewsItem[] = [
   },
   {
     id: '15',
-    headline: 'Global Semiconductor Shortage Eases as TSMC Ramps 3nm Production',
-    body: 'TSMC reports 3nm yields above 80%, clearing backlog for $AAPL and $NVDA orders. Chip lead times fall to 12-week average, the lowest since 2021.',
-    sources: [{ name: 'SEMI', url: 'https://www.semi.org/tsmc-3nm-production-ramp' }],
+    headline: 'TSMC Secures €5 Billion EU Subsidy for First European Mega-Fab in Germany',
+    body: 'Taiwan Semiconductor Manufacturing Co. officially breaks ground on its Dresden facility, a cornerstone of the European Chips Act aimed at securing local semiconductor supply.',
+    sources: [{ name: 'FINANCIAL TIMES', url: 'https://www.ft.com/content/tsmc-eu-subsidy' }],
     publishedAt: new Date(Date.now() - 6 * 60 * 60 * 1000),
-    regionTag: 'global',
-    countryCode: 'global',
+    regionTag: 'eu',
+    countryCode: 'eu',
     category: 'tech',
     impact: 'low',
     sentiment: 'good',
@@ -323,12 +323,12 @@ export const mockNews: NewsItem[] = [
   },
   {
     id: '18',
-    headline: 'Mastercard Hits All-Time High on Record Cross-Border Payment Volumes',
-    body: '$MA reports cross-border transaction volumes up 22% YoY, driven by global travel recovery and expanding digital payment adoption in emerging markets. Value-added services revenue grows 24%.',
-    sources: [{ name: 'REUTERS', url: 'https://www.reuters.com/business/mastercard-cross-border-record' }],
+    headline: 'Mastercard Expands Open Banking Solutions Across Europe Following New ECB Directives',
+    body: '$MA announces aggressive expansion of its open banking framework in 14 European countries, aligning with the latest European Central Bank mandates to boost digital transaction security.',
+    sources: [{ name: 'REUTERS', url: 'https://www.reuters.com/business/finance/mastercard-eu-open-banking' }],
     publishedAt: new Date(Date.now() - 20 * 60 * 1000),
-    regionTag: 'global',
-    countryCode: 'global',
+    regionTag: 'eu',
+    countryCode: 'eu',
     category: 'markets',
     impact: 'high',
     sentiment: 'good',
@@ -413,6 +413,7 @@ export const mockNews: NewsItem[] = [
       { symbol: 'AMZN', name: 'Amazon.com, Inc.', sentiment: 'down', sentimentScore: -8 },
     ],
   },
+
 ];
 
 
@@ -490,3 +491,4 @@ export const mockAIOutlook: Record<string, string> = {
   GULF: "Gulf Energy Development benefits from Thailand's tourism recovery and growing electricity demand. The company's renewable energy portfolio expansion aligns with government decarbonization targets. Foreign investor inflows to Thai equities provide additional tailwind.",
   CPALL: "CP ALL's convenience store network dominance in Thailand continues to drive steady same-store sales growth. The Lotus's integration is delivering synergies in supply chain and private label products. Rising tourist spending in urban locations provides cyclical upside.",
 };
+

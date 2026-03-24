@@ -5,7 +5,7 @@ import TopBar from '@/components/layout/TopBar';
 import RightSidebar from '@/components/layout/RightSidebar';
 import { TrendingUp, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { TrendFilter, TickerAnalysis } from '@/lib/types';
+import { TrendFilter, TrendSort, TickerAnalysis } from '@/lib/types';
 import { mockMarketTrends } from '@/lib/mock-data';
 import {
   TopStocksRow,
@@ -13,32 +13,44 @@ import {
   TrendDataTable,
 } from '@/components/market-trends';
 
-type TimeRange = '24H' | '7D' | '30D' | 'All';
+type TimeRange = '24H' | '7D';
 
 const rangeOptions: { value: TimeRange; label: string }[] = [
   { value: '24H', label: 'Last 24H' },
   { value: '7D', label: 'Last 7D' },
-  { value: '30D', label: 'Last 30D' },
-  { value: 'All', label: 'All' },
 ];
 
-function filterMarketTrends(
+function filterAndSortTrends(
   items: TickerAnalysis[],
-  filter: TrendFilter
+  filter: TrendFilter,
+  sort: TrendSort
 ): TickerAnalysis[] {
+  // 1. Filter
+  let filtered: TickerAnalysis[];
   switch (filter) {
     case 'top_positive':
-      return items
-        .filter((i) => i.sentiment === 'up')
-        .sort((a, b) => b.score - a.score);
+      filtered = items.filter((i) => i.sentiment === 'up');
+      break;
     case 'top_negative':
-      return items
-        .filter((i) => i.sentiment === 'down')
-        .sort((a, b) => a.score - b.score);
+      filtered = items.filter((i) => i.sentiment === 'down');
+      break;
     case 'most_mention':
-      return [...items].sort((a, b) => b.mentionCount - a.mentionCount);
+      filtered = [...items];
+      break;
     default:
-      return [...items].sort((a, b) => b.score - a.score);
+      filtered = [...items];
+  }
+
+  // 2. Sort
+  switch (sort) {
+    case 'highest_score':
+      return filtered.sort((a, b) => b.score - a.score);
+    case 'lowest_score':
+      return filtered.sort((a, b) => a.score - b.score);
+    case 'most_mention':
+      return filtered.sort((a, b) => b.mentionCount - a.mentionCount);
+    default:
+      return filtered;
   }
 }
 
@@ -47,6 +59,7 @@ export default function MarketTrendsPage() {
   const [rangeOpen, setRangeOpen] = useState(false);
   const rangeRef = useRef<HTMLDivElement>(null);
   const [activeFilter, setActiveFilter] = useState<TrendFilter>('all');
+  const [activeSort, setActiveSort] = useState<TrendSort>('highest_score');
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -59,8 +72,8 @@ export default function MarketTrendsPage() {
   const currentLabel = rangeOptions.find((o) => o.value === selectedRange)?.label ?? 'Last 24H';
 
   const filteredTrends = useMemo(() => {
-    return filterMarketTrends(mockMarketTrends, activeFilter);
-  }, [activeFilter]);
+    return filterAndSortTrends(mockMarketTrends, activeFilter, activeSort);
+  }, [activeFilter, activeSort]);
 
   // Top 4 cards: "All" shows most extreme scores (furthest from 0), others follow filter
   const sortedTopStocks = useMemo(() => {
@@ -125,10 +138,12 @@ export default function MarketTrendsPage() {
             {/* Top Stock Cards */}
             <TopStocksRow items={sortedTopStocks} />
 
-            {/* Filter Tabs */}
+            {/* Filter Tabs + Sort */}
             <TrendFilterTabs
               activeFilter={activeFilter}
               onFilterChange={setActiveFilter}
+              activeSort={activeSort}
+              onSortChange={setActiveSort}
             />
 
             {/* Data Table */}
