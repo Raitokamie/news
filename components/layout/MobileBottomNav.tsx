@@ -54,6 +54,7 @@ export default function MobileBottomNav() {
                 <Icon
                   size={24}
                   strokeWidth={active ? 2.5 : 2.25}
+                  fill={active && Icon === Star ? 'currentColor' : 'none'}
                 />
                 <span className={cn('text-xs', active ? 'font-bold' : 'font-semibold')}>
                   {label}

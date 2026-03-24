@@ -29,11 +29,11 @@ export default function TopStockCard({ item }: TopStockCardProps) {
       <div className="flex items-start justify-between">
         <div>
           <h3 className="text-white font-bold text-base">{item.symbol}</h3>
-          <p className="text-[#808080] text-xs">{item.name}</p>
+          <p className="text-[#808080] text-xs line-clamp-2 min-h-[32px]">{item.name}</p>
         </div>
         <div
           className={cn(
-            'w-8 h-8 rounded-full flex items-center justify-center',
+            'w-8 h-8 rounded-full flex items-center justify-center shrink-0',
             config.bgColor
           )}
         >

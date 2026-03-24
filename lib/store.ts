@@ -1,11 +1,12 @@
 'use client';
 
 import { create } from 'zustand';
-import { RegionTab, Region, ImpactLevel, SortOrder } from './types';
+import { RegionTab, Region, ImpactLevel, SortOrder, Category } from './types';
 
 interface TerminalStore {
   activeRegion: RegionTab;
   activeCountry: Region | 'all';
+  activeCategory: Category;
   activeTicker: string | null;
   activeImpact: ImpactLevel | 'all';
   sortOrder: SortOrder;
@@ -23,6 +24,7 @@ interface TerminalStore {
   setMobileSentiment: (sentiment: 'bad' | 'good') => void;
   setRegion: (region: RegionTab) => void;
   setCountry: (country: Region | 'all') => void;
+  setCategory: (category: Category) => void;
   setTicker: (ticker: string | null) => void;
   setImpact: (impact: ImpactLevel | 'all') => void;
   setSortOrder: (order: SortOrder) => void;
@@ -43,12 +45,14 @@ interface TerminalStore {
 export const useTerminalStore = create<TerminalStore>((set) => ({
   activeRegion: 'global',
   activeCountry: 'all',
+  activeCategory: 'markets',
   activeTicker: null,
   activeImpact: 'all',
   sortOrder: 'latest',
   sidebarOpen: false,
   setRegion: (region) => set({ activeRegion: region, activeCountry: 'all', activeTicker: null }),
   setCountry: (country) => set({ activeCountry: country }),
+  setCategory: (category) => set({ activeCategory: category }),
   setTicker: (ticker) => set((state) => ({
     activeTicker: state.activeTicker === ticker ? null : ticker,
   })),
