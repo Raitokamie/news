@@ -90,11 +90,7 @@ export default function TopBar({ showBack }: TopBarProps) {
               >
                 Clear
               </span>
-            ) : (
-              <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-mono text-slate-600 bg-white/6 rounded border border-white/10">
-                /
-              </kbd>
-            )}
+            ) : null}
           </button>
 
           {/* Bell */}

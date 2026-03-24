@@ -28,9 +28,9 @@ export default function SentimentDonutChart({ historical, mentionCount }: Sentim
     { key: 'negative', label: 'Negative', pct: negPct, count: negative, color: '#EF4444' },
   ];
 
-  // Sort by percentage descending (dominant first)
-  const segments = [...allSegments].sort((a, b) => b.pct - a.pct);
-  const dominant = segments[0];
+  // Sort by percentage descending for legend display
+  const sortedSegments = [...allSegments].sort((a, b) => b.pct - a.pct);
+  const dominant = sortedSegments[0];
 
   // SVG donut params
   const size = 160;
@@ -38,14 +38,13 @@ export default function SentimentDonutChart({ historical, mentionCount }: Sentim
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
 
-  // Calculate segment lengths and offsets dynamically
-  const segmentLengths = segments.map(s => (s.pct / 100) * circumference);
-  const segmentOffsets = segments.map((_, i) => {
-    let offset = 0;
-    for (let j = 0; j < i; j++) {
-      offset -= segmentLengths[j];
-    }
-    return offset;
+  // Calculate segment lengths and cumulative offsets in fixed order (positive, neutral, negative)
+  let cumulativeOffset = 0;
+  const renderSegments = allSegments.map(seg => {
+    const length = (seg.pct / 100) * circumference;
+    const offset = cumulativeOffset;
+    cumulativeOffset += length;
+    return { ...seg, length, offset };
   });
 
   return (
@@ -69,8 +68,8 @@ export default function SentimentDonutChart({ historical, mentionCount }: Sentim
               stroke="#2A2A2A"
               strokeWidth={strokeWidth}
             />
-            {/* Render segments in sorted order (dominant first) */}
-            {segments.map((seg, i) => (
+            {/* Render segments in reverse order so first segment is on top */}
+            {[...renderSegments].reverse().map((seg) => (
               <circle
                 key={seg.key}
                 cx={size / 2}
@@ -79,8 +78,8 @@ export default function SentimentDonutChart({ historical, mentionCount }: Sentim
                 fill="none"
                 stroke={seg.color}
                 strokeWidth={strokeWidth}
-                strokeDasharray={`${segmentLengths[i]} ${circumference - segmentLengths[i]}`}
-                strokeDashoffset={segmentOffsets[i]}
+                strokeDasharray={`${seg.length} ${circumference - seg.length}`}
+                strokeDashoffset={-seg.offset}
                 strokeLinecap="butt"
                 transform={`rotate(-90 ${size / 2} ${size / 2})`}
               />
@@ -96,7 +95,7 @@ export default function SentimentDonutChart({ historical, mentionCount }: Sentim
 
       {/* Legend - ordered by dominant sentiment */}
       <div className="flex items-start justify-between px-4">
-        {segments.map((seg) => (
+        {sortedSegments.map((seg) => (
           <div key={seg.key} className="flex items-start gap-2">
             <span className="w-3 h-3 rounded-full mt-1.5" style={{ backgroundColor: seg.color }} />
             <div className="flex flex-col items-start">
