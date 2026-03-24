@@ -1,7 +1,7 @@
 // ─── Shared enums ───────────────────────────────────────
 export type Region = string;
 export type RegionTab = 'global' | 'us' | 'eu' | 'asia' | 'mena';
-export type Category = 'markets' | 'economic' | 'politic' | 'tech' | 'industry' | 'commodities' | 'crypto' | 'energy' | 'healthcare' | 'real-estate';
+export type Category = 'markets' | 'economic' | 'politics' | 'tech' | 'industry' | 'commodities' | 'crypto' | 'energy' | 'healthcare' | 'real-estate';
 export type ImpactLevel = 'high' | 'medium' | 'low';
 export type Sentiment = 'good' | 'bad' | 'neutral';
 export type SortOrder = 'latest' | 'oldest' | 'impact';
@@ -15,6 +15,7 @@ export interface NewsItem {
   publishedAt: Date;
   regionTag: RegionTab;
   countryCode: Region;
+  category: Category;
   impact: ImpactLevel;
   sentiment: Sentiment;
   tickers: { symbol: string; name: string; sentiment: 'up' | 'down' | 'flat'; sentimentScore: number }[];

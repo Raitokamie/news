@@ -1,4 +1,4 @@
-import { NewsItem, TickerAnalysis, LiveUpdate, TelegramNotificationStatus } from './types';
+import { NewsItem, TickerAnalysis, LiveUpdate, TelegramNotificationStatus, Category } from './types';
 
 export const mockNews: NewsItem[] = [
   // ── US ─────────────────────────────────────────────
@@ -12,6 +12,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 4 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
+    category: 'politics',
     impact: 'high',
     sentiment: 'bad',
     tickers: [
@@ -27,6 +28,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 4 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
+    category: 'tech',
     impact: 'high',
     sentiment: 'good',
     tickers: [
@@ -42,6 +44,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 12 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
+    category: 'tech',
     impact: 'medium',
     sentiment: 'bad',
     tickers: [
@@ -57,6 +60,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 8 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
+    category: 'tech',
     impact: 'medium',
     sentiment: 'good',
     tickers: [
@@ -75,6 +79,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 12 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
+    category: 'tech',
     impact: 'high',
     sentiment: 'good',
     tickers: [
@@ -93,6 +98,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 18 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
+    category: 'tech',
     impact: 'medium',
     sentiment: 'bad',
     tickers: [
@@ -109,6 +115,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 25 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
+    category: 'industry',
     impact: 'high',
     sentiment: 'bad',
     tickers: [
@@ -123,6 +130,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 35 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
+    category: 'crypto',
     impact: 'low',
     sentiment: 'bad',
     tickers: [
@@ -140,6 +148,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 30 * 60 * 1000),
     regionTag: 'eu',
     countryCode: 'de',
+    category: 'economic',
     impact: 'high',
     sentiment: 'good',
     tickers: [
@@ -155,6 +164,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 5 * 60 * 60 * 1000),
     regionTag: 'eu',
     countryCode: 'nl',
+    category: 'industry',
     impact: 'medium',
     sentiment: 'good',
     tickers: [
@@ -171,6 +181,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 45 * 60 * 1000),
     regionTag: 'asia',
     countryCode: 'jp',
+    category: 'economic',
     impact: 'high',
     sentiment: 'bad',
     tickers: [
@@ -186,6 +197,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 60 * 60 * 1000),
     regionTag: 'asia',
     countryCode: 'cn',
+    category: 'economic',
     impact: 'high',
     sentiment: 'bad',
     tickers: [
@@ -202,6 +214,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
     regionTag: 'asia',
     countryCode: 'th',
+    category: 'markets',
     impact: 'medium',
     sentiment: 'good',
     tickers: [
@@ -219,6 +232,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 3 * 60 * 60 * 1000),
     regionTag: 'global',
     countryCode: 'global',
+    category: 'tech',
     impact: 'medium',
     sentiment: 'good',
     tickers: [
@@ -233,6 +247,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 4 * 60 * 60 * 1000),
     regionTag: 'global',
     countryCode: 'global',
+    category: 'healthcare',
     impact: 'medium',
     sentiment: 'good',
     tickers: [
@@ -250,6 +265,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 50 * 60 * 1000),
     regionTag: 'global',
     countryCode: 'global',
+    category: 'energy',
     impact: 'high',
     sentiment: 'neutral',
     tickers: [
@@ -265,6 +281,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 6 * 60 * 60 * 1000),
     regionTag: 'global',
     countryCode: 'global',
+    category: 'tech',
     impact: 'low',
     sentiment: 'good',
     tickers: [
@@ -282,6 +299,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 6 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
+    category: 'tech',
     impact: 'high',
     sentiment: 'good',
     tickers: [
@@ -296,6 +314,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 15 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
+    category: 'markets',
     impact: 'high',
     sentiment: 'bad',
     tickers: [
@@ -310,6 +329,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 20 * 60 * 1000),
     regionTag: 'global',
     countryCode: 'global',
+    category: 'markets',
     impact: 'high',
     sentiment: 'good',
     tickers: [
@@ -324,6 +344,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 22 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
+    category: 'tech',
     impact: 'high',
     sentiment: 'bad',
     tickers: [
@@ -339,6 +360,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 32 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
+    category: 'tech',
     impact: 'medium',
     sentiment: 'bad',
     tickers: [
@@ -354,6 +376,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 40 * 60 * 1000),
     regionTag: 'eu',
     countryCode: 'nl',
+    category: 'tech',
     impact: 'high',
     sentiment: 'good',
     tickers: [
@@ -368,6 +391,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 55 * 60 * 1000),
     regionTag: 'eu',
     countryCode: 'ie',
+    category: 'politics',
     impact: 'medium',
     sentiment: 'bad',
     tickers: [
@@ -382,6 +406,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 90 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
+    category: 'politics',
     impact: 'high',
     sentiment: 'bad',
     tickers: [

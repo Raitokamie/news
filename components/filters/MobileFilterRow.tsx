@@ -10,7 +10,7 @@ import { mockNews } from '@/lib/api';
 const categoryOptions: { id: Category; label: string }[] = [
   { id: 'markets', label: 'Markets' },
   { id: 'economic', label: 'Economic' },
-  { id: 'politic', label: 'Politic' },
+  { id: 'politics', label: 'Politics' },
   { id: 'tech', label: 'Tech' },
   { id: 'industry', label: 'Industry' },
   { id: 'commodities', label: 'Commodities' },

@@ -11,7 +11,7 @@ const HOURS_24 = 24 * 60 * 60 * 1000;
 const PAGE_SIZE = 10;
 
 export default function ImpactFeed() {
-  const { activeRegion, activeCountry, activeTicker, activeImpact, sortOrder, selectedSymbols, searchQuery, mobileSentiment } = useTerminalStore();
+  const { activeCountry, activeCategory, activeTicker, activeImpact, sortOrder, selectedSymbols, mobileSentiment } = useTerminalStore();
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const filtered = useMemo(() => {
@@ -23,10 +23,9 @@ export default function ImpactFeed() {
     const cutoff = new Date(Date.now() - HOURS_24);
     items = items.filter((n) => n.publishedAt >= cutoff);
 
-    // Filter by region tab (uses regionTag directly from data)
-    if (activeRegion !== 'global') {
-      items = items.filter((n) => n.regionTag === activeRegion);
-    }
+    // Filter by category
+    items = items.filter((n) => n.category === activeCategory);
+
     // Filter by country
     if (activeCountry !== 'all') {
       items = items.filter((n) => n.countryCode === activeCountry);
@@ -45,7 +44,7 @@ export default function ImpactFeed() {
     }
 
     return items;
-  }, [activeRegion, activeCountry, activeTicker, activeImpact, sortOrder, selectedSymbols]);
+  }, [activeCategory, activeCountry, activeTicker, activeImpact, sortOrder, selectedSymbols]);
 
   const sortItems = (list: typeof filtered) => {
     const impactOrder: Record<string, number> = { high: 0, medium: 1, low: 2 };
