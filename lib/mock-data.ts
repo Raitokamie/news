@@ -399,32 +399,32 @@ export const liveUpdate: LiveUpdate = {
 
 // Market Trends data (exact values from screenshot)
 export const mockMarketTrends: TickerAnalysis[] = [
-  // score = ((avg_sentimentScore + 10) / 20) × 100  (normalized 0-100 from avg of -10..+10)
-  { symbol: 'GOOGL', name: 'Alphabet Inc.', impactLevel: 'high', sentiment: 'up', mentionCount: 25, sentimentHistorical: { positive: 16, neutral: 4, negative: 5 }, score: 60 },   // avg +2.0
-  { symbol: 'NVDA', name: 'NVIDIA Corporation', impactLevel: 'high', sentiment: 'up', mentionCount: 14, sentimentHistorical: { positive: 10, neutral: 2, negative: 2 }, score: 75 },   // avg +5.0
-  { symbol: 'AAPL', name: 'Apple Inc. • Nasdaq GS', impactLevel: 'medium', sentiment: 'up', mentionCount: 17, sentimentHistorical: { positive: 12, neutral: 2, negative: 3 }, score: 78 },   // avg +5.5
-  { symbol: 'MSFT', name: 'Microsoft Corporation', impactLevel: 'low', sentiment: 'up', mentionCount: 18, sentimentHistorical: { positive: 12, neutral: 4, negative: 2 }, score: 55 },   // avg +1.0
-  { symbol: 'TSLA', name: 'Tesla, Inc.', impactLevel: 'high', sentiment: 'down', mentionCount: 20, sentimentHistorical: { positive: 4, neutral: 2, negative: 14 }, score: 10 },   // avg -8.0
-  { symbol: 'AMZN', name: 'Amazon.com, Inc.', impactLevel: 'low', sentiment: 'down', mentionCount: 31, sentimentHistorical: { positive: 4, neutral: 2, negative: 25 }, score: 43 },   // avg -1.5
-  { symbol: 'MA', name: 'Mastercard Incorporated', impactLevel: 'high', sentiment: 'up', mentionCount: 14, sentimentHistorical: { positive: 12, neutral: 1, negative: 1 }, score: 90 },   // avg +8.0
-  { symbol: 'AMD', name: 'Advanced Micro Devices', impactLevel: 'medium', sentiment: 'down', mentionCount: 7, sentimentHistorical: { positive: 1, neutral: 1, negative: 5 }, score: 20 },   // avg -6.0
-  { symbol: 'SPY', name: 'SPDR S&P 500 ETF Trust', impactLevel: 'high', sentiment: 'down', mentionCount: 10, sentimentHistorical: { positive: 1, neutral: 2, negative: 7 }, score: 20 },   // avg -6.0
-  { symbol: 'META', name: 'Meta Platforms, Inc.', impactLevel: 'high', sentiment: 'up', mentionCount: 34, sentimentHistorical: { positive: 24, neutral: 5, negative: 5 }, score: 58 },   // avg +1.5
-  { symbol: 'ASML', name: 'ASML Holding N.V.', impactLevel: 'high', sentiment: 'up', mentionCount: 12, sentimentHistorical: { positive: 10, neutral: 1, negative: 1 }, score: 90 },   // avg +8.0
+  // score = avg sentimentScore (-10..+10), positive = up, negative = down, 0 = neutral
+  { symbol: 'GOOGL', name: 'Alphabet Inc.', impactLevel: 'high', sentiment: 'up', mentionCount: 25, sentimentHistorical: { positive: 16, neutral: 4, negative: 5 }, score: 2.0 },
+  { symbol: 'NVDA', name: 'NVIDIA Corporation', impactLevel: 'high', sentiment: 'up', mentionCount: 14, sentimentHistorical: { positive: 10, neutral: 2, negative: 2 }, score: 5.0 },
+  { symbol: 'AAPL', name: 'Apple Inc. • Nasdaq GS', impactLevel: 'medium', sentiment: 'up', mentionCount: 17, sentimentHistorical: { positive: 12, neutral: 2, negative: 3 }, score: 5.5 },
+  { symbol: 'MSFT', name: 'Microsoft Corporation', impactLevel: 'low', sentiment: 'up', mentionCount: 18, sentimentHistorical: { positive: 12, neutral: 4, negative: 2 }, score: 1.0 },
+  { symbol: 'TSLA', name: 'Tesla, Inc.', impactLevel: 'high', sentiment: 'down', mentionCount: 20, sentimentHistorical: { positive: 4, neutral: 2, negative: 14 }, score: -8.0 },
+  { symbol: 'AMZN', name: 'Amazon.com, Inc.', impactLevel: 'low', sentiment: 'down', mentionCount: 31, sentimentHistorical: { positive: 4, neutral: 2, negative: 25 }, score: -1.5 },
+  { symbol: 'MA', name: 'Mastercard Incorporated', impactLevel: 'high', sentiment: 'up', mentionCount: 14, sentimentHistorical: { positive: 12, neutral: 1, negative: 1 }, score: 8.0 },
+  { symbol: 'AMD', name: 'Advanced Micro Devices', impactLevel: 'medium', sentiment: 'down', mentionCount: 7, sentimentHistorical: { positive: 1, neutral: 1, negative: 5 }, score: -6.0 },
+  { symbol: 'SPY', name: 'SPDR S&P 500 ETF Trust', impactLevel: 'high', sentiment: 'down', mentionCount: 10, sentimentHistorical: { positive: 1, neutral: 2, negative: 7 }, score: -6.0 },
+  { symbol: 'META', name: 'Meta Platforms, Inc.', impactLevel: 'high', sentiment: 'up', mentionCount: 34, sentimentHistorical: { positive: 24, neutral: 5, negative: 5 }, score: 1.5 },
+  { symbol: 'ASML', name: 'ASML Holding N.V.', impactLevel: 'high', sentiment: 'up', mentionCount: 12, sentimentHistorical: { positive: 10, neutral: 1, negative: 1 }, score: 8.0 },
   // ── Regional & Sector tickers (referenced in mockNews) ──
-  { symbol: 'COIN', name: 'Coinbase Global, Inc.', impactLevel: 'medium', sentiment: 'down', mentionCount: 8, sentimentHistorical: { positive: 2, neutral: 1, negative: 5 }, score: 30 },   // avg -4.0
-  { symbol: 'MSTR', name: 'MicroStrategy Incorporated', impactLevel: 'low', sentiment: 'down', mentionCount: 5, sentimentHistorical: { positive: 1, neutral: 1, negative: 3 }, score: 35 },   // avg -3.0
-  { symbol: 'BABA', name: 'Alibaba Group Holding Ltd.', impactLevel: 'high', sentiment: 'down', mentionCount: 11, sentimentHistorical: { positive: 2, neutral: 2, negative: 7 }, score: 25 },   // avg -5.0
-  { symbol: 'PDD', name: 'PDD Holdings Inc.', impactLevel: 'medium', sentiment: 'down', mentionCount: 7, sentimentHistorical: { positive: 1, neutral: 1, negative: 5 }, score: 30 },   // avg -4.0
-  { symbol: 'XOM', name: 'Exxon Mobil Corporation', impactLevel: 'medium', sentiment: 'up', mentionCount: 8, sentimentHistorical: { positive: 5, neutral: 2, negative: 1 }, score: 80 },   // avg +6.0
-  { symbol: 'CVX', name: 'Chevron Corporation', impactLevel: 'medium', sentiment: 'up', mentionCount: 6, sentimentHistorical: { positive: 4, neutral: 1, negative: 1 }, score: 75 },   // avg +5.0
-  { symbol: 'FXI', name: 'iShares China Large-Cap ETF', impactLevel: 'high', sentiment: 'down', mentionCount: 9, sentimentHistorical: { positive: 1, neutral: 2, negative: 6 }, score: 15 },   // avg -7.0
-  { symbol: 'EWG', name: 'iShares MSCI Germany ETF', impactLevel: 'medium', sentiment: 'up', mentionCount: 6, sentimentHistorical: { positive: 4, neutral: 1, negative: 1 }, score: 75 },   // avg +5.0
-  { symbol: 'FXE', name: 'Invesco CurrencyShares Euro Trust', impactLevel: 'low', sentiment: 'up', mentionCount: 4, sentimentHistorical: { positive: 3, neutral: 1, negative: 0 }, score: 70 },   // avg +4.0
-  { symbol: 'FXY', name: 'Invesco CurrencyShares Yen Trust', impactLevel: 'medium', sentiment: 'down', mentionCount: 6, sentimentHistorical: { positive: 1, neutral: 1, negative: 4 }, score: 20 },   // avg -6.0
-  { symbol: 'EWJ', name: 'iShares MSCI Japan ETF', impactLevel: 'low', sentiment: 'up', mentionCount: 5, sentimentHistorical: { positive: 3, neutral: 1, negative: 1 }, score: 65 },   // avg +3.0
-  { symbol: 'GULF', name: 'Gulf Energy Development PCL', impactLevel: 'low', sentiment: 'up', mentionCount: 4, sentimentHistorical: { positive: 3, neutral: 1, negative: 0 }, score: 75 },   // avg +5.0
-  { symbol: 'CPALL', name: 'CP ALL Public Company Ltd.', impactLevel: 'low', sentiment: 'up', mentionCount: 5, sentimentHistorical: { positive: 3, neutral: 1, negative: 1 }, score: 70 },   // avg +4.0
+  { symbol: 'COIN', name: 'Coinbase Global, Inc.', impactLevel: 'medium', sentiment: 'down', mentionCount: 8, sentimentHistorical: { positive: 2, neutral: 1, negative: 5 }, score: -4.0 },
+  { symbol: 'MSTR', name: 'MicroStrategy Incorporated', impactLevel: 'low', sentiment: 'down', mentionCount: 5, sentimentHistorical: { positive: 1, neutral: 1, negative: 3 }, score: -3.0 },
+  { symbol: 'BABA', name: 'Alibaba Group Holding Ltd.', impactLevel: 'high', sentiment: 'down', mentionCount: 11, sentimentHistorical: { positive: 2, neutral: 2, negative: 7 }, score: -5.0 },
+  { symbol: 'PDD', name: 'PDD Holdings Inc.', impactLevel: 'medium', sentiment: 'down', mentionCount: 7, sentimentHistorical: { positive: 1, neutral: 1, negative: 5 }, score: -4.0 },
+  { symbol: 'XOM', name: 'Exxon Mobil Corporation', impactLevel: 'medium', sentiment: 'up', mentionCount: 8, sentimentHistorical: { positive: 5, neutral: 2, negative: 1 }, score: 6.0 },
+  { symbol: 'CVX', name: 'Chevron Corporation', impactLevel: 'medium', sentiment: 'up', mentionCount: 6, sentimentHistorical: { positive: 4, neutral: 1, negative: 1 }, score: 5.0 },
+  { symbol: 'FXI', name: 'iShares China Large-Cap ETF', impactLevel: 'high', sentiment: 'down', mentionCount: 9, sentimentHistorical: { positive: 1, neutral: 2, negative: 6 }, score: -7.0 },
+  { symbol: 'EWG', name: 'iShares MSCI Germany ETF', impactLevel: 'medium', sentiment: 'up', mentionCount: 6, sentimentHistorical: { positive: 4, neutral: 1, negative: 1 }, score: 5.0 },
+  { symbol: 'FXE', name: 'Invesco CurrencyShares Euro Trust', impactLevel: 'low', sentiment: 'up', mentionCount: 4, sentimentHistorical: { positive: 3, neutral: 1, negative: 0 }, score: 4.0 },
+  { symbol: 'FXY', name: 'Invesco CurrencyShares Yen Trust', impactLevel: 'medium', sentiment: 'down', mentionCount: 6, sentimentHistorical: { positive: 1, neutral: 1, negative: 4 }, score: -6.0 },
+  { symbol: 'EWJ', name: 'iShares MSCI Japan ETF', impactLevel: 'low', sentiment: 'up', mentionCount: 5, sentimentHistorical: { positive: 3, neutral: 1, negative: 1 }, score: 3.0 },
+  { symbol: 'GULF', name: 'Gulf Energy Development PCL', impactLevel: 'low', sentiment: 'up', mentionCount: 4, sentimentHistorical: { positive: 3, neutral: 1, negative: 0 }, score: 5.0 },
+  { symbol: 'CPALL', name: 'CP ALL Public Company Ltd.', impactLevel: 'low', sentiment: 'up', mentionCount: 5, sentimentHistorical: { positive: 3, neutral: 1, negative: 1 }, score: 4.0 }
 ];
 
 // Stock Sentiment uses the same data as Market Trends (single source of truth)

@@ -19,7 +19,7 @@ export default function TopStockCard({ item }: TopStockCardProps) {
   const router = useRouter();
   const config = sentimentConfig[item.sentiment];
   const TrendIcon = config.icon;
-  const scoreNormalized = Math.min(item.score, 100);
+  const barWidth = Math.round(((item.score + 10) / 20) * 100);
 
   return (
     <div
@@ -44,7 +44,7 @@ export default function TopStockCard({ item }: TopStockCardProps) {
       {/* Sentiment Score */}
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <span className="text-white text-xs font-medium">Sentiment Score</span>
+          <span className="text-white text-xs font-medium">AVG Score</span>
           <span className="text-white font-semibold text-sm">
             {item.score}
           </span>
@@ -53,7 +53,7 @@ export default function TopStockCard({ item }: TopStockCardProps) {
         <div className="h-2 w-full bg-[#2A2A2A] rounded-full overflow-hidden">
           <div
             className={cn('h-full rounded-full', config.barColor)}
-            style={{ width: `${scoreNormalized}%` }}
+            style={{ width: `${barWidth}%` }}
           />
         </div>
       </div>

@@ -48,7 +48,7 @@ export default function WatchlistStocksRow({ trackedSymbols, onRemove }: Watchli
     const trend = trendConfig[item.sentiment];
     const sentiment = sentimentMap[item.sentiment];
     const TrendIcon = trend.icon;
-    const scoreNormalized = Math.min(item.score, 100);
+    const barWidth = Math.round(((item.score + 10) / 20) * 100);
 
     return (
       <div key={item.symbol} className="relative group">
@@ -67,13 +67,13 @@ export default function WatchlistStocksRow({ trackedSymbols, onRemove }: Watchli
 
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <span className="text-white text-xs font-medium">Sentiment Score</span>
+              <span className="text-white text-xs font-medium">AVG Score</span>
               <span className="text-white font-semibold text-sm">{item.score}</span>
             </div>
             <div className="h-2 w-full bg-[#2A2A2A] rounded-full overflow-hidden">
               <div
                 className={cn('h-full rounded-full', sentiment.barColor)}
-                style={{ width: `${scoreNormalized}%` }}
+                style={{ width: `${barWidth}%` }}
               />
             </div>
           </div>
