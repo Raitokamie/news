@@ -9,15 +9,14 @@ import { mockNews } from '@/lib/api';
 
 const categoryOptions: { id: Category; label: string }[] = [
   { id: 'markets', label: 'Markets' },
-  { id: 'economic', label: 'Economic' },
-  { id: 'politic', label: 'Politic' },
+  { id: 'economic', label: 'Economics' },
+  { id: 'politic', label: 'Politics' },
   { id: 'tech', label: 'Tech' },
   { id: 'industry', label: 'Industry' },
-  { id: 'commodities', label: 'Commodities' },
+  { id: 'ai', label: 'AI' },
+  { id: 'politics', label: 'Politics' },
+  { id: 'green', label: 'Green' },
   { id: 'crypto', label: 'Crypto' },
-  { id: 'energy', label: 'Energy' },
-  { id: 'healthcare', label: 'Healthcare' },
-  { id: 'real-estate', label: 'Real Estate' },
 ];
 
 const sortOptions: { value: SortOrder; label: string }[] = [

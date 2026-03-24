@@ -9,22 +9,21 @@ import { mockNews } from '@/lib/api';
 
 const categoryTabs: { id: Category; label: string }[] = [
   { id: 'markets', label: 'Markets' },
-  { id: 'economic', label: 'Economic' },
-  { id: 'politic', label: 'Politic' },
+  { id: 'economic', label: 'Economics' },
+  { id: 'politic', label: 'Politics' },
   { id: 'tech', label: 'Tech' },
   { id: 'industry', label: 'Industry' },
 ];
 
 const otherOptions: { id: Category; label: string }[] = [
-  { id: 'commodities', label: 'Commodities' },
+  { id: 'ai', label: 'AI' },
+  { id: 'politics', label: 'Politics' },
+  { id: 'green', label: 'Green' },
   { id: 'crypto', label: 'Crypto' },
-  { id: 'energy', label: 'Energy' },
-  { id: 'healthcare', label: 'Healthcare' },
-  { id: 'real-estate', label: 'Real Estate' },
 ];
 
 // Categories that appear in the "Other" dropdown
-const otherCategoryIds: Category[] = ['commodities', 'crypto', 'energy', 'healthcare', 'real-estate'];
+const otherCategoryIds: Category[] = ['ai', 'politics', 'green', 'crypto'];
 
 // Build countries per region from actual news data
 const countriesByRegion: Record<RegionTab, Region[]> = { global: [], us: [], eu: [], asia: [], mena: [] };
@@ -79,8 +78,8 @@ export default function RegionRibbon() {
   const countries = countriesByRegion[activeRegion];
 
   return (
-    <div className="hidden md:flex flex-col gap-4 px-4 py-3 border-b border-[#222F44] bg-[#0a1017]">
-      {/* Row 1: Category tabs + Sort dropdown */}
+    <div className="hidden md:flex flex-col gap-3 px-4 py-3 border-b border-[#222F44] bg-[#0a1017]">
+      {/* Row: Category tabs + Country + Sort dropdown */}
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-6">
           {categoryTabs.map((t) => {
@@ -153,78 +152,81 @@ export default function RegionRibbon() {
           </div>
         </div>
 
-        {/* Sort dropdown */}
-        <div className="relative ml-auto shrink-0" ref={sortRef}>
-          <button
-            onClick={() => setSortOpen(!sortOpen)}
-            className="flex items-center gap-2 px-4 py-2 bg-[#1A1A1A] hover:bg-[#2A2A2A] border border-[#222F44] rounded-lg text-sm font-bold text-white transition-all"
-          >
-            <span className="text-white text-sm font-bold">Sort By:</span>
-            <span>{currentSort?.label}</span>
-            <ChevronDown size={14} className={cn('text-white transition-transform', sortOpen && 'rotate-180')} />
-          </button>
-          {sortOpen && (
-            <div className="absolute top-full mt-1 right-0 z-50 bg-[#1A1A1A] border border-[#222F44] rounded-lg shadow-xl overflow-hidden min-w-[140px]">
-              {sortOptions.map((opt) => (
+        {/* Right side: Country + Divider + Sort */}
+        <div className="flex items-center gap-3 ml-auto">
+          {/* Country dropdown */}
+          <div className="relative" ref={countryRef}>
+            <button
+              onClick={() => setCountryOpen(!countryOpen)}
+              className="flex items-center gap-2 px-3 py-1.5 bg-[#1A1A1A] hover:bg-[#2A2A2A] border border-[#222F44] rounded-lg text-sm font-bold text-white transition-all"
+            >
+              <CountryFlag code={activeCountry === 'all' ? 'all' : activeCountry} size={18} />
+              <span>{activeCountry === 'all' ? 'All' : activeCountry.toUpperCase()}</span>
+              <ChevronDown size={14} className={cn('transition-transform', countryOpen && 'rotate-180')} />
+            </button>
+            {countryOpen && (
+              <div className="absolute top-full mt-1 right-0 z-50 bg-[#1A1A1A] border border-[#222F44] rounded-lg shadow-xl overflow-hidden min-w-[150px]">
                 <button
-                  key={opt.value}
-                  onClick={() => { setSortOrder(opt.value); setSortOpen(false); }}
+                  onClick={() => { setCountry('all'); setCountryOpen(false); }}
                   className={cn(
-                    'block w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-white/8 transition-colors',
-                    sortOrder === opt.value ? 'text-white bg-white/5' : 'text-white'
+                    'flex items-center gap-3 w-full text-left px-4 py-2.5 text-sm font-semibold transition-colors',
+                    activeCountry === 'all'
+                      ? 'text-[#3B82F6] bg-[#3B82F6]/10'
+                      : 'text-white hover:bg-white/8'
                   )}
                 >
-                  {opt.label}
+                  <Globe size={18} />
+                  All
                 </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Row 2: Country selector */}
-      <div className="relative" ref={countryRef}>
-        <button
-          onClick={() => setCountryOpen(!countryOpen)}
-          className="flex items-center gap-2 text-white hover:text-[#3B82F6] transition-colors"
-        >
-          <CountryFlag code={activeCountry === 'all' ? 'all' : activeCountry} size={20} />
-          <span className="text-sm font-bold">
-            {activeCountry === 'all' ? 'All' : activeCountry.toUpperCase()}
-          </span>
-          <ChevronDown size={14} className={cn('transition-transform', countryOpen && 'rotate-180')} />
-        </button>
-        {countryOpen && (
-          <div className="absolute top-full mt-2 left-0 z-50 bg-[#1A1A1A] border border-[#222F44] rounded-lg shadow-xl overflow-hidden min-w-[150px]">
-            <button
-              onClick={() => { setCountry('all'); setCountryOpen(false); }}
-              className={cn(
-                'flex items-center gap-3 w-full text-left px-4 py-2.5 text-sm font-semibold transition-colors',
-                activeCountry === 'all'
-                  ? 'text-[#3B82F6] bg-[#3B82F6]/10'
-                  : 'text-white hover:bg-white/8'
-              )}
-            >
-              <Globe size={18} />
-              All
-            </button>
-            {countries.map((c) => (
-              <button
-                key={c}
-                onClick={() => { setCountry(c); setCountryOpen(false); }}
-                className={cn(
-                  'flex items-center gap-3 w-full text-left px-4 py-2.5 text-sm font-semibold transition-colors',
-                  activeCountry === c
-                    ? 'text-[#3B82F6] bg-[#3B82F6]/10'
-                    : 'text-white hover:bg-white/8'
-                )}
-              >
-                <CountryFlag code={c} size={18} />
-                {c.toUpperCase()}
-              </button>
-            ))}
+                {countries.map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => { setCountry(c); setCountryOpen(false); }}
+                    className={cn(
+                      'flex items-center gap-3 w-full text-left px-4 py-2.5 text-sm font-semibold transition-colors',
+                      activeCountry === c
+                        ? 'text-[#3B82F6] bg-[#3B82F6]/10'
+                        : 'text-white hover:bg-white/8'
+                    )}
+                  >
+                    <CountryFlag code={c} size={18} />
+                    {c.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-        )}
+
+          {/* Vertical divider */}
+          <div className="h-6 w-px bg-[#222F44]" />
+
+          {/* Sort dropdown */}
+          <div className="relative" ref={sortRef}>
+            <button
+              onClick={() => setSortOpen(!sortOpen)}
+              className="flex items-center gap-2 px-4 py-1.5 bg-[#1A1A1A] hover:bg-[#2A2A2A] border border-[#222F44] rounded-lg text-sm font-bold text-white transition-all"
+            >
+              <span>{currentSort?.label}</span>
+              <ChevronDown size={14} className={cn('text-white transition-transform', sortOpen && 'rotate-180')} />
+            </button>
+            {sortOpen && (
+              <div className="absolute top-full mt-1 right-0 z-50 bg-[#1A1A1A] border border-[#222F44] rounded-lg shadow-xl overflow-hidden min-w-[140px]">
+                {sortOptions.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => { setSortOrder(opt.value); setSortOpen(false); }}
+                    className={cn(
+                      'block w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-white/8 transition-colors',
+                      sortOrder === opt.value ? 'text-white bg-white/5' : 'text-white'
+                    )}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
