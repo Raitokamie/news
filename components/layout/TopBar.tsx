@@ -79,7 +79,7 @@ export default function TopBar({ showBack }: TopBarProps) {
               </div>
             ) : (
               <span className="flex-1 text-sm text-slate-500 group-hover:text-slate-400 transition-colors">
-                Search symbols, news, or reports…
+                Search symbols or news…
               </span>
             )}
             {selectedSymbols.length > 0 ? (

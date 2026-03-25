@@ -1,4 +1,4 @@
-import { NewsItem, TickerAnalysis, LiveUpdate, TelegramNotificationStatus, Category } from './types';
+import { NewsItem, TickerAnalysis, LiveUpdate, TelegramNotificationStatus } from './types';
 
 export const mockNews: NewsItem[] = [
   // ── US ─────────────────────────────────────────────
@@ -12,7 +12,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 4 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
-    category: 'geopolitics',
+    category: 'tech',
     impact: 'high',
     sentiment: 'bad',
     tickers: [
@@ -115,7 +115,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 25 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
-    category: 'markets',
+    category: 'tech',
     impact: 'high',
     sentiment: 'bad',
     tickers: [
@@ -130,7 +130,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 35 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
-    category: 'markets',
+    category: 'crypto',
     impact: 'low',
     sentiment: 'bad',
     tickers: [
@@ -231,7 +231,7 @@ export const mockNews: NewsItem[] = [
     sources: [{ name: 'BLOOMBERG', url: 'https://www.bloomberg.com/news/apple-eu-nfc-payments' }],
     publishedAt: new Date(Date.now() - 3 * 60 * 60 * 1000),
     regionTag: 'eu',
-    countryCode: 'eu',
+    countryCode: 'be',
     category: 'tech',
     impact: 'medium',
     sentiment: 'good',
@@ -246,7 +246,7 @@ export const mockNews: NewsItem[] = [
     sources: [{ name: 'REUTERS', url: 'https://www.reuters.com/technology/google-eu-privacy-deal' }],
     publishedAt: new Date(Date.now() - 4 * 60 * 60 * 1000),
     regionTag: 'eu',
-    countryCode: 'eu',
+    countryCode: 'be',
     category: 'geopolitics',
     impact: 'medium',
     sentiment: 'good',
@@ -264,7 +264,7 @@ export const mockNews: NewsItem[] = [
     ],
     publishedAt: new Date(Date.now() - 50 * 60 * 1000),
     regionTag: 'eu',
-    countryCode: 'eu',
+    countryCode: 'no',
     category: 'energy',
     impact: 'high',
     sentiment: 'neutral',
@@ -280,7 +280,7 @@ export const mockNews: NewsItem[] = [
     sources: [{ name: 'FINANCIAL TIMES', url: 'https://www.ft.com/content/tsmc-eu-subsidy' }],
     publishedAt: new Date(Date.now() - 6 * 60 * 60 * 1000),
     regionTag: 'eu',
-    countryCode: 'eu',
+    countryCode: 'de',
     category: 'tech',
     impact: 'low',
     sentiment: 'good',
@@ -328,8 +328,8 @@ export const mockNews: NewsItem[] = [
     sources: [{ name: 'REUTERS', url: 'https://www.reuters.com/business/finance/mastercard-eu-open-banking' }],
     publishedAt: new Date(Date.now() - 20 * 60 * 1000),
     regionTag: 'eu',
-    countryCode: 'eu',
-    category: 'markets',
+    countryCode: 'de',
+    category: 'banking',
     impact: 'high',
     sentiment: 'good',
     tickers: [
@@ -406,7 +406,7 @@ export const mockNews: NewsItem[] = [
     publishedAt: new Date(Date.now() - 90 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
-    category: 'geopolitics',
+    category: 'tech',
     impact: 'high',
     sentiment: 'bad',
     tickers: [

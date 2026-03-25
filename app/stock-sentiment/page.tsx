@@ -9,7 +9,7 @@ import { mockStockSentiment } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import { Rss, X, Plus, TrendingUp, TrendingDown, Minus, ChevronDown, ChevronLeft, ChevronRight, Search, ArrowUp, ArrowDown } from 'lucide-react';
-import { ImpactLevel, TrendFilter, TrendSort } from '@/lib/types';
+import { ImpactLevel, TrendFilter } from '@/lib/types';
 import SentimentFilterRibbon from '@/components/filters/SentimentFilterRibbon';
 
 type SortColumn = 'symbol' | 'impact' | 'sentiment' | 'mention' | 'score';
@@ -52,7 +52,6 @@ export default function StockSentimentPage() {
   const [rangeOpen, setRangeOpen] = useState(false);
   const rangeRef = useRef<HTMLDivElement>(null);
   const [activeFilter, setActiveFilter] = useState<TrendFilter>('all');
-  const [activeSort, setActiveSort] = useState<TrendSort>('highest_score');
   const [sortColumn, setSortColumn] = useState<SortColumn | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
@@ -106,17 +105,19 @@ export default function StockSentimentPage() {
         filtered = filtered.filter((r) => r.sentiment === 'down');
         break;
     }
-    // Apply sort from dropdown
-    switch (activeSort) {
-      case 'highest_score':
+    // Default sort: by filter type
+    switch (activeFilter) {
+      case 'top_positive':
         filtered.sort((a, b) => b.score - a.score);
         break;
-      case 'lowest_score':
+      case 'top_negative':
         filtered.sort((a, b) => a.score - b.score);
         break;
       case 'most_mention':
         filtered.sort((a, b) => b.mentionCount - a.mentionCount);
         break;
+      default:
+        filtered.sort((a, b) => b.score - a.score);
     }
     return filtered;
   })();
@@ -275,8 +276,6 @@ export default function StockSentimentPage() {
             <SentimentFilterRibbon
               activeFilter={activeFilter}
               onFilterChange={(filter) => { setActiveFilter(filter); setPage(0); }}
-              activeSort={activeSort}
-              onSortChange={setActiveSort}
             />
           </div>
 

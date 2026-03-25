@@ -67,7 +67,6 @@ export interface NarrativeGroup {
 }
 
 export type TrendFilter = 'all' | 'top_positive' | 'top_negative' | 'most_mention';
-export type TrendSort = 'highest_score' | 'lowest_score' | 'most_mention';
 
 // Telegram notification status for watchlist
 export interface TelegramNotificationStatus {

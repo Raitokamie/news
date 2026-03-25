@@ -34,6 +34,29 @@ function fuzzyMatch(query: string, ...targets: string[]): boolean {
   return targets.some((t) => t.toLowerCase().includes(q));
 }
 
+// ─── Category badge styling ──────────────────────────────────────────────────
+const CATEGORY_STYLE: Record<string, { color: string; bg: string }> = {
+  markets:     { color: '#3B82F6', bg: 'rgba(59,130,246,0.12)' },
+  economy:     { color: '#8B5CF6', bg: 'rgba(139,92,246,0.12)' },
+  geopolitics: { color: '#EF4444', bg: 'rgba(239,68,68,0.12)' },
+  tech:        { color: '#06B6D4', bg: 'rgba(6,182,212,0.12)' },
+  ai:          { color: '#A855F7', bg: 'rgba(168,85,247,0.12)' },
+  crypto:      { color: '#F59E0B', bg: 'rgba(245,158,11,0.12)' },
+  energy:      { color: '#F97316', bg: 'rgba(249,115,22,0.12)' },
+  commodities: { color: '#84CC16', bg: 'rgba(132,204,22,0.12)' },
+  healthcare:  { color: '#10B981', bg: 'rgba(16,185,129,0.12)' },
+  'real-estate':{ color: '#EC4899', bg: 'rgba(236,72,153,0.12)' },
+  climate:     { color: '#22C55E', bg: 'rgba(34,197,94,0.12)' },
+  defense:     { color: '#64748B', bg: 'rgba(100,116,139,0.12)' },
+  banking:     { color: '#0EA5E9', bg: 'rgba(14,165,233,0.12)' },
+};
+
+const SENTIMENT_COLOR: Record<string, string> = {
+  good: '#10B981',
+  bad: '#EF4444',
+  neutral: '#475569',
+};
+
 // ─── Stock Row ────────────────────────────────────────────────────────────────
 interface StockRowProps {
   stock: TickerAnalysis;
@@ -122,6 +145,9 @@ const IMPACT_BADGE: Record<string, { label: string; color: string; bg: string }>
 
 function NewsRow({ item, isHighlighted, isLast, onClick, onHover }: NewsRowProps) {
   const badge = IMPACT_BADGE[item.impact] ?? IMPACT_BADGE.low;
+  const catStyle = CATEGORY_STYLE[item.category] ?? { color: '#64748B', bg: 'rgba(100,116,139,0.12)' };
+  const sentimentDot = SENTIMENT_COLOR[item.sentiment] ?? SENTIMENT_COLOR.neutral;
+
   return (
     <button
       className={cn(
@@ -136,18 +162,24 @@ function NewsRow({ item, isHighlighted, isLast, onClick, onHover }: NewsRowProps
         <span className="absolute left-0 top-0 bottom-0 w-[3px] rounded-r-full bg-[#2962FF]" />
       )}
 
-      {/* Impact badge */}
-      <span
-        className="mt-0.5 text-[9px] font-bold px-1.5 py-0.5 rounded shrink-0 tracking-wide"
-        style={{ color: badge.color, backgroundColor: badge.bg }}
-      >
-        {badge.label}
-      </span>
-
       {/* Headline + meta */}
       <div className="flex-1 min-w-0">
         <p className="text-[13px] text-slate-200 line-clamp-2 leading-snug">{item.headline}</p>
         <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+          {/* Impact badge */}
+          <span
+            className="text-[9px] font-bold px-1.5 py-0.5 rounded tracking-wide"
+            style={{ color: badge.color, backgroundColor: badge.bg }}
+          >
+            {badge.label}
+          </span>
+          {/* Category badge */}
+          <span
+            className="text-[9px] font-semibold px-1.5 py-0.5 rounded capitalize tracking-wide"
+            style={{ color: catStyle.color, backgroundColor: catStyle.bg }}
+          >
+            {item.category}
+          </span>
           <span className="text-[11px] text-slate-500">{timeAgo(item.publishedAt)}</span>
           {item.tickers.slice(0, 3).map((t) => (
             <span
@@ -159,13 +191,19 @@ function NewsRow({ item, isHighlighted, isLast, onClick, onHover }: NewsRowProps
           ))}
         </div>
       </div>
+
+      {/* Sentiment dot (moved to the right edge to match StockRow) */}
+      <div
+        className="w-2.5 h-2.5 rounded-full shrink-0 mt-1.5"
+        style={{ backgroundColor: sentimentDot, boxShadow: `0 0 8px ${sentimentDot}33` }}
+      />
     </button>
   );
 }
 
 // ─── Main overlay ─────────────────────────────────────────────────────────────
 export default function SearchOverlay() {
-  const { closeSearchOverlay, toggleSymbol, selectedSymbols } = useTerminalStore();
+  const { closeSearchOverlay, toggleSymbol, selectedSymbols, setCategory, setTicker } = useTerminalStore();
 
   const [query, setQuery]               = useState('');
   const [activeTab, setActiveTab]       = useState<SearchTab>('stocks');
@@ -181,9 +219,11 @@ export default function SearchOverlay() {
   }, [query]);
 
   const filteredNews = useMemo<NewsItem[]>(() => {
-    if (!query.trim()) return mockNews.slice(0, 10);
-    return mockNews.filter((n) =>
-      fuzzyMatch(query, n.headline, ...n.tickers.map((t) => t.symbol), ...n.tickers.map((t) => t.name))
+    // Sort by latest first
+    const sorted = [...mockNews].sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
+    if (!query.trim()) return sorted; // Show all news instead of just top 10/20
+    return sorted.filter((n) =>
+      fuzzyMatch(query, n.headline, n.body, n.category, n.sources[0]?.name || '', ...n.tickers.map((t) => t.symbol), ...n.tickers.map((t) => t.name))
     );
   }, [query]);
 
@@ -198,9 +238,13 @@ export default function SearchOverlay() {
   }, [toggleSymbol]);
 
   const handleSelectNews = useCallback((item: NewsItem) => {
-    const sym = item.tickers[0]?.symbol;
-    if (sym) toggleSymbol(sym);
-  }, [toggleSymbol]);
+    // Open the news source in a new tab instead of filtering the dashboard
+    if (item.sources && item.sources.length > 0) {
+      window.open(item.sources[0].url, '_blank', 'noopener,noreferrer');
+    }
+    
+    closeSearchOverlay();
+  }, [closeSearchOverlay]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
@@ -247,7 +291,7 @@ export default function SearchOverlay() {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search symbol or company name…"
+            placeholder="Search symbols or news…"
             className="flex-1 bg-transparent text-[14px] text-white placeholder:text-slate-500 focus:outline-none"
           />
           {query && (
