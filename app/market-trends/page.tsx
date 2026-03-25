@@ -20,7 +20,7 @@ const rangeOptions: { value: TimeRange; label: string }[] = [
   { value: '7D', label: 'Last 7D' },
 ];
 
-function filterAndSortTrends(
+function filterTrends(
   items: TickerAnalysis[],
   filter: TrendFilter
 ): TickerAnalysis[] {
@@ -62,7 +62,7 @@ export default function MarketTrendsPage() {
   const currentLabel = rangeOptions.find((o) => o.value === selectedRange)?.label ?? 'Last 24H';
 
   const filteredTrends = useMemo(() => {
-    return filterAndSortTrends(mockMarketTrends, activeFilter);
+    return filterTrends(mockMarketTrends, activeFilter);
   }, [activeFilter]);
 
   // Top 4 cards: "All" shows most extreme scores (furthest from 0), others follow filter
@@ -128,7 +128,7 @@ export default function MarketTrendsPage() {
             {/* Top Stock Cards */}
             <TopStocksRow items={sortedTopStocks} />
 
-            {/* Filter Tabs + Sort */}
+            {/* Filter Tabs */}
             <TrendFilterTabs
               activeFilter={activeFilter}
               onFilterChange={setActiveFilter}
