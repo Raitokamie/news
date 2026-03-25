@@ -5,7 +5,7 @@ import TopBar from '@/components/layout/TopBar';
 import RightSidebar from '@/components/layout/RightSidebar';
 import { TrendingUp, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { TrendFilter, TrendSort, TickerAnalysis } from '@/lib/types';
+import { TrendFilter, TickerAnalysis } from '@/lib/types';
 import { mockMarketTrends } from '@/lib/mock-data';
 import {
   TopStocksRow,
@@ -20,37 +20,17 @@ const rangeOptions: { value: TimeRange; label: string }[] = [
   { value: '7D', label: 'Last 7D' },
 ];
 
-function filterAndSortTrends(
+function filterTrends(
   items: TickerAnalysis[],
-  filter: TrendFilter,
-  sort: TrendSort
+  filter: TrendFilter
 ): TickerAnalysis[] {
-  // 1. Filter
-  let filtered: TickerAnalysis[];
   switch (filter) {
     case 'top_positive':
-      filtered = items.filter((i) => i.sentiment === 'up');
-      break;
+      return items.filter((i) => i.sentiment === 'up');
     case 'top_negative':
-      filtered = items.filter((i) => i.sentiment === 'down');
-      break;
-    case 'most_mention':
-      filtered = [...items];
-      break;
+      return items.filter((i) => i.sentiment === 'down');
     default:
-      filtered = [...items];
-  }
-
-  // 2. Sort
-  switch (sort) {
-    case 'highest_score':
-      return filtered.sort((a, b) => b.score - a.score);
-    case 'lowest_score':
-      return filtered.sort((a, b) => a.score - b.score);
-    case 'most_mention':
-      return filtered.sort((a, b) => b.mentionCount - a.mentionCount);
-    default:
-      return filtered;
+      return [...items];
   }
 }
 
@@ -59,7 +39,6 @@ export default function MarketTrendsPage() {
   const [rangeOpen, setRangeOpen] = useState(false);
   const rangeRef = useRef<HTMLDivElement>(null);
   const [activeFilter, setActiveFilter] = useState<TrendFilter>('all');
-  const [activeSort, setActiveSort] = useState<TrendSort>('highest_score');
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -72,8 +51,8 @@ export default function MarketTrendsPage() {
   const currentLabel = rangeOptions.find((o) => o.value === selectedRange)?.label ?? 'Last 24H';
 
   const filteredTrends = useMemo(() => {
-    return filterAndSortTrends(mockMarketTrends, activeFilter, activeSort);
-  }, [activeFilter, activeSort]);
+    return filterTrends(mockMarketTrends, activeFilter);
+  }, [activeFilter]);
 
   // Top 4 cards: "All" shows most extreme scores (furthest from 0), others follow filter
   const sortedTopStocks = useMemo(() => {
@@ -138,12 +117,10 @@ export default function MarketTrendsPage() {
             {/* Top Stock Cards */}
             <TopStocksRow items={sortedTopStocks} />
 
-            {/* Filter Tabs + Sort */}
+            {/* Filter Tabs */}
             <TrendFilterTabs
               activeFilter={activeFilter}
               onFilterChange={setActiveFilter}
-              activeSort={activeSort}
-              onSortChange={setActiveSort}
             />
 
             {/* Data Table */}
