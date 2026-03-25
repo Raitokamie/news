@@ -83,11 +83,7 @@ export default function ImpactFeed() {
 
     // Filter by category
     if (activeCategory !== 'all') {
-      if (activeCategory === 'green') {
-        items = items.filter((n) => n.category === 'green' || n.category === 'energy');
-      } else {
-        items = items.filter((n) => n.category === activeCategory);
-      }
+      items = items.filter((n) => n.category === activeCategory);
     }
 
     // Filter by country

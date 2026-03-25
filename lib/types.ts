@@ -1,7 +1,21 @@
 // ─── Shared enums ───────────────────────────────────────
 export type Region = string;
 export type RegionTab = 'global' | 'us' | 'eu' | 'asia' | 'mena';
-export type Category = 'all' | 'markets' | 'economic' | 'politics' | 'tech' | 'industry' | 'ai' | 'green' | 'energy' | 'crypto' | 'healthcare' | 'commodities' | 'real-estate' | 'other';
+export type Category =
+  | 'all'
+  | 'markets'
+  | 'economy'
+  | 'geopolitics'
+  | 'tech'
+  | 'ai'
+  | 'crypto'
+  | 'energy'
+  | 'commodities'
+  | 'healthcare'
+  | 'real-estate'
+  | 'climate'
+  | 'defense'
+  | 'banking';
 export type ImpactLevel = 'high' | 'medium' | 'low';
 export type Sentiment = 'good' | 'bad' | 'neutral';
 export type SortOrder = 'latest' | 'oldest' | 'impact';

@@ -5,33 +5,47 @@ import { mockNews } from './api';
 
 // ─── Categories ──────────────────────────────────────────────────────────
 
+// ─── Main tabs shown on desktop ribbon ───────────────────────────────
 export const categoryTabs: { id: Category; label: string }[] = [
   { id: 'markets', label: 'Markets' },
-  { id: 'economic', label: 'Economic' },
-  { id: 'politics', label: 'Politics' },
+  { id: 'economy', label: 'Economy' },
+  { id: 'geopolitics', label: 'Geopolitics' },
   { id: 'tech', label: 'Tech' },
-  { id: 'industry', label: 'Industry' },
+  { id: 'ai', label: 'AI' },
 ];
 
+// ─── "Other" dropdown on desktop ─────────────────────────────────────
 export const otherOptions: { id: Category; label: string }[] = [
-  { id: 'ai', label: 'AI' },
   { id: 'all', label: 'All Categories' },
-  { id: 'green', label: 'Green' },
+  { id: 'crypto', label: 'Crypto' },
+  { id: 'energy', label: 'Energy' },
+  { id: 'commodities', label: 'Commodities' },
+  { id: 'healthcare', label: 'Healthcare' },
+  { id: 'real-estate', label: 'Real Estate' },
+  { id: 'climate', label: 'Climate' },
+  { id: 'defense', label: 'Defense' },
+  { id: 'banking', label: 'Banking' },
 ];
 
 // For Desktop: Categories that appear in the "Other" dropdown
 export const otherCategoryIds: Category[] = otherOptions.map((o) => o.id);
 
-// For Mobile: Combined list (sorted A-Z, "All Categories" last)
+// For Mobile: Combined list (main tabs first, then others, "All" at top)
 export const categoryOptions: { id: Category; label: string }[] = [
   { id: 'all', label: 'All Categories' },
   { id: 'markets', label: 'Markets' },
-  { id: 'economic', label: 'Economic' },
+  { id: 'economy', label: 'Economy' },
+  { id: 'geopolitics', label: 'Geopolitics' },
   { id: 'tech', label: 'Tech' },
-  { id: 'politics', label: 'Politics' },
-  { id: 'industry', label: 'Industry' },
   { id: 'ai', label: 'AI' },
-  { id: 'green', label: 'Green' },
+  { id: 'crypto', label: 'Crypto' },
+  { id: 'energy', label: 'Energy' },
+  { id: 'commodities', label: 'Commodities' },
+  { id: 'healthcare', label: 'Healthcare' },
+  { id: 'real-estate', label: 'Real Estate' },
+  { id: 'climate', label: 'Climate' },
+  { id: 'defense', label: 'Defense' },
+  { id: 'banking', label: 'Banking' },
 ];
 
 // ─── Sorting ─────────────────────────────────────────────────────────────
