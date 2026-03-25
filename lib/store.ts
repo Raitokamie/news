@@ -45,7 +45,7 @@ interface TerminalStore {
 export const useTerminalStore = create<TerminalStore>((set) => ({
   activeRegion: 'global',
   activeCountry: 'all',
-  activeCategory: 'markets',
+  activeCategory: 'all',
   activeTicker: null,
   activeImpact: 'all',
   sortOrder: 'latest',
