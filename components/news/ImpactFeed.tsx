@@ -164,11 +164,6 @@ export default function ImpactFeed() {
     <div className="px-4">
       {/* Mobile View: Single column with sentiment toggle */}
       <div className="md:hidden">
-        {/* Sentiment Toggle — once at top */}
-        <div className="py-3">
-          <MobileSentimentToggle />
-        </div>
-
         {groupedByCountry.map(({ country, name, items: countryItems }) => {
               const countryBad = sortItems(countryItems.filter((n) => n.sentiment === 'bad' || n.sentiment === 'neutral'));
               const countryGood = sortItems(countryItems.filter((n) => n.sentiment === 'good'));
@@ -190,7 +185,12 @@ export default function ImpactFeed() {
                     </span>
                   </div>
 
-                  <div className="space-y-3 py-4">
+                  {/* Sentiment Toggle per country */}
+                  <div className="py-3">
+                    <MobileSentimentToggle />
+                  </div>
+
+                  <div className="space-y-3 pb-4">
                     {visibleItems.length > 0 ? (
                       visibleItems.map((item) => (
                         <NewsCard key={item.id} item={item} />
@@ -222,24 +222,6 @@ export default function ImpactFeed() {
 
       {/* Desktop View: Two-column grid */}
       <div className="hidden md:block">
-            {/* Global sentiment column headers — shown once */}
-            <div className="grid grid-cols-2 gap-x-5 pt-4 pb-2">
-              <div className="flex items-center gap-2">
-                <TrendingDown size={18} className="text-red-400" />
-                <h2 className="text-base font-bold tracking-widest uppercase text-red-400">Bad Sentiment</h2>
-                <span className="ml-auto text-xs font-medium text-red-500 bg-red-500/10 border border-red-500/30 px-3 py-1 rounded-full min-w-[2rem] text-center">
-                  {badItems.length}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <TrendingUp size={18} className="text-green-400" />
-                <h2 className="text-base font-bold tracking-widest uppercase text-green-400">Good Sentiment</h2>
-                <span className="ml-auto text-xs font-medium text-green-500 bg-green-500/10 border border-green-500/30 px-3 py-1 rounded-full min-w-[2rem] text-center">
-                  {goodItems.length}
-                </span>
-              </div>
-            </div>
-
             {groupedByCountry.map(({ country, name, items: countryItems }) => {
               const countryBad = sortItems(countryItems.filter((n) => n.sentiment === 'bad' || n.sentiment === 'neutral'));
               const countryGood = sortItems(countryItems.filter((n) => n.sentiment === 'good'));
@@ -261,7 +243,25 @@ export default function ImpactFeed() {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-x-5 gap-y-3 mt-4 mb-2">
+                  {/* Sentiment column headers per country */}
+                  <div className="grid grid-cols-2 gap-x-5 pt-3 pb-2">
+                    <div className="flex items-center gap-2">
+                      <TrendingDown size={18} className="text-red-400" />
+                      <h2 className="text-base font-bold tracking-widest uppercase text-red-400">Bad Sentiment</h2>
+                      <span className="ml-auto text-xs font-medium text-red-500 bg-red-500/10 border border-red-500/30 px-3 py-1 rounded-full min-w-[2rem] text-center">
+                        {countryBad.length}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <TrendingUp size={18} className="text-green-400" />
+                      <h2 className="text-base font-bold tracking-widest uppercase text-green-400">Good Sentiment</h2>
+                      <span className="ml-auto text-xs font-medium text-green-500 bg-green-500/10 border border-green-500/30 px-3 py-1 rounded-full min-w-[2rem] text-center">
+                        {countryGood.length}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-x-5 gap-y-3 mb-2">
                     {/* Paired Cards */}
                     {Array.from({ length: showRows }).map((_, i) => (
                       <Fragment key={i}>
