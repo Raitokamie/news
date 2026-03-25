@@ -7,6 +7,7 @@ import { mockNews } from './api';
 
 // ─── Main tabs shown on desktop ribbon ───────────────────────────────
 export const categoryTabs: { id: Category; label: string }[] = [
+  { id: 'all', label: 'All' },
   { id: 'markets', label: 'Markets' },
   { id: 'economy', label: 'Economy' },
   { id: 'geopolitics', label: 'Geopolitics' },
@@ -16,7 +17,6 @@ export const categoryTabs: { id: Category; label: string }[] = [
 
 // ─── "Other" dropdown on desktop ─────────────────────────────────────
 export const otherOptions: { id: Category; label: string }[] = [
-  { id: 'all', label: 'All Categories' },
   { id: 'crypto', label: 'Crypto' },
   { id: 'energy', label: 'Energy' },
   { id: 'commodities', label: 'Commodities' },
