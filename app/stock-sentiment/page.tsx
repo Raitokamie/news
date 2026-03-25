@@ -147,6 +147,14 @@ export default function StockSentimentPage() {
   });
 
   const totalPages = Math.max(1, Math.ceil(rows.length / rowsPerPage));
+
+  // Reset page if current page exceeds total pages
+  useEffect(() => {
+    if (page >= totalPages) {
+      setPage(Math.max(0, totalPages - 1));
+    }
+  }, [totalPages, page]);
+
   const paged = rows.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
 
   return (
@@ -401,6 +409,22 @@ export default function StockSentimentPage() {
                   >
                     <ChevronLeft size={16} />
                   </button>
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: totalPages }, (_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setPage(i)}
+                        className={cn(
+                          'min-w-[28px] h-7 px-2 rounded text-sm font-medium transition-colors',
+                          page === i
+                            ? 'bg-[#0D7FF2] text-white'
+                            : 'text-slate-400 hover:bg-white/10'
+                        )}
+                      >
+                        {i + 1}
+                      </button>
+                    ))}
+                  </div>
                   <button
                     onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
                     disabled={page >= totalPages - 1}

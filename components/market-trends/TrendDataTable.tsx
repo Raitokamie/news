@@ -126,7 +126,15 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
     setRowsDropdownOpen(false);
   };
 
-  const totalPages = Math.ceil(sortedItems.length / rowsPerPage);
+  const totalPages = Math.max(1, Math.ceil(sortedItems.length / rowsPerPage));
+
+  // Reset page if current page exceeds total pages
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(Math.max(1, totalPages));
+    }
+  }, [totalPages, currentPage]);
+
   const startIndex = (currentPage - 1) * rowsPerPage;
   const paginatedItems = sortedItems.slice(startIndex, startIndex + rowsPerPage);
 
@@ -296,6 +304,22 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
           >
             <ChevronLeft size={16} />
           </button>
+          <div className="flex items-center gap-1">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentPage(i + 1)}
+                className={cn(
+                  'min-w-[28px] h-7 px-2 rounded text-sm font-medium transition-colors',
+                  currentPage === i + 1
+                    ? 'bg-[#0D7FF2] text-white'
+                    : 'text-slate-400 hover:bg-white/10'
+                )}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
           <button
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
