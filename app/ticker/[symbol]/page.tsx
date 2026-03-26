@@ -9,21 +9,22 @@ import NewsCard from '@/components/news/NewsCard';
 import { TelegramStatusWidget } from '@/components/watchlist';
 import { mockTelegramNotifications } from '@/lib/api';
 import MobileSentimentToggle from '@/components/news/MobileSentimentToggle';
+import RangeDropdown, { RangeOption as RangeDropdownOption } from '@/components/filters/RangeDropdown';
 import { ArrowLeft, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import PremiumLock from '@/components/premium/PremiumLock';
 
-type RangeOption = '24h' | '7d';
+type TimeRange = '24h' | '7d';
 
-const RANGE_MS: Record<RangeOption, number> = {
+const RANGE_MS: Record<TimeRange, number> = {
   '24h': 24 * 60 * 60 * 1000,
   '7d': 7 * 24 * 60 * 60 * 1000,
 };
 
-const RANGE_LABEL: Record<RangeOption, string> = {
-  '24h': 'Last 24H',
-  '7d': 'Last 7D',
-};
+const rangeOptions: RangeDropdownOption<TimeRange>[] = [
+  { value: '24h', label: 'Last 24H' },
+  { value: '7d', label: 'Last 7D' },
+];
 
 const trendConfig = {
   up: { icon: TrendingUp, bg: 'bg-[#17382D]', color: 'text-[#10B981]' },
@@ -35,7 +36,7 @@ export default function TickerDetailPage() {
   const params = useParams();
   const router = useRouter();
   const symbol = (params.symbol as string).toUpperCase();
-  const [range, setRange] = useState<RangeOption>('24h');
+  const [range, setRange] = useState<TimeRange>('24h');
   const selectedSymbols = useTerminalStore((s) => s.selectedSymbols);
   const userPlan = useTerminalStore((s) => s.userPlan);
   const mobileSentiment = useTerminalStore((s) => s.mobileSentiment);
@@ -126,19 +127,11 @@ export default function TickerDetailPage() {
                 </div>
               </div>
 
-              {/* Range */}
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-white">Range:</span>
-                <select
-                  value={range}
-                  onChange={(e) => setRange(e.target.value as RangeOption)}
-                  className="appearance-none bg-[#1A1A1A] text-white text-sm font-semibold border border-[#222F44] rounded-lg px-3 py-1.5 cursor-pointer hover:border-[#666] transition-colors focus:outline-none focus:border-[#0D7FF2]"
-                >
-                  {(['24h', '7d'] as RangeOption[]).map((opt) => (
-                    <option key={opt} value={opt}>{RANGE_LABEL[opt]}</option>
-                  ))}
-                </select>
-              </div>
+              <RangeDropdown
+                options={rangeOptions}
+                value={range}
+                onChange={setRange}
+              />
             </div>
             <p className="text-[#808080] text-sm mt-1 ml-12">{tickerName}</p>
           </div>
