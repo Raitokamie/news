@@ -67,13 +67,14 @@ export default function TopBar({ showBack }: TopBarProps) {
                     className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#2962FF]/15 text-[#2962FF] text-[12px] font-semibold"
                   >
                     {sym}
-                    <span
-                      role="button"
+                    <button
+                      type="button"
                       onClick={(e) => { e.stopPropagation(); removeSymbol(sym); }}
-                      className="hover:text-white transition-colors cursor-pointer"
+                      className="hover:text-white transition-colors"
+                      aria-label={`Remove ${sym}`}
                     >
                       <X size={10} />
-                    </span>
+                    </button>
                   </span>
                 ))}
               </div>
@@ -82,15 +83,16 @@ export default function TopBar({ showBack }: TopBarProps) {
                 Search symbols or news…
               </span>
             )}
-            {selectedSymbols.length > 0 ? (
-              <span
-                role="button"
+            {selectedSymbols.length > 0 && (
+              <button
+                type="button"
                 onClick={(e) => { e.stopPropagation(); clearSymbols(); }}
-                className="text-[11px] text-slate-400 hover:text-white px-2 py-0.5 rounded border border-white/10 hover:border-white/20 transition-colors cursor-pointer"
+                className="text-[11px] text-slate-400 hover:text-white px-2 py-0.5 rounded border border-white/10 hover:border-white/20 transition-colors"
+                aria-label="Clear all symbols"
               >
                 Clear
-              </span>
-            ) : null}
+              </button>
+            )}
           </button>
 
           {/* Bell */}
