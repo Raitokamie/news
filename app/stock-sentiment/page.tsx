@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import TopBar from '@/components/layout/TopBar';
 import RightSidebar from '@/components/layout/RightSidebar';
+import RangeDropdown, { RangeOption } from '@/components/filters/RangeDropdown';
 import { SentimentHistoricalBar } from '@/components/market-trends';
 import { mockStockSentiment } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
@@ -11,6 +12,14 @@ import { cn } from '@/lib/utils';
 import { Rss, X, Plus, TrendingUp, TrendingDown, Minus, ChevronDown, ChevronLeft, ChevronRight, Search, ArrowUp, ArrowDown } from 'lucide-react';
 import { ImpactLevel, TrendFilter } from '@/lib/types';
 import SentimentFilterRibbon from '@/components/filters/SentimentFilterRibbon';
+import ScrollToTopButton from '@/components/ui/ScrollToTopButton';
+
+type TimeRange = '24H' | '7D';
+
+const rangeOptions: RangeOption<TimeRange>[] = [
+  { value: '24H', label: 'Last 24H' },
+  { value: '7D', label: 'Last 7D' },
+];
 
 type SortColumn = 'symbol' | 'impact' | 'sentiment' | 'mention' | 'score';
 type SortDirection = 'asc' | 'desc';
@@ -41,16 +50,9 @@ export default function StockSentimentPage() {
   const [addSearch, setAddSearch] = useState('');
   const addRef = useRef<HTMLDivElement>(null);
   const addInputRef = useRef<HTMLInputElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Range dropdown state
-  type TimeRange = '24H' | '7D';
-  const rangeOptions: { value: TimeRange; label: string }[] = [
-    { value: '24H', label: 'Last 24H' },
-    { value: '7D', label: 'Last 7D' },
-  ];
   const [selectedRange, setSelectedRange] = useState<TimeRange>('24H');
-  const [rangeOpen, setRangeOpen] = useState(false);
-  const rangeRef = useRef<HTMLDivElement>(null);
   const [activeFilter, setActiveFilter] = useState<TrendFilter>('all');
   const [sortColumn, setSortColumn] = useState<SortColumn | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
@@ -72,8 +74,6 @@ export default function StockSentimentPage() {
       : <ArrowDown size={12} className="text-[#3B82F6]" />;
   };
 
-  const currentLabel = rangeOptions.find((o) => o.value === selectedRange)?.label ?? 'Last 24H';
-
   const availableToAdd = mockStockSentiment
     .map((r) => r.symbol)
     .filter((s) => !sentimentTickers.includes(s));
@@ -85,7 +85,6 @@ export default function StockSentimentPage() {
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (addRef.current && !addRef.current.contains(e.target as Node)) setAddOpen(false);
-      if (rangeRef.current && !rangeRef.current.contains(e.target as Node)) setRangeOpen(false);
       if (rppRef.current && !rppRef.current.contains(e.target as Node)) setRppOpen(false);
     }
     document.addEventListener('mousedown', handleClick);
@@ -164,7 +163,7 @@ export default function StockSentimentPage() {
         <TopBar />
 
         {/* Center content area */}
-        <div className="flex-1 overflow-y-auto pb-28 md:pb-0">
+        <div ref={scrollRef} className="flex-1 overflow-y-auto pb-28 md:pb-0">
           {/* Header */}
           <div className="px-4 md:px-6 py-5 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 shrink-0">
@@ -174,35 +173,11 @@ export default function StockSentimentPage() {
               </h1>
             </div>
 
-            {/* Range selector */}
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="text-sm font-medium text-white hidden sm:inline">Range:</span>
-              <div className="relative" ref={rangeRef}>
-                <button
-                  onClick={() => setRangeOpen(!rangeOpen)}
-                  className="px-3 py-1.5 bg-[#1A1A1A] border border-[#222F44] rounded-xl text-sm text-white hover:bg-[#2A2A2A] transition-colors flex items-center gap-2"
-                >
-                  {currentLabel}
-                  <ChevronDown size={12} className={cn('text-white transition-transform', rangeOpen && 'rotate-180')} />
-                </button>
-                {rangeOpen && (
-                  <div className="absolute top-full mt-1 right-0 z-50 bg-[#1A1A1A] border border-[#4D4D4D] rounded-lg shadow-xl overflow-hidden min-w-[140px]">
-                    {rangeOptions.map((opt) => (
-                      <button
-                        key={opt.value}
-                        onClick={() => { setSelectedRange(opt.value); setRangeOpen(false); }}
-                        className={cn(
-                          'block w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-white/8 transition-colors',
-                          selectedRange === opt.value ? 'text-[#0D7FF2] bg-white/5' : 'text-white'
-                        )}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
+            <RangeDropdown
+              options={rangeOptions}
+              value={selectedRange}
+              onChange={setSelectedRange}
+            />
           </div>
 
           {/* Ticker Filter Bar */}
@@ -439,6 +414,7 @@ export default function StockSentimentPage() {
       </div>
 
       <RightSidebar />
+      <ScrollToTopButton scrollContainerRef={scrollRef} />
     </div>
   );
 }
