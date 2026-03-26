@@ -56,8 +56,8 @@ export default function NewsCard({ item, compact = false }: NewsCardProps) {
     <article
       id={`news-${item.id}`}
       className={cn(
-        'flex flex-col h-full bg-[#0a1017] border border-[#222F44] rounded-xl p-4 transition-all duration-200 hover:border-[#666] hover:bg-[#1A1A1A] group',
-        item.impact === 'high' && 'hover:border-red-500/20',
+        'flex flex-col h-full bg-[#0a1017] border border-[#222F44] rounded-xl p-4 transition-all duration-200 hover:bg-[#111722] group cursor-pointer',
+        item.impact === 'high' ? ' hover:border-red-500/40' : 'hover:border-[#666]',
         compact && 'p-3'
       )}
     >

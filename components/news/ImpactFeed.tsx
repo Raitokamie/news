@@ -72,22 +72,6 @@ export default function ImpactFeed() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Scroll to a specific news card when selected from search overlay
-  useEffect(() => {
-    if (!scrollToNewsId) return;
-    // Delay to allow DOM to render after filter reset
-    const timer = setTimeout(() => {
-      const el = document.getElementById(`news-${scrollToNewsId}`);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        el.classList.add('ring-2', 'ring-[#2962FF]');
-        setTimeout(() => el.classList.remove('ring-2', 'ring-[#2962FF]'), 2000);
-      }
-      setScrollToNewsId(null);
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [scrollToNewsId, setScrollToNewsId]);
-
   const loadMoreCountryRows = (country: string) => {
     setCountryVisibleRows(prev => ({
       ...prev,
@@ -154,6 +138,35 @@ export default function ImpactFeed() {
       items: groups[country]
     }));
   }, [filtered, activeCountry]);
+
+  // Scroll to a specific news card when selected from search overlay
+  useEffect(() => {
+    if (!scrollToNewsId) return;
+
+    // Expand all country groups so the target card is in the DOM
+    setCountryVisibleRows(() => {
+      const expanded: Record<string, number> = {};
+      for (const { country, items } of groupedByCountry) {
+        expanded[country] = items.length;
+      }
+      return expanded;
+    });
+
+    // Delay to allow DOM to render after expand + filter reset
+    const timer = setTimeout(() => {
+      // Same news id exists in both mobile (md:hidden) and desktop sections
+      // Use querySelectorAll + visibility check to find the actually visible one
+      const candidates = document.querySelectorAll<HTMLElement>(`[id="news-${scrollToNewsId}"]`);
+      const el = Array.from(candidates).find(e => e.offsetParent !== null);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('ring-2', 'ring-[#2962FF]');
+        setTimeout(() => el.classList.remove('ring-2', 'ring-[#2962FF]'), 2000);
+      }
+      setScrollToNewsId(null);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [scrollToNewsId, setScrollToNewsId, groupedByCountry]);
 
   const sortItems = (list: typeof filtered) => {
     const impactOrder: Record<string, number> = { high: 0, medium: 1, low: 2 };
