@@ -2,7 +2,9 @@
 
 import { Fragment, useMemo } from 'react';
 import { mockNews } from '@/lib/api';
+import { useTerminalStore } from '@/lib/store';
 import NewsCard from '@/components/news/NewsCard';
+import MobileSentimentToggle from '@/components/news/MobileSentimentToggle';
 import { TrendingDown, TrendingUp } from 'lucide-react';
 
 interface StockDetailNewsFeedProps {
@@ -10,6 +12,8 @@ interface StockDetailNewsFeedProps {
 }
 
 export default function StockDetailNewsFeed({ symbol }: StockDetailNewsFeedProps) {
+  const mobileSentiment = useTerminalStore((s) => s.mobileSentiment);
+
   const filtered = useMemo(() => {
     return mockNews.filter((n) =>
       n.tickers.some((t) => t.symbol === symbol || t.symbol === symbol.replace('GOOG', 'GOOGL'))
@@ -20,9 +24,30 @@ export default function StockDetailNewsFeed({ symbol }: StockDetailNewsFeedProps
   const goodItems = filtered.filter((n) => n.sentiment === 'good');
   const maxRows = Math.max(badItems.length, goodItems.length);
 
+  const mobileItems = mobileSentiment === 'bad' ? badItems : goodItems;
+
   return (
     <div className="flex flex-col gap-3">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-3">
+      {/* Mobile: toggle */}
+      <div className="md:hidden">
+        <div className="py-1">
+          <MobileSentimentToggle />
+        </div>
+        <div className="space-y-3 mt-3">
+          {mobileItems.length > 0 ? (
+            mobileItems.map((item) => (
+              <NewsCard key={item.id} item={item} />
+            ))
+          ) : (
+            <div className="text-center py-12 text-slate-600 text-sm">
+              No {mobileSentiment} sentiment news
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Desktop: two-column grid */}
+      <div className="hidden md:grid grid-cols-2 gap-x-5 gap-y-3">
         {/* Column Headers */}
         <div className="flex items-center gap-2 mb-1">
           <TrendingDown size={18} className="text-red-400" />
@@ -31,7 +56,7 @@ export default function StockDetailNewsFeed({ symbol }: StockDetailNewsFeedProps
             {badItems.length}
           </span>
         </div>
-        <div className="flex items-center gap-2 mb-1 max-md:mt-6">
+        <div className="flex items-center gap-2 mb-1">
           <TrendingUp size={18} className="text-green-400" />
           <h2 className="text-base font-bold tracking-widest uppercase text-green-400">Good Sentiment</h2>
           <span className="ml-auto text-xs text-slate-600 bg-white/5 px-2 py-0.5 rounded-full">
