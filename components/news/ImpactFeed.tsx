@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { mockNews } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
 import NewsCard from './NewsCard';
@@ -60,9 +60,25 @@ function CountryFlag({ code, size = 20 }: { code: string; size?: number }) {
 }
 
 export default function ImpactFeed() {
-  const { activeCountry, activeCategory, activeTicker, activeImpact, sortOrder, selectedSymbols, mobileSentiment } = useTerminalStore();
+  const { activeCountry, activeCategory, activeTicker, activeImpact, sortOrder, selectedSymbols, mobileSentiment, scrollToNewsId, setScrollToNewsId } = useTerminalStore();
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [countryVisibleRows, setCountryVisibleRows] = useState<Record<string, number>>({});
+
+  // Scroll to a specific news card when selected from search overlay
+  useEffect(() => {
+    if (!scrollToNewsId) return;
+    // Delay to allow DOM to render after filter reset
+    const timer = setTimeout(() => {
+      const el = document.getElementById(`news-${scrollToNewsId}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('ring-2', 'ring-[#2962FF]');
+        setTimeout(() => el.classList.remove('ring-2', 'ring-[#2962FF]'), 2000);
+      }
+      setScrollToNewsId(null);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [scrollToNewsId, setScrollToNewsId]);
 
   const loadMoreCountryRows = (country: string) => {
     setCountryVisibleRows(prev => ({

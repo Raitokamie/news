@@ -36,6 +36,8 @@ interface TerminalStore {
   toggleSymbol: (symbol: string) => void;
   removeSymbol: (symbol: string) => void;
   clearSymbols: () => void;
+  scrollToNewsId: string | null;
+  setScrollToNewsId: (id: string | null) => void;
   openSearchOverlay: () => void;
   closeSearchOverlay: () => void;
   connectTelegram: () => void;
@@ -71,6 +73,8 @@ export const useTerminalStore = create<TerminalStore>((set) => ({
   clearSymbols: () => set({ selectedSymbols: [] }),
   searchQuery: '',
   setSearchQuery: (query) => set({ searchQuery: query }),
+  scrollToNewsId: null,
+  setScrollToNewsId: (id) => set({ scrollToNewsId: id }),
   searchOverlayOpen: false,
   openSearchOverlay: () => set({ searchOverlayOpen: true }),
   closeSearchOverlay: () => set({ searchOverlayOpen: false }),

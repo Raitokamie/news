@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { mockMarketTrends, mockNews } from '@/lib/api';
 import { TickerAnalysis, NewsItem } from '@/lib/types';
 import { useTerminalStore } from '@/lib/store';
+import { useRouter, usePathname } from 'next/navigation';
 
 type SearchTab = 'stocks' | 'news';
 
@@ -36,19 +37,19 @@ function fuzzyMatch(query: string, ...targets: string[]): boolean {
 
 // ─── Category badge styling ──────────────────────────────────────────────────
 const CATEGORY_STYLE: Record<string, { color: string; bg: string }> = {
-  markets:     { color: '#3B82F6', bg: 'rgba(59,130,246,0.12)' },
-  economy:     { color: '#8B5CF6', bg: 'rgba(139,92,246,0.12)' },
+  markets: { color: '#3B82F6', bg: 'rgba(59,130,246,0.12)' },
+  economy: { color: '#8B5CF6', bg: 'rgba(139,92,246,0.12)' },
   geopolitics: { color: '#EF4444', bg: 'rgba(239,68,68,0.12)' },
-  tech:        { color: '#06B6D4', bg: 'rgba(6,182,212,0.12)' },
-  ai:          { color: '#A855F7', bg: 'rgba(168,85,247,0.12)' },
-  crypto:      { color: '#F59E0B', bg: 'rgba(245,158,11,0.12)' },
-  energy:      { color: '#F97316', bg: 'rgba(249,115,22,0.12)' },
+  tech: { color: '#06B6D4', bg: 'rgba(6,182,212,0.12)' },
+  ai: { color: '#A855F7', bg: 'rgba(168,85,247,0.12)' },
+  crypto: { color: '#F59E0B', bg: 'rgba(245,158,11,0.12)' },
+  energy: { color: '#F97316', bg: 'rgba(249,115,22,0.12)' },
   commodities: { color: '#84CC16', bg: 'rgba(132,204,22,0.12)' },
-  healthcare:  { color: '#10B981', bg: 'rgba(16,185,129,0.12)' },
-  'real-estate':{ color: '#EC4899', bg: 'rgba(236,72,153,0.12)' },
-  climate:     { color: '#22C55E', bg: 'rgba(34,197,94,0.12)' },
-  defense:     { color: '#64748B', bg: 'rgba(100,116,139,0.12)' },
-  banking:     { color: '#0EA5E9', bg: 'rgba(14,165,233,0.12)' },
+  healthcare: { color: '#10B981', bg: 'rgba(16,185,129,0.12)' },
+  'real-estate': { color: '#EC4899', bg: 'rgba(236,72,153,0.12)' },
+  climate: { color: '#22C55E', bg: 'rgba(34,197,94,0.12)' },
+  defense: { color: '#64748B', bg: 'rgba(100,116,139,0.12)' },
+  banking: { color: '#0EA5E9', bg: 'rgba(14,165,233,0.12)' },
 };
 
 const SENTIMENT_COLOR: Record<string, string> = {
@@ -118,9 +119,9 @@ function StockRow({ stock, isHighlighted, isSelected, isLast, onClick, onHover }
           className="w-2.5 h-2.5 rounded-full shrink-0"
           style={{
             backgroundColor:
-              stock.sentiment === 'up'   ? '#10B981' :
-              stock.sentiment === 'down' ? '#EF4444' :
-                                           '#475569',
+              stock.sentiment === 'up' ? '#10B981' :
+                stock.sentiment === 'down' ? '#EF4444' :
+                  '#475569',
           }}
         />
       )}
@@ -138,9 +139,9 @@ interface NewsRowProps {
 }
 
 const IMPACT_BADGE: Record<string, { label: string; color: string; bg: string }> = {
-  high:   { label: 'HIGH', color: '#EF4444', bg: 'rgba(239,68,68,0.12)' },
-  medium: { label: 'MED',  color: '#F59E0B', bg: 'rgba(245,158,11,0.12)' },
-  low:    { label: 'LOW',  color: '#64748b', bg: 'rgba(100,116,139,0.12)' },
+  high: { label: 'HIGH', color: '#EF4444', bg: 'rgba(239,68,68,0.12)' },
+  medium: { label: 'MED', color: '#F59E0B', bg: 'rgba(245,158,11,0.12)' },
+  low: { label: 'LOW', color: '#64748b', bg: 'rgba(100,116,139,0.12)' },
 };
 
 function NewsRow({ item, isHighlighted, isLast, onClick, onHover }: NewsRowProps) {
@@ -203,11 +204,13 @@ function NewsRow({ item, isHighlighted, isLast, onClick, onHover }: NewsRowProps
 
 // ─── Main overlay ─────────────────────────────────────────────────────────────
 export default function SearchOverlay() {
-  const { closeSearchOverlay, toggleSymbol, selectedSymbols, setCategory, setTicker } = useTerminalStore();
+  const { closeSearchOverlay, toggleSymbol, selectedSymbols, setScrollToNewsId, setCategory, setImpact, setCountry, setRegion } = useTerminalStore();
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const [query, setQuery]               = useState('');
-  const [activeTab, setActiveTab]       = useState<SearchTab>('stocks');
-  const [highlightedIdx, setHighlighted]= useState(0);
+  const [query, setQuery] = useState('');
+  const [activeTab, setActiveTab] = useState<SearchTab>('stocks');
+  const [highlightedIdx, setHighlighted] = useState(0);
 
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => { inputRef.current?.focus(); }, []);
@@ -238,13 +241,22 @@ export default function SearchOverlay() {
   }, [toggleSymbol]);
 
   const handleSelectNews = useCallback((item: NewsItem) => {
-    // Open the news source in a new tab instead of filtering the dashboard
-    if (item.sources && item.sources.length > 0) {
-      window.open(item.sources[0].url, '_blank', 'noopener,noreferrer');
+    // Reset filters so the news card is visible
+    setCategory('all');
+    setImpact('all');
+    setCountry('all');
+    setRegion('global');
+
+    // Set the news id to scroll to
+    setScrollToNewsId(item.id);
+
+    // Navigate to dashboard if not already there
+    if (pathname !== '/') {
+      router.push('/');
     }
-    
+
     closeSearchOverlay();
-  }, [closeSearchOverlay]);
+  }, [closeSearchOverlay, setScrollToNewsId, setCategory, setImpact, setCountry, setRegion, pathname, router]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
@@ -369,26 +381,26 @@ export default function SearchOverlay() {
 
               {activeTab === 'stocks'
                 ? filteredStocks.map((stock, i) => (
-                    <StockRow
-                      key={stock.symbol}
-                      stock={stock}
-                      isHighlighted={i === highlightedIdx}
-                      isSelected={selectedSymbols.includes(stock.symbol)}
-                      isLast={i === filteredStocks.length - 1}
-                      onClick={() => handleSelectStock(stock.symbol)}
-                      onHover={() => setHighlighted(i)}
-                    />
-                  ))
+                  <StockRow
+                    key={stock.symbol}
+                    stock={stock}
+                    isHighlighted={i === highlightedIdx}
+                    isSelected={selectedSymbols.includes(stock.symbol)}
+                    isLast={i === filteredStocks.length - 1}
+                    onClick={() => handleSelectStock(stock.symbol)}
+                    onHover={() => setHighlighted(i)}
+                  />
+                ))
                 : filteredNews.map((item, i) => (
-                    <NewsRow
-                      key={item.id}
-                      item={item}
-                      isHighlighted={i === highlightedIdx}
-                      isLast={i === filteredNews.length - 1}
-                      onClick={() => handleSelectNews(item)}
-                      onHover={() => setHighlighted(i)}
-                    />
-                  ))}
+                  <NewsRow
+                    key={item.id}
+                    item={item}
+                    isHighlighted={i === highlightedIdx}
+                    isLast={i === filteredNews.length - 1}
+                    onClick={() => handleSelectNews(item)}
+                    onHover={() => setHighlighted(i)}
+                  />
+                ))}
             </>
           )}
         </div>

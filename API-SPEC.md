@@ -212,59 +212,21 @@ GET /news?range=24h
 
 ---
 
-## 3. Search (Global Search Overlay)
+## 3. Search
 
-### 3.1 GET /search — ค้นหาข่าวและหุ้น
+### Note: Search Overlay ทำงานอย่างไร
 
-Frontend มี Search Overlay ที่ค้นหาได้ 2 tab: Stocks และ News
+Frontend มี Search Overlay ที่ค้นหาได้ 2 tab:
+- **Symbols tab** — ค้นหา ticker ด้วย symbol หรือชื่อบริษัท → คลิกแล้ว toggle เลือก/ไม่เลือก
+- **News tab** — ค้นหาข่าวจากข้อมูลที่โหลดมาจาก `GET /news` แล้ว (client-side search) → คลิกแล้ว scroll ไปที่ข่าวนั้นบน Dashboard พร้อม highlight
 
-```
-GET /search?q=nvidia&type=all
-```
-
-**Query params:**
-
-| Param  | Type   | Default | ค่าที่เป็นไปได้                      |
-| ------ | ------ | ------- | ------------------------------------ |
-| `q`    | string | (required) | คำค้นหา (min 2 ตัวอักษร)         |
-| `type` | string | `all`   | `all`, `stocks`, `news`              |
-| `limit`| number | `20`    | จำนวนผลลัพธ์ต่อ type (max 50)      |
-
-**Response 200:**
-
-```json
-{
-  "stocks": [
-    {
-      "symbol": "NVDA",
-      "name": "NVIDIA Corporation",
-      "sentiment": "up",
-      "score": 7.2
-    }
-  ],
-  "news": [
-    {
-      "id": "3",
-      "headline": "Nvidia Accelerates Data Center Dominance...",
-      "publishedAt": "2026-03-25T09:48:00Z",
-      "category": "tech",
-      "impact": "high",
-      "sentiment": "good",
-      "tickers": [
-        { "symbol": "NVDA", "name": "NVIDIA Corporation", "sentiment": "up", "sentimentScore": 9 }
-      ]
-    }
-  ]
-}
-```
-
-**ใช้ในหน้า:** ทุกหน้า (Search Overlay เรียกจาก TopBar)
+> **ไม่มี `GET /search` endpoint** — News search ทำฝั่ง Frontend ทั้งหมด โดยใช้ข้อมูลจาก `GET /news` ที่โหลดมาแล้ว
 
 ---
 
-### 3.2 GET /tickers/search — ค้นหา ticker สำหรับ autocomplete
+### 3.1 GET /tickers/search — ค้นหา ticker สำหรับ autocomplete
 
-ใช้ใน AddTickerModal เพื่อค้นหา ticker ที่จะเพิ่มเข้า watchlist หรือ sentiment monitor
+ใช้ใน Search Overlay (Symbols tab) และ AddTickerModal เพื่อค้นหา ticker ที่จะเพิ่มเข้า watchlist หรือ sentiment monitor
 
 ```
 GET /tickers/search?q=goo&limit=10
@@ -655,26 +617,25 @@ Authorization: Bearer <access_token>
 
 ---
 
-## สรุป API ทั้งหมด (20 endpoints)
+## สรุป API ทั้งหมด (19 endpoints)
 
 | #  | Method | Endpoint                     | Auth | Plan    | ใช้ในหน้า                         |
 | -- | ------ | ---------------------------- | ---- | ------- | --------------------------------- |
 | 1  | -      | OAuth redirect               | -    | -       | Login                             |
 | 2  | POST   | `/auth/refresh`              | No   | Any     | ทุกหน้า (auto refresh)            |
 | 3  | GET    | `/auth/me`                   | Yes  | Any     | ทุกหน้า                           |
-| 4  | GET    | `/news`                      | No   | Free    | Dashboard, Ticker Detail          |
+| 4  | GET    | `/news`                      | No   | Free    | Dashboard, Ticker Detail, Search Overlay (News tab) |
 | 5  | GET    | `/news/watchlist`            | Yes  | Premium | Watchlist (Activity Feed)         |
-| 6  | GET    | `/search`                    | No   | Free    | ทุกหน้า (Search Overlay)          |
-| 7  | GET    | `/tickers/search`            | No   | Free    | Watchlist, Stock Sentiment (Modal)|
-| 8  | GET    | `/live-update`               | No   | Free    | ทุกหน้า (widget)                  |
-| 9  | GET    | `/tickers/analysis`          | No   | Free    | Stock Sentiment, Market Trends    |
-| 10 | GET    | `/tickers/:symbol/outlook`   | No   | Free    | Sentiment Detail, Ticker Detail   |
-| 11 | GET    | `/sentiment/tickers`         | Yes  | Free    | Stock Sentiment                   |
-| 12 | POST   | `/sentiment/tickers`         | Yes  | Free    | Stock Sentiment                   |
-| 13 | DELETE | `/sentiment/tickers/:symbol` | Yes  | Free    | Stock Sentiment                   |
-| 14 | GET    | `/watchlist`                 | Yes  | Premium | Watchlist                         |
-| 15 | POST   | `/watchlist`                 | Yes  | Premium | Watchlist                         |
-| 16 | DELETE | `/watchlist/:symbol`         | Yes  | Premium | Watchlist                         |
-| 17 | POST   | `/telegram/connect`          | Yes  | Premium | Watchlist                         |
-| 18 | POST   | `/telegram/disconnect`       | Yes  | Premium | Watchlist                         |
-| 19 | GET    | `/telegram/status`           | Yes  | Premium | Watchlist                         |
+| 6  | GET    | `/tickers/search`            | No   | Free    | Search Overlay (Symbols tab), AddTickerModal |
+| 7  | GET    | `/live-update`               | No   | Free    | ทุกหน้า (widget)                  |
+| 8  | GET    | `/tickers/analysis`          | No   | Free    | Stock Sentiment, Market Trends    |
+| 9  | GET    | `/tickers/:symbol/outlook`   | No   | Free    | Sentiment Detail, Ticker Detail   |
+| 10 | GET    | `/sentiment/tickers`         | Yes  | Free    | Stock Sentiment                   |
+| 11 | POST   | `/sentiment/tickers`         | Yes  | Free    | Stock Sentiment                   |
+| 12 | DELETE | `/sentiment/tickers/:symbol` | Yes  | Free    | Stock Sentiment                   |
+| 13 | GET    | `/watchlist`                 | Yes  | Premium | Watchlist                         |
+| 14 | POST   | `/watchlist`                 | Yes  | Premium | Watchlist                         |
+| 15 | DELETE | `/watchlist/:symbol`         | Yes  | Premium | Watchlist                         |
+| 16 | POST   | `/telegram/connect`          | Yes  | Premium | Watchlist                         |
+| 17 | POST   | `/telegram/disconnect`       | Yes  | Premium | Watchlist                         |
+| 18 | GET    | `/telegram/status`           | Yes  | Premium | Watchlist                         |
