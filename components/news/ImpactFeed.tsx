@@ -4,6 +4,7 @@ import { Fragment, useEffect, useMemo, useState } from 'react';
 import { mockNews } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
 import NewsCard from './NewsCard';
+import NewsCardSkeleton from './NewsCardSkeleton';
 import MobileSentimentToggle from './MobileSentimentToggle';
 import { TrendingDown, TrendingUp, Globe, ChevronDown } from 'lucide-react';
 import { NewsItem } from '@/lib/types';
@@ -63,6 +64,13 @@ export default function ImpactFeed() {
   const { activeCountry, activeCategory, activeTicker, activeImpact, sortOrder, selectedSymbols, mobileSentiment, scrollToNewsId, setScrollToNewsId } = useTerminalStore();
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [countryVisibleRows, setCountryVisibleRows] = useState<Record<string, number>>({});
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulate initial loading for perceived performance
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Scroll to a specific news card when selected from search overlay
   useEffect(() => {
@@ -175,6 +183,51 @@ export default function ImpactFeed() {
   const mobileItems = mobileSentiment === 'bad' ? badItems : goodItems;
   const mobileVisibleItems = mobileItems.slice(0, visibleCount);
   const mobileHasMore = visibleCount < mobileItems.length;
+
+  if (isLoading) {
+    return (
+      <div className="px-4">
+        {/* Mobile Skeleton */}
+        <div className="md:hidden">
+          <div className="py-3">
+            <div className="h-10 bg-slate-700/30 rounded-lg animate-pulse" />
+          </div>
+          <div className="flex items-center gap-2 py-3 -mx-4 px-4 bg-[#111722] border-b border-[#222F44]">
+            <div className="w-5 h-4 bg-slate-700/50 rounded animate-pulse" />
+            <div className="h-5 w-20 bg-slate-700/50 rounded animate-pulse" />
+          </div>
+          <div className="space-y-3 py-3">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <NewsCardSkeleton key={i} />
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop Skeleton */}
+        <div className="hidden md:block">
+          <div className="grid grid-cols-2 gap-x-5 pt-3 pb-2">
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 bg-red-500/20 rounded animate-pulse" />
+              <div className="h-5 w-32 bg-slate-700/50 rounded animate-pulse" />
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 bg-green-500/20 rounded animate-pulse" />
+              <div className="h-5 w-32 bg-slate-700/50 rounded animate-pulse" />
+            </div>
+          </div>
+          <div className="flex items-center gap-3 py-3 -mx-4 px-4 bg-[#111722] border-b border-[#222F44]">
+            <div className="w-6 h-5 bg-slate-700/50 rounded animate-pulse" />
+            <div className="h-6 w-24 bg-slate-700/50 rounded animate-pulse" />
+          </div>
+          <div className="grid grid-cols-2 gap-x-5 gap-y-3 pt-3">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <NewsCardSkeleton key={i} />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="px-4">
