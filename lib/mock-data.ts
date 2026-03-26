@@ -4,37 +4,39 @@ export const mockNews: NewsItem[] = [
   // ── US ─────────────────────────────────────────────
   {
     id: '1',
-    headline: 'Antitrust Updates: DOJ Closing Arguments Focus on Google\'s Default Search Deals',
-    body: 'The landmark trial enters its final phase as regulators argue that payment to phone makers stifles competition...',
+    headline: 'Trump wants to squeeze Iran into peace talks with more troops — but it may backfire, analysts say',
+    body: 'The White House is ramping up military deployments to the Middle East in an effort to pressure Tehran into negotiations, but analysts warn the strategy could escalate tensions rather than bring Iran to the table.',
     sources: [
-      { name: 'REUTERS', url: 'https://www.reuters.com/technology/google-antitrust-doj' },
+      { name: 'CNBC', url: 'https://www.cnbc.com/trump-iran-peace-talks-troops' },
     ],
     publishedAt: new Date(Date.now() - 4 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
-    category: 'tech',
+    category: 'geopolitics',
     impact: 'high',
     sentiment: 'bad',
     tickers: [
-      { symbol: 'GOOGL', name: 'Alphabet Inc.', sentiment: 'down', sentimentScore: -7 },
+      { symbol: 'XOM', name: 'Exxon Mobil Corporation', sentiment: 'down', sentimentScore: -3 },
+      { symbol: 'LMT', name: 'Lockheed Martin', sentiment: 'up', sentimentScore: 5 },
     ],
-    narrativeGroupId: 'ng-google-antitrust',
+    imageUrl: '/images/1.png',
   },
   {
     id: '2',
-    headline: 'Google Cloud Growth Accelerates as AI Demand Surges Among Enterprise Clients',
-    body: 'Quarterly reports show a 28% increase in cloud revenue, driven by the rapid adoption of Vertex AI tools...',
-    sources: [{ name: 'BLOOMBERG', url: 'https://www.bloomberg.com/news/google-cloud-ai' }],
+    headline: 'The oil market is in ‘backwardation’ — Here’s what that means for energy prices',
+    body: 'Crude oil futures are trading in backwardation as near-term supply tightens amid OPEC+ production cuts. Analysts say the pricing structure signals strong physical demand and could push gasoline prices higher through summer.',
+    sources: [{ name: 'CNBC', url: 'https://www.cnbc.com/oil-backwardation-energy-prices' }],
     publishedAt: new Date(Date.now() - 4 * 60 * 1000),
     regionTag: 'us',
     countryCode: 'us',
-    category: 'tech',
+    category: 'energy',
     impact: 'high',
-    sentiment: 'good',
+    sentiment: 'bad',
     tickers: [
-      { symbol: 'GOOGL', name: 'Alphabet Inc.', sentiment: 'up', sentimentScore: 8 },
+      { symbol: 'XOM', name: 'Exxon Mobil Corporation', sentiment: 'up', sentimentScore: 5 },
+      { symbol: 'CVX', name: 'Chevron Corporation', sentiment: 'up', sentimentScore: 4 },
     ],
-    narrativeGroupId: 'ng-google-cloud',
+    imageUrl: '/images/3.png',
   },
   {
     id: '2b',
@@ -89,6 +91,7 @@ export const mockNews: NewsItem[] = [
       { symbol: 'AMZN', name: 'Amazon.com, Inc.', sentiment: 'up', sentimentScore: 3 },
     ],
     narrativeGroupId: 'ng-tech-earnings',
+    imageUrl: 'https://picsum.photos/seed/nvidia/800/450',
   },
   {
     id: '4',
@@ -121,6 +124,7 @@ export const mockNews: NewsItem[] = [
     tickers: [
       { symbol: 'TSLA', name: 'Tesla, Inc.', sentiment: 'down', sentimentScore: -8 },
     ],
+    imageUrl: 'https://picsum.photos/seed/tesla/800/450',
   },
   {
     id: '6',
@@ -155,6 +159,7 @@ export const mockNews: NewsItem[] = [
       { symbol: 'EWG', name: 'iShares MSCI Germany', sentiment: 'up', sentimentScore: 5 },
       { symbol: 'FXE', name: 'Invesco CurrencyShares Euro', sentiment: 'up', sentimentScore: 4 },
     ],
+    imageUrl: 'https://picsum.photos/seed/ecb/800/450',
   },
   {
     id: '8',
@@ -188,6 +193,7 @@ export const mockNews: NewsItem[] = [
       { symbol: 'FXY', name: 'Invesco CurrencyShares Yen', sentiment: 'down', sentimentScore: -6 },
       { symbol: 'EWJ', name: 'iShares MSCI Japan', sentiment: 'up', sentimentScore: 3 },
     ],
+    imageUrl: 'https://picsum.photos/seed/boj/800/450',
   },
   {
     id: '10',
@@ -205,6 +211,7 @@ export const mockNews: NewsItem[] = [
       { symbol: 'BABA', name: 'Alibaba Group', sentiment: 'down', sentimentScore: -5 },
       { symbol: 'PDD', name: 'PDD Holdings', sentiment: 'down', sentimentScore: -4 },
     ],
+    imageUrl: 'https://picsum.photos/seed/china/800/450',
   },
   {
     id: '11',
@@ -272,6 +279,7 @@ export const mockNews: NewsItem[] = [
       { symbol: 'XOM', name: 'Exxon Mobil Corporation', sentiment: 'up', sentimentScore: 6 },
       { symbol: 'CVX', name: 'Chevron Corporation', sentiment: 'up', sentimentScore: 5 },
     ],
+    imageUrl: 'https://picsum.photos/seed/energy/800/450',
   },
   {
     id: '15',
@@ -293,18 +301,19 @@ export const mockNews: NewsItem[] = [
   // ── Added: Coverage for all mockMarketTrends tickers ────
   {
     id: '16',
-    headline: 'Meta\'s AI-Powered Ad Targeting Drives Record Q4 Revenue, Shares Jump 8%',
-    body: '$META reports Q4 revenue of $42.3B, beating estimates by 5%. AI-driven ad optimization and Reels monetization fuel the surge. Reality Labs losses narrow to $3.7B as Quest 3 adoption accelerates.',
-    sources: [{ name: 'BLOOMBERG', url: 'https://www.bloomberg.com/news/meta-q4-earnings-beat' }],
+    headline: 'European markets head for lower open amid Iran peace talks uncertainty',
+    body: 'European stock futures point sharply lower as investors weigh the risk of escalating Middle East tensions. The Stoxx 600 is set to open down 1.2% with energy and defense sectors diverging on geopolitical uncertainty.',
+    sources: [{ name: 'BLOOMBERG', url: 'https://www.bloomberg.com/news/european-markets-iran-uncertainty' }],
     publishedAt: new Date(Date.now() - 6 * 60 * 1000),
-    regionTag: 'us',
-    countryCode: 'us',
-    category: 'tech',
+    regionTag: 'eu',
+    countryCode: 'de',
+    category: 'markets',
     impact: 'high',
-    sentiment: 'good',
+    sentiment: 'bad',
     tickers: [
-      { symbol: 'META', name: 'Meta Platforms, Inc.', sentiment: 'up', sentimentScore: 8 },
+      { symbol: 'EWG', name: 'iShares MSCI Germany', sentiment: 'down', sentimentScore: -4 },
     ],
+    imageUrl: '/images/2.png',
   },
   {
     id: '17',
@@ -320,6 +329,7 @@ export const mockNews: NewsItem[] = [
     tickers: [
       { symbol: 'SPY', name: 'SPDR S&P 500 ETF Trust', sentiment: 'down', sentimentScore: -6 },
     ],
+    imageUrl: 'https://picsum.photos/seed/markets/800/450',
   },
   {
     id: '18',
@@ -335,6 +345,7 @@ export const mockNews: NewsItem[] = [
     tickers: [
       { symbol: 'MA', name: 'Mastercard Incorporated', sentiment: 'up', sentimentScore: 8 },
     ],
+    imageUrl: 'https://picsum.photos/seed/banking/800/450',
   },
   {
     id: '19',
@@ -351,6 +362,7 @@ export const mockNews: NewsItem[] = [
       { symbol: 'AMZN', name: 'Amazon.com, Inc.', sentiment: 'down', sentimentScore: -7 },
       { symbol: 'MSFT', name: 'Microsoft Corporation', sentiment: 'up', sentimentScore: 4 },
     ],
+    imageUrl: 'https://picsum.photos/seed/pentagon/800/450',
   },
   {
     id: '20',
@@ -382,6 +394,7 @@ export const mockNews: NewsItem[] = [
     tickers: [
       { symbol: 'ASML', name: 'ASML Holding N.V.', sentiment: 'up', sentimentScore: 8 },
     ],
+    imageUrl: 'https://picsum.photos/seed/asml/800/450',
   },
   {
     id: '22',
@@ -412,6 +425,7 @@ export const mockNews: NewsItem[] = [
     tickers: [
       { symbol: 'AMZN', name: 'Amazon.com, Inc.', sentiment: 'down', sentimentScore: -8 },
     ],
+    imageUrl: 'https://picsum.photos/seed/ftc/800/450',
   },
 
   // ── Crypto ────────────────────────────────────────────
@@ -430,6 +444,7 @@ export const mockNews: NewsItem[] = [
       { symbol: 'MSTR', name: 'MicroStrategy Inc.', sentiment: 'up', sentimentScore: 9 },
       { symbol: 'COIN', name: 'Coinbase Global', sentiment: 'up', sentimentScore: 7 },
     ],
+    imageUrl: 'https://picsum.photos/seed/bitcoin/800/450',
   },
   {
     id: 'crypto-2',
@@ -462,6 +477,7 @@ export const mockNews: NewsItem[] = [
     tickers: [
       { symbol: 'NVO', name: 'Novo Nordisk A/S', sentiment: 'up', sentimentScore: 8 },
     ],
+    imageUrl: 'https://picsum.photos/seed/pharma/800/450',
   },
   {
     id: 'health-2',
@@ -495,6 +511,7 @@ export const mockNews: NewsItem[] = [
       { symbol: 'GLD', name: 'SPDR Gold Shares', sentiment: 'up', sentimentScore: 7 },
       { symbol: 'NEM', name: 'Newmont Corp', sentiment: 'up', sentimentScore: 6 },
     ],
+    imageUrl: 'https://picsum.photos/seed/gold/800/450',
   },
   {
     id: 'comm-2',
@@ -525,6 +542,7 @@ export const mockNews: NewsItem[] = [
     impact: 'high',
     sentiment: 'bad',
     tickers: [],
+    imageUrl: 'https://picsum.photos/seed/realestate/800/450',
   },
   {
     id: 're-2',
@@ -557,6 +575,7 @@ export const mockNews: NewsItem[] = [
     tickers: [
       { symbol: 'MT', name: 'ArcelorMittal', sentiment: 'down', sentimentScore: -4 },
     ],
+    imageUrl: 'https://picsum.photos/seed/climate/800/450',
   },
   {
     id: 'climate-2',
@@ -590,6 +609,7 @@ export const mockNews: NewsItem[] = [
       { symbol: 'LMT', name: 'Lockheed Martin', sentiment: 'up', sentimentScore: 8 },
       { symbol: 'RTX', name: 'RTX Corporation', sentiment: 'up', sentimentScore: 7 },
     ],
+    imageUrl: 'https://picsum.photos/seed/defense/800/450',
   },
   {
     id: 'def-2',
@@ -620,6 +640,7 @@ export const mockNews: NewsItem[] = [
     tickers: [
       { symbol: 'JPM', name: 'JPMorgan Chase & Co.', sentiment: 'up', sentimentScore: 8 },
     ],
+    imageUrl: 'https://picsum.photos/seed/jpmorgan/800/450',
   },
   {
     id: 'bank-2',
@@ -633,6 +654,76 @@ export const mockNews: NewsItem[] = [
     impact: 'high',
     sentiment: 'bad',
     tickers: [],
+    imageUrl: 'https://picsum.photos/seed/yen/800/450',
+  },
+
+  // ── Automotive ──────────────────────────────────────────
+  {
+    id: 'auto-1',
+    headline: 'Tesla Recalls 1.2M Vehicles Over Autopilot Safety Concerns After NHTSA Probe',
+    body: '$TSLA issues its largest recall to date after federal regulators find Autopilot fails to adequately monitor driver attention. The OTA fix will limit Autopilot use on certain road types.',
+    sources: [{ name: 'REUTERS', url: 'https://www.reuters.com/tesla-recall-autopilot' }],
+    publishedAt: new Date(Date.now() - 25 * 60 * 1000),
+    regionTag: 'us',
+    countryCode: 'us',
+    category: 'automotive',
+    impact: 'high',
+    sentiment: 'bad',
+    tickers: [
+      { symbol: 'TSLA', name: 'Tesla, Inc.', sentiment: 'down', sentimentScore: -7 },
+    ],
+    imageUrl: 'https://picsum.photos/seed/teslarecall/800/450',
+  },
+  {
+    id: 'auto-2',
+    headline: 'Toyota and BYD Form Joint Venture to Develop Affordable EVs for Southeast Asia',
+    body: 'Toyota Motor and BYD announce a 50-50 JV targeting sub-$20K electric vehicles for ASEAN markets, combining Toyota\'s manufacturing scale with BYD\'s battery technology.',
+    sources: [{ name: 'NIKKEI', url: 'https://asia.nikkei.com/toyota-byd-ev-joint-venture' }],
+    publishedAt: new Date(Date.now() - 50 * 60 * 1000),
+    regionTag: 'asia',
+    countryCode: 'jp',
+    category: 'automotive',
+    impact: 'high',
+    sentiment: 'good',
+    tickers: [
+      { symbol: 'TM', name: 'Toyota Motor Corp', sentiment: 'up', sentimentScore: 6 },
+    ],
+    imageUrl: 'https://picsum.photos/seed/toyotabyd/800/450',
+  },
+
+  // ── Trade ───────────────────────────────────────────────
+  {
+    id: 'trade-1',
+    headline: 'US Imposes 45% Tariff on Chinese EV Imports, Beijing Vows Retaliation',
+    body: 'The White House announces sweeping tariffs on Chinese electric vehicles and battery components, escalating the trade war. China\'s Commerce Ministry warns of "equivalent countermeasures" targeting US agricultural exports.',
+    sources: [{ name: 'WSJ', url: 'https://www.wsj.com/us-china-ev-tariffs' }],
+    publishedAt: new Date(Date.now() - 30 * 60 * 1000),
+    regionTag: 'us',
+    countryCode: 'us',
+    category: 'trade',
+    impact: 'high',
+    sentiment: 'bad',
+    tickers: [
+      { symbol: 'FXI', name: 'iShares China Large-Cap', sentiment: 'down', sentimentScore: -5 },
+      { symbol: 'TSLA', name: 'Tesla, Inc.', sentiment: 'up', sentimentScore: 3 },
+    ],
+    imageUrl: 'https://picsum.photos/seed/tariff/800/450',
+  },
+  {
+    id: 'trade-2',
+    headline: 'EU and India Finalize Free Trade Agreement After 16 Years of Negotiations',
+    body: 'The European Union and India sign a landmark free trade deal eliminating tariffs on 90% of goods over 10 years. The agreement opens up Europe\'s largest untapped market and boosts Indian textile and IT exports.',
+    sources: [{ name: 'FT', url: 'https://www.ft.com/content/eu-india-fta' }],
+    publishedAt: new Date(Date.now() - 85 * 60 * 1000),
+    regionTag: 'eu',
+    countryCode: 'de',
+    category: 'trade',
+    impact: 'high',
+    sentiment: 'good',
+    tickers: [
+      { symbol: 'EWG', name: 'iShares MSCI Germany', sentiment: 'up', sentimentScore: 4 },
+    ],
+    imageUrl: 'https://picsum.photos/seed/eutrade/800/450',
   },
 
 ];

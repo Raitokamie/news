@@ -6,6 +6,7 @@ import RightSidebar from '@/components/layout/RightSidebar';
 import RegionRibbon from '@/components/filters/RegionRibbon';
 import MobileFilterRow from '@/components/filters/MobileFilterRow';
 import ImpactFeed from '@/components/news/ImpactFeed';
+import BreakingNews from '@/components/news/BreakingNews';
 import ScrollToTopButton from '@/components/ui/ScrollToTopButton';
 
 export default function DashboardPage() {
@@ -18,6 +19,7 @@ export default function DashboardPage() {
         <MobileFilterRow />
         <RegionRibbon />
         <div ref={scrollRef} className="flex-1 overflow-y-auto pb-28 md:pb-0">
+          <BreakingNews />
           <ImpactFeed />
         </div>
       </div>

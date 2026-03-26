@@ -15,7 +15,9 @@ export type Category =
   | 'real-estate'
   | 'climate'
   | 'defense'
-  | 'banking';
+  | 'banking'
+  | 'automotive'
+  | 'trade';
 export type ImpactLevel = 'high' | 'medium' | 'low';
 export type Sentiment = 'good' | 'bad' | 'neutral';
 export type SortOrder = 'latest' | 'oldest' | 'impact';
@@ -35,6 +37,7 @@ export interface NewsItem {
   tickers: { symbol: string; name: string; sentiment: 'up' | 'down' | 'flat'; sentimentScore: number }[];
   narrativeGroupId?: string;
   logoUrl?: string;
+  imageUrl?: string;
 }
 
 export interface SentimentHistorical {

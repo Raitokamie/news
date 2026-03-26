@@ -25,6 +25,8 @@ export const otherOptions: { id: Category; label: string }[] = [
   { id: 'climate', label: 'Climate' },
   { id: 'defense', label: 'Defense' },
   { id: 'banking', label: 'Banking' },
+  { id: 'automotive', label: 'Automotive' },
+  { id: 'trade', label: 'Trade' },
 ];
 
 // For Desktop: Categories that appear in the "Other" dropdown
@@ -46,6 +48,8 @@ export const categoryOptions: { id: Category; label: string }[] = [
   { id: 'climate', label: 'Climate' },
   { id: 'defense', label: 'Defense' },
   { id: 'banking', label: 'Banking' },
+  { id: 'automotive', label: 'Automotive' },
+  { id: 'trade', label: 'Trade' },
 ];
 
 // ─── Sorting ─────────────────────────────────────────────────────────────

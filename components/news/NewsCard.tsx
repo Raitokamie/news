@@ -81,7 +81,7 @@ export default function NewsCard({ item, compact = false }: NewsCardProps) {
       <h3
         className={cn(
           'font-bold text-white leading-snug mb-2 group-hover:text-cyan-50 transition-colors uppercase line-clamp-2',
-          compact ? 'text-sm' : 'text-base'
+          compact ? 'text-base' : 'text-lg'
         )}
       >
         {highlightTickers(item.headline)}

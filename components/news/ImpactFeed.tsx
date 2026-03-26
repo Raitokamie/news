@@ -308,14 +308,14 @@ export default function ImpactFeed() {
             <div className="grid grid-cols-2 gap-x-5 pt-3 pb-2">
               <div className="flex items-center gap-2">
                 <TrendingDown size={18} className="text-red-400" />
-                <h2 className="text-base font-bold tracking-widest uppercase text-red-400">Bad Sentiment</h2>
+                <h2 className="text-lg font-bold tracking-widest uppercase text-red-400">Bad Sentiment</h2>
                 <span className="ml-auto text-xs font-medium text-red-500 bg-red-500/10 border border-red-500/30 px-3 py-1 rounded-full min-w-[2rem] text-center">
                   {badItems.length}
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <TrendingUp size={18} className="text-green-400" />
-                <h2 className="text-base font-bold tracking-widest uppercase text-green-400">Good Sentiment</h2>
+                <h2 className="text-lg font-bold tracking-widest uppercase text-green-400">Good Sentiment</h2>
                 <span className="ml-auto text-xs font-medium text-green-500 bg-green-500/10 border border-green-500/30 px-3 py-1 rounded-full min-w-[2rem] text-center">
                   {goodItems.length}
                 </span>
