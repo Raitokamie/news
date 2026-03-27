@@ -114,7 +114,7 @@ export default function StockSentimentPage() {
     : availableToAdd;
 
   useEffect(() => {
-    const t = setTimeout(() => setIsLoading(false), 1500);
+    const t = setTimeout(() => setIsLoading(false), 300);
     return () => clearTimeout(t);
   }, []);
 
@@ -295,8 +295,8 @@ export default function StockSentimentPage() {
             {/* Table */}
             {isLoading ? (
               <TableSkeleton rows={rowsPerPage} />
-            ) : null}
-            <div className={isLoading ? 'hidden' : 'border border-[#222F44] rounded-xl'}>
+            ) : (
+            <div className="border border-[#222F44] rounded-xl">
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[700px]">
                   <thead>
@@ -448,6 +448,7 @@ export default function StockSentimentPage() {
                 </div>
               </div>
             </div>
+            )}
           </div>
         </div>
       </div>

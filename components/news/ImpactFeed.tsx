@@ -68,7 +68,7 @@ export default function ImpactFeed() {
 
   // Simulate initial loading for perceived performance
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1500);
+    const timer = setTimeout(() => setIsLoading(false), 300);
     return () => clearTimeout(timer);
   }, []);
 

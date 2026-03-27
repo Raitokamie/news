@@ -5,6 +5,28 @@ Base URL: `https://api.ideatrade1.com` (หรือตามที่ backend �
 
 ---
 
+## Error Response Format
+
+ทุก error ใช้ format เดียวกัน:
+
+```json
+{
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human-readable message",
+    "status": 400
+  }
+}
+```
+
+| Field     | Type   | คำอธิบาย                           |
+| --------- | ------ | ---------------------------------- |
+| `code`    | string | Machine-readable error code (UPPER_SNAKE_CASE) |
+| `message` | string | ข้อความอธิบาย error               |
+| `status`  | number | HTTP status code (ซ้ำกับ header)  |
+
+---
+
 ## 0. Enum Reference
 
 ค่าที่เป็นไปได้ของแต่ละ field ใช้อ้างอิงทั้ง request และ response
@@ -26,6 +48,8 @@ Base URL: `https://api.ideatrade1.com` (หรือตามที่ backend �
 | `climate`     | Climate     | Climate change, ESG, carbon                |
 | `defense`     | Defense     | กลาโหม, อาวุธ, cybersecurity              |
 | `banking`     | Banking     | ธนาคาร, fintech, ประกันภัย                |
+| `automotive`  | Automotive  | รถยนต์, EV, ชิ้นส่วนยานยนต์               |
+| `trade`       | Trade       | การค้าระหว่างประเทศ, tariff, FTA           |
 
 ### Region Tag
 
@@ -70,29 +94,63 @@ Base URL: `https://api.ideatrade1.com` (หรือตามที่ backend �
 
 ## 1. Authentication
 
-### 1.1 Login (OAuth Redirect)
+### 1.1 Login (OAuth Authorization Code Flow)
 
-Frontend จะ redirect user ไปหน้า login ของ ideatrade1
+ใช้ Authorization Code flow มาตรฐาน — ไม่ส่ง token ผ่าน URL เพื่อป้องกัน token leak
 
-```
-กด Login → redirect ไป https://ideatrade1.com/login?redirect_uri=https://newsweb.com/auth/callback
-```
-
-เมื่อ login สำเร็จ → redirect กลับมาที่:
+**Step 1:** Frontend redirect user ไปหน้า login
 
 ```
-https://newsweb.com/auth/callback?access_token=<ACCESS_TOKEN>&refresh_token=<REFRESH_TOKEN>
+กด Login → redirect ไป https://ideatrade1.com/authorize?response_type=code&client_id=newsweb&redirect_uri=https://newsweb.com/auth/callback
 ```
 
-**สิ่งที่ backend ต้องทำ:**
+**Step 2:** Login สำเร็จ → redirect กลับพร้อม **authorization code** (ไม่ใช่ token)
 
-- รับ `redirect_uri` parameter ตอน login
-- Login สำเร็จ → redirect กลับไปที่ `redirect_uri` พร้อม `access_token` + `refresh_token`
-- Token ควรเป็น JWT ที่มีข้อมูล user อยู่ข้างใน
+```
+https://newsweb.com/auth/callback?code=<AUTHORIZATION_CODE>
+```
+
+**Step 3:** Frontend ส่ง code ไปแลก token ผ่าน `POST /auth/token`
 
 ---
 
-### 1.2 POST /auth/refresh — ขอ Access Token ใหม่
+### 1.2 POST /auth/token — แลก authorization code เป็น token
+
+```
+POST /auth/token
+Content-Type: application/json
+
+{
+  "grantType": "authorization_code",
+  "code": "<AUTHORIZATION_CODE>",
+  "redirectUri": "https://newsweb.com/auth/callback"
+}
+```
+
+**Response 200:**
+
+```json
+{
+  "accessToken": "<ACCESS_TOKEN>",
+  "refreshToken": "<REFRESH_TOKEN>"
+}
+```
+
+**Response 400:** code ไม่ถูกต้องหรือหมดอายุ
+
+```json
+{
+  "error": {
+    "code": "INVALID_AUTHORIZATION_CODE",
+    "message": "Authorization code is invalid or expired",
+    "status": 400
+  }
+}
+```
+
+---
+
+### 1.3 POST /auth/refresh — ขอ Access Token ใหม่
 
 เมื่อ Access Token หมดอายุ (ได้ 401) → Frontend จะเรียก API นี้เพื่อขอ token ใหม่โดยไม่ต้อง login ใหม่
 
@@ -115,7 +173,13 @@ Content-Type: application/json
 **Response 401:** refresh token หมดอายุ → user ต้อง login ใหม่
 
 ```json
-{ "error": "Refresh token expired" }
+{
+  "error": {
+    "code": "REFRESH_TOKEN_EXPIRED",
+    "message": "Refresh token expired",
+    "status": 401
+  }
+}
 ```
 
 **Token Lifetime:**
@@ -127,7 +191,26 @@ Content-Type: application/json
 
 ---
 
-### 1.3 GET /auth/me — ดึงข้อมูล user ปัจจุบัน
+### 1.4 POST /auth/logout — Logout
+
+ลบ refresh token ฝั่ง server เพื่อป้องกันการใช้ token ต่อหลัง logout
+
+```
+POST /auth/logout
+Authorization: Bearer <access_token>
+```
+
+**Response 200:**
+
+```json
+{ "success": true }
+```
+
+> Frontend จะลบ token ออกจาก storage + redirect ไปหน้า login
+
+---
+
+### 1.5 GET /auth/me — ดึงข้อมูล user ปัจจุบัน
 
 ```
 GET /auth/me
@@ -151,7 +234,13 @@ Authorization: Bearer <access_token>
 **Response 401:** token หมดอายุหรือไม่ถูกต้อง
 
 ```json
-{ "error": "Unauthorized" }
+{
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "Unauthorized",
+    "status": 401
+  }
+}
 ```
 
 **ใช้ในหน้า:** ทุกหน้า (Sidebar แสดงชื่อ + plan, กำหนดสิทธิ์)
@@ -185,7 +274,7 @@ GET /news?range=24h
       "id": "1",
       "headline": "DOJ Closing Arguments Focus on Google's Default Search Deals",
       "body": "The landmark trial enters its final phase...",
-      "sources": [{ "name": "REUTERS", "url": "https://..." }],
+      "sources": [{ "name": "REUTERS", "url": "https://...", "publishedAt": "2026-03-25T09:45:00Z" }],
       "publishedAt": "2026-03-25T10:00:00Z",
       "regionTag": "us",
       "countryCode": "us",
@@ -201,12 +290,23 @@ GET /news?range=24h
         }
       ],
       "narrativeGroupId": "ng-google-antitrust",
-      "logoUrl": null
+      "logoUrl": null,
+      "imageUrl": "/images/1.png"
     }
   ],
   "total": 150
 }
 ```
+
+**Sources field:**
+
+| Field         | Type   | Required | คำอธิบาย                                      |
+| ------------- | ------ | -------- | --------------------------------------------- |
+| `name`        | string | Yes      | ชื่อแหล่งข่าว เช่น `REUTERS`                 |
+| `url`         | string | Yes      | URL ต้นฉบับ                                   |
+| `publishedAt` | string | No       | เวลาที่แหล่งข่าวเผยแพร่ (ISO 8601) — ถ้ามี   |
+
+> `publishedAt` ระดับ root คือเวลาที่ระบบรวมข่าว, `sources[].publishedAt` คือเวลาที่แหล่งข่าวแต่ละแหล่งเผยแพร่จริง (optional)
 
 **ใช้ในหน้า:** Dashboard (`/`), Ticker Detail (`/ticker/[symbol]`)
 
@@ -267,11 +367,12 @@ Authorization: Bearer <access_token>
 
 **Query params:**
 
-| Param    | Type   | Default | ค่าที่เป็นไปได้ |
-| -------- | ------ | ------- | --------------- |
-| `range`  | string | `24h`   | `24h`, `7d`, `30d`, `all` |
-| `page`   | number | `1`     | สำหรับ pagination |
-| `limit`  | number | `50`    | จำนวนข่าวต่อ page |
+| Param      | Type   | Default | ค่าที่เป็นไปได้ |
+| ---------- | ------ | ------- | --------------- |
+| `range`    | string | `24h`   | `24h`, `7d`, `30d`, `all` |
+| `category` | string | `all`   | `all`, `markets`, `economy`, `geopolitics`, `tech`, `ai`, `crypto`, `energy`, `commodities`, `healthcare`, `real-estate`, `climate`, `defense`, `banking`, `automotive`, `trade` |
+| `page`     | number | `1`     | สำหรับ pagination |
+| `limit`    | number | `50`    | จำนวนข่าวต่อ page |
 
 **Response 200:**
 
@@ -282,7 +383,7 @@ Authorization: Bearer <access_token>
       "id": "3",
       "headline": "Nvidia Accelerates Data Center Dominance...",
       "body": "$NVDA begins mass shipments of GB200 Blackwell GPUs...",
-      "sources": [{ "name": "REUTERS", "url": "https://..." }],
+      "sources": [{ "name": "REUTERS", "url": "https://...", "publishedAt": "2026-03-25T09:40:00Z" }],
       "publishedAt": "2026-03-25T09:48:00Z",
       "regionTag": "us",
       "countryCode": "us",
@@ -307,7 +408,13 @@ Authorization: Bearer <access_token>
 **Response 403:** user เป็น free plan
 
 ```json
-{ "error": "Premium required" }
+{
+  "error": {
+    "code": "PREMIUM_REQUIRED",
+    "message": "Premium required",
+    "status": 403
+  }
+}
 ```
 
 **ใช้ในหน้า:** Watchlist (`/watchlist`) — Activity Feed section
@@ -348,7 +455,7 @@ GET /tickers/analysis?range=24h
 
 | Param    | Type   | Default          | ค่าที่เป็นไปได้                                          |
 | -------- | ------ | ---------------- | -------------------------------------------------------- |
-| `range`  | string | `24h`            | `24h`, `7d`                                              |
+| `range`  | string | `24h`            | `24h`, `7d`, `30d`, `all`                                |
 
 > Filter (top_positive, top_negative, most_mention) ทำฝั่ง Frontend — แต่ละ filter มี default sort ในตัว
 
@@ -475,7 +582,13 @@ Authorization: Bearer <access_token>
 **Response 403:** user เป็น free plan
 
 ```json
-{ "error": "Premium required" }
+{
+  "error": {
+    "code": "PREMIUM_REQUIRED",
+    "message": "Premium required",
+    "status": 403
+  }
+}
 ```
 
 ---
@@ -499,7 +612,13 @@ Content-Type: application/json
 **Response 400:** watchlist เต็ม (สูงสุด 50 ตัว)
 
 ```json
-{ "error": "Watchlist limit reached (max 50)" }
+{
+  "error": {
+    "code": "WATCHLIST_LIMIT_REACHED",
+    "message": "Watchlist limit reached (max 50)",
+    "status": 400
+  }
+}
 ```
 
 ---
@@ -645,7 +764,7 @@ Source: REUTERS
 ### 10.4 Authorization (สิทธิ์)
 - API ที่ต้อง Premium (`/watchlist`, `/telegram`, `/news/watchlist`) → backend ต้องเช็ค plan ทุก request
 - ห้ามเชื่อ frontend อย่างเดียว เพราะ user สามารถเรียก API ตรงได้
-- ถ้า free user เรียก premium API → ตอบ `403 { "error": "Premium required" }`
+- ถ้า free user เรียก premium API → ตอบ `403` ด้วย structured error format
 
 ### 10.5 OAuth Callback
 - `redirect_uri` ต้อง whitelist เฉพาะ domain ของ newsweb
@@ -653,25 +772,27 @@ Source: REUTERS
 
 ---
 
-## สรุป API ทั้งหมด (19 endpoints)
+## สรุป API ทั้งหมด (21 endpoints)
 
 | #  | Method | Endpoint                     | Auth | Plan    | ใช้ในหน้า                         |
 | -- | ------ | ---------------------------- | ---- | ------- | --------------------------------- |
-| 1  | -      | OAuth redirect               | -    | -       | Login                             |
-| 2  | POST   | `/auth/refresh`              | No   | Any     | ทุกหน้า (auto refresh)            |
-| 3  | GET    | `/auth/me`                   | Yes  | Any     | ทุกหน้า                           |
-| 4  | GET    | `/news`                      | No   | Free    | Dashboard, Ticker Detail, Search Overlay (News tab) |
-| 5  | GET    | `/news/watchlist`            | Yes  | Premium | Watchlist (Activity Feed)         |
-| 6  | GET    | `/tickers/search`            | No   | Free    | Search Overlay (Symbols tab), AddTickerModal |
-| 7  | GET    | `/live-update`               | No   | Free    | ทุกหน้า (widget)                  |
-| 8  | GET    | `/tickers/analysis`          | No   | Free    | Stock Sentiment, Market Trends    |
-| 9  | GET    | `/tickers/:symbol/outlook`   | No   | Free    | Sentiment Detail, Ticker Detail   |
-| 10 | GET    | `/sentiment/tickers`         | Yes  | Free    | Stock Sentiment                   |
-| 11 | POST   | `/sentiment/tickers`         | Yes  | Free    | Stock Sentiment                   |
-| 12 | DELETE | `/sentiment/tickers/:symbol` | Yes  | Free    | Stock Sentiment                   |
-| 13 | GET    | `/watchlist`                 | Yes  | Premium | Watchlist                         |
-| 14 | POST   | `/watchlist`                 | Yes  | Premium | Watchlist                         |
-| 15 | DELETE | `/watchlist/:symbol`         | Yes  | Premium | Watchlist                         |
-| 16 | POST   | `/telegram/connect`          | Yes  | Premium | Watchlist                         |
-| 17 | POST   | `/telegram/disconnect`       | Yes  | Premium | Watchlist                         |
-| 18 | GET    | `/telegram/status`           | Yes  | Premium | Watchlist                         |
+| 1  | -      | OAuth redirect (Auth Code)   | -    | -       | Login                             |
+| 2  | POST   | `/auth/token`                | No   | Any     | Login callback (แลก code → token) |
+| 3  | POST   | `/auth/refresh`              | No   | Any     | ทุกหน้า (auto refresh)            |
+| 4  | POST   | `/auth/logout`               | Yes  | Any     | Logout                            |
+| 5  | GET    | `/auth/me`                   | Yes  | Any     | ทุกหน้า                           |
+| 6  | GET    | `/news`                      | No   | Free    | Dashboard, Ticker Detail, Search Overlay (News tab) |
+| 7  | GET    | `/news/watchlist`            | Yes  | Premium | Watchlist (Activity Feed)         |
+| 8  | GET    | `/tickers/search`            | No   | Free    | Search Overlay (Symbols tab), AddTickerModal |
+| 9  | GET    | `/live-update`               | No   | Free    | ทุกหน้า (widget)                  |
+| 10 | GET    | `/tickers/analysis`          | No   | Free    | Stock Sentiment, Market Trends    |
+| 11 | GET    | `/tickers/:symbol/outlook`   | No   | Free    | Sentiment Detail, Ticker Detail   |
+| 12 | GET    | `/sentiment/tickers`         | Yes  | Free    | Stock Sentiment                   |
+| 13 | POST   | `/sentiment/tickers`         | Yes  | Free    | Stock Sentiment                   |
+| 14 | DELETE | `/sentiment/tickers/:symbol` | Yes  | Free    | Stock Sentiment                   |
+| 15 | GET    | `/watchlist`                 | Yes  | Premium | Watchlist                         |
+| 16 | POST   | `/watchlist`                 | Yes  | Premium | Watchlist                         |
+| 17 | DELETE | `/watchlist/:symbol`         | Yes  | Premium | Watchlist                         |
+| 18 | POST   | `/telegram/connect`          | Yes  | Premium | Watchlist                         |
+| 19 | POST   | `/telegram/disconnect`       | Yes  | Premium | Watchlist                         |
+| 20 | GET    | `/telegram/status`           | Yes  | Premium | Watchlist                         |

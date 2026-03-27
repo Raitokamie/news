@@ -97,7 +97,7 @@ export default function MarketTrendsPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const t = setTimeout(() => setIsLoading(false), 1500);
+    const t = setTimeout(() => setIsLoading(false), 300);
     return () => clearTimeout(t);
   }, []);
 
