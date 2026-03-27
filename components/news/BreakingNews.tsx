@@ -5,6 +5,7 @@ import { mockNews } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
 import { NewsItem } from '@/lib/types';
 import { timeAgo } from '@/lib/utils';
+import TickerChip from '@/components/tickers/TickerChip';
 
 const HOURS_24 = 24 * 60 * 60 * 1000;
 
@@ -17,15 +18,19 @@ function BreakingCard({ item, large = false }: { item: NewsItem; large?: boolean
 
   return (
     <div
+      role="button"
+      tabIndex={0}
       onClick={() => src?.url && window.open(src.url, '_blank', 'noopener,noreferrer')}
+      onKeyDown={(e) => { if (e.key === 'Enter' && src?.url) window.open(src.url, '_blank', 'noopener,noreferrer'); }}
       className={`group flex flex-col overflow-hidden rounded-xl cursor-pointer border border-[#222F44] bg-[#0d1520] ${large ? 'row-span-2' : ''}`}
+      aria-label={item.headline}
     >
       {/* Image */}
-      <div className={`relative overflow-hidden ${large ? 'flex-1' : 'h-36'}`}>
+      <div className={`relative overflow-hidden ${large ? 'aspect-[16/10]' : 'aspect-[16/9]'}`}>
         {item.imageUrl ? (
           <img
             src={item.imageUrl}
-            alt=""
+            alt={item.headline}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
@@ -38,14 +43,23 @@ function BreakingCard({ item, large = false }: { item: NewsItem; large?: boolean
       </div>
 
       {/* Content */}
-      <div className={`flex flex-col ${large ? 'p-4 gap-2' : 'p-3 gap-1.5'}`}>
+      <div className={`flex flex-col ${large ? 'p-5 gap-3' : 'p-4 gap-2.5'}`}>
         {/* Headline */}
         <h3 className={`font-bold leading-snug text-white uppercase ${large ? 'text-xl line-clamp-3' : 'text-base line-clamp-2'}`}>
           {item.headline}
         </h3>
 
+        {/* Tickers */}
+        {item.tickers.length > 0 && (
+          <div className="flex flex-wrap gap-1.5" onClick={(e) => e.stopPropagation()}>
+            {item.tickers.map((t) => (
+              <TickerChip key={t.symbol} symbol={t.symbol} trend={t.sentiment} />
+            ))}
+          </div>
+        )}
+
         {/* Source + time */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 pt-3 mt-auto border-t border-[#222F44] leading-none">
           {src && (
             <>
               <img
@@ -53,12 +67,13 @@ function BreakingCard({ item, large = false }: { item: NewsItem; large?: boolean
                 alt={src.name}
                 className="h-4 w-4 rounded-full bg-[#333]"
               />
-              <span className="text-xs text-slate-300">
+              <span className="text-sm text-slate-400">
                 {src.name.charAt(0) + src.name.slice(1).toLowerCase()} Reporting
               </span>
+              <span className="text-xl text-slate-500 pt-[2px]">·</span>
             </>
           )}
-          <span className="text-xs text-slate-400" suppressHydrationWarning>
+          <span className="text-xs text-slate-400 pt-[2.9px] " suppressHydrationWarning>
             {timeAgo(item.publishedAt)}
           </span>
           <a
@@ -66,7 +81,7 @@ function BreakingCard({ item, large = false }: { item: NewsItem; large?: boolean
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="ml-auto text-xs font-medium text-[#0D7FF2] hover:text-[#3399FF] transition-colors"
+            className="ml-auto text-sm font-medium text-[#0D7FF2] hover:text-[#3399FF] transition-colors"
           >
             View more
           </a>
@@ -103,7 +118,7 @@ export default function BreakingNews() {
       </h2>
 
       {/* Desktop: 1 large + 2 small grid */}
-      <div className="hidden md:grid grid-cols-2 grid-rows-2 gap-3" style={{ height: 380 }}>
+      <div className="hidden md:grid grid-cols-2 auto-rows-[250px] gap-4">
         {breakingItems[0] && <BreakingCard item={breakingItems[0]} large />}
         {breakingItems[1] && <BreakingCard item={breakingItems[1]} />}
         {breakingItems[2] && <BreakingCard item={breakingItems[2]} />}

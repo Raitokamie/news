@@ -52,9 +52,12 @@ export default function TopBar({ showBack }: TopBarProps) {
           </button>
 
           {/* Search trigger — opens overlay on click/focus */}
-          <button
+          <div
             id="topbar-search-trigger"
+            role="button"
+            tabIndex={0}
             onClick={openSearchOverlay}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') openSearchOverlay(); }}
             className="relative flex-1 flex items-center gap-2 bg-[#111722] hover:bg-[#171f2e] rounded-lg px-3 py-2 text-sm text-slate-500 transition-all cursor-text text-left group"
             aria-label="Open search"
           >
@@ -93,7 +96,7 @@ export default function TopBar({ showBack }: TopBarProps) {
                 Clear
               </button>
             )}
-          </button>
+          </div>
 
           {/* Bell */}
           <button className="relative p-2 rounded-lg bg-[#111722] hover:bg-[#252525] transition-colors text-white">

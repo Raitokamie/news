@@ -190,8 +190,11 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
               onClick={() => handleSort('score')}
               className="text-right text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
             >
-              <span className="inline-flex items-center gap-1 justify-end">
-                SCORE <SortIcon column="score" />
+              <span className="inline-flex flex-col items-end">
+                <span className="inline-flex items-center gap-1">
+                  SCORE <SortIcon column="score" />
+                </span>
+                <span className="text-[11px] font-medium text-slate-400 tracking-normal">(-10 to 10)</span>
               </span>
             </th>
           </tr>

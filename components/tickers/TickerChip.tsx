@@ -19,7 +19,7 @@ export default function TickerChip({ symbol, showBookmark = true, trend = 'flat'
   const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus;
   const trendColor = trend === 'up' ? 'text-green-400' : trend === 'down' ? 'text-red-400' : 'text-slate-500';
 
-  function handleStarClick(e: React.MouseEvent) {
+  function handleStarClick(e: React.SyntheticEvent) {
     e.stopPropagation();
     if (isTracked) {
       removeTicker(symbol);
@@ -43,14 +43,22 @@ export default function TickerChip({ symbol, showBookmark = true, trend = 'flat'
       <span className="tracking-wide">{symbol}</span>
       <TrendIcon size={14} className={trendColor} />
       {showBookmark && (
-        <Star
-          size={12}
+        <span
+          role="button"
+          tabIndex={0}
           onClick={handleStarClick}
-          className={cn(
-            'ml-0.5 transition-colors',
-            isTracked ? 'text-yellow-400 fill-yellow-400' : 'text-slate-500 hover:text-yellow-400'
-          )}
-        />
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleStarClick(e); } }}
+          className="ml-0.5 inline-flex"
+          aria-label={isTracked ? `Remove ${symbol} from watchlist` : `Add ${symbol} to watchlist`}
+        >
+          <Star
+            size={12}
+            className={cn(
+              'transition-colors',
+              isTracked ? 'text-yellow-400 fill-yellow-400' : 'text-slate-500 hover:text-yellow-400'
+            )}
+          />
+        </span>
       )}
     </button>
   );

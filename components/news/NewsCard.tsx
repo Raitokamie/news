@@ -38,7 +38,7 @@ function CountryFlag({ code }: { code: Region }) {
     <img
       src={`https://flagcdn.com/w40/${code}.png`}
       srcSet={`https://flagcdn.com/w80/${code}.png 2x`}
-      alt={code}
+      alt={code.toUpperCase()}
       className="w-6 h-6 rounded-full object-cover"
     />
   );
@@ -114,7 +114,7 @@ export default function NewsCard({ item, compact = false }: NewsCardProps) {
               <img key={s.name} src={`https://www.google.com/s2/favicons?domain=${getDomain(s.url)}&sz=32`} alt={s.name} className="w-6 h-6 rounded-full border-2 border-[#0d0d0d] bg-[#333]" />
             ))}
           </div>
-          <span className="text-xs text-slate-400">
+          <span className="text-sm text-slate-400">
             {item.sources.map((s) => s.name.charAt(0) + s.name.slice(1).toLowerCase()).join(', ')} Reporting
           </span>
         </div>

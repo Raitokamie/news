@@ -83,7 +83,7 @@ export function CountryFlag({ code, size = 20 }: { code: Region | 'all'; size?: 
     <img
       src={`https://flagcdn.com/w40/${code}.png`}
       srcSet={`https://flagcdn.com/w80/${code}.png 2x`}
-      alt={code}
+      alt={code.toUpperCase()}
       className="w-5 h-5 rounded-full object-cover"
     />
   );

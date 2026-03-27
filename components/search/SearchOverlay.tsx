@@ -204,13 +204,14 @@ function NewsRow({ item, isHighlighted, isLast, onClick, onHover }: NewsRowProps
 
 // ─── Main overlay ─────────────────────────────────────────────────────────────
 export default function SearchOverlay() {
-  const { closeSearchOverlay, toggleSymbol, selectedSymbols, setScrollToNewsId, setCategory, setImpact, setCountry, setRegion } = useTerminalStore();
+  const { closeSearchOverlay, toggleSymbol, selectedSymbols, setScrollToNewsId, setCategory, setImpact, setCountry, setRegion, setMobileSentiment } = useTerminalStore();
   const router = useRouter();
   const pathname = usePathname();
 
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState<SearchTab>('stocks');
   const [highlightedIdx, setHighlighted] = useState(0);
+  const [newsLimit, setNewsLimit] = useState(20);
 
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => { inputRef.current?.focus(); }, []);
@@ -230,8 +231,11 @@ export default function SearchOverlay() {
     );
   }, [query]);
 
+  const visibleNews = filteredNews.slice(0, newsLimit);
+  const hasMoreNews = filteredNews.length > newsLimit;
+
   const results = activeTab === 'stocks' ? filteredStocks : filteredNews;
-  useEffect(() => { setHighlighted(0); }, [query, activeTab]);
+  useEffect(() => { setHighlighted(0); setNewsLimit(20); }, [query, activeTab]);
 
   // ── Handlers ───────────────────────────────────────────────────────────────
   const handleClose = useCallback(() => closeSearchOverlay(), [closeSearchOverlay]);
@@ -247,6 +251,13 @@ export default function SearchOverlay() {
     setCountry('all');
     setRegion('global');
 
+    // Switch mobile sentiment tab to match the selected news
+    if (item.sentiment === 'good') {
+      setMobileSentiment('good');
+    } else {
+      setMobileSentiment('bad');
+    }
+
     // Set the news id to scroll to
     setScrollToNewsId(item.id);
 
@@ -256,26 +267,29 @@ export default function SearchOverlay() {
     }
 
     closeSearchOverlay();
-  }, [closeSearchOverlay, setScrollToNewsId, setCategory, setImpact, setCountry, setRegion, pathname, router]);
+  }, [closeSearchOverlay, setScrollToNewsId, setCategory, setImpact, setCountry, setRegion, setMobileSentiment, pathname, router]);
+
+  const visibleResults = activeTab === 'stocks' ? filteredStocks : visibleNews;
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       handleClose();
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setHighlighted((i) => Math.min(i + 1, results.length - 1));
+      setHighlighted((i) => Math.min(i + 1, visibleResults.length - 1));
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       setHighlighted((i) => Math.max(i - 1, 0));
-    } else if (e.key === 'Enter' && results.length > 0) {
+    } else if (e.key === 'Enter' && visibleResults.length > 0) {
       e.preventDefault();
-      if (activeTab === 'stocks') handleSelectStock(filteredStocks[highlightedIdx].symbol);
-      else handleSelectNews(filteredNews[highlightedIdx]);
+      const idx = Math.min(highlightedIdx, visibleResults.length - 1);
+      if (activeTab === 'stocks') handleSelectStock(filteredStocks[idx].symbol);
+      else handleSelectNews(visibleNews[idx]);
     }
-  }, [results, highlightedIdx, activeTab, filteredStocks, filteredNews, handleClose, handleSelectStock, handleSelectNews]);
+  }, [visibleResults, highlightedIdx, activeTab, filteredStocks, visibleNews, handleClose, handleSelectStock, handleSelectNews]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-[8vh]">
+    <div className="fixed inset-0 z-[60] flex items-start justify-center pt-[8vh]">
 
       {/* ── Ultra-light backdrop — page stays fully visible ── */}
       <div
@@ -391,16 +405,26 @@ export default function SearchOverlay() {
                     onHover={() => setHighlighted(i)}
                   />
                 ))
-                : filteredNews.map((item, i) => (
-                  <NewsRow
-                    key={item.id}
-                    item={item}
-                    isHighlighted={i === highlightedIdx}
-                    isLast={i === filteredNews.length - 1}
-                    onClick={() => handleSelectNews(item)}
-                    onHover={() => setHighlighted(i)}
-                  />
-                ))}
+                : <>
+                  {visibleNews.map((item, i) => (
+                    <NewsRow
+                      key={item.id}
+                      item={item}
+                      isHighlighted={i === highlightedIdx}
+                      isLast={!hasMoreNews && i === visibleNews.length - 1}
+                      onClick={() => handleSelectNews(item)}
+                      onHover={() => setHighlighted(i)}
+                    />
+                  ))}
+                  {hasMoreNews && (
+                    <button
+                      onClick={() => setNewsLimit((l) => l + 20)}
+                      className="w-full py-3 text-[13px] font-medium text-[#2962FF] hover:bg-white/[0.05] transition-colors border-t border-white/[0.06]"
+                    >
+                      Show more ({filteredNews.length - newsLimit} remaining)
+                    </button>
+                  )}
+                </>}
             </>
           )}
         </div>
