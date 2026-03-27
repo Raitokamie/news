@@ -68,7 +68,7 @@ export default function WatchlistStocksRow({ trackedSymbols, onRemove }: Watchli
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <span className="text-white text-xs font-medium">AVG Score</span>
-              <span className="text-white font-semibold text-sm">{item.score}</span>
+              <span className="text-white font-semibold text-sm">{item.score}<span className="text-slate-500 font-normal">/{item.sentiment === 'down' ? '-10' : '10'}</span></span>
             </div>
             <div className="h-2 w-full bg-[#2A2A2A] rounded-full overflow-hidden">
               <div

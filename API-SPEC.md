@@ -416,9 +416,9 @@ Authorization: Bearer <access_token>
 }
 ```
 
-> ถ้า user ยังไม่เคยตั้งค่า → ส่งค่า default มา (เช่น top 10 most mentioned)
+> ถ้า user ยังไม่เคยตั้งค่า → return `{ "tickers": [] }` (หน้าเปล่า ให้ user เลือกเอง เพื่อไม่ให้ซ้ำกับหน้า Market Trends)
 
-**Response 401:** ไม่ได้ login → ใช้ default list ฝั่ง frontend
+**Response 401:** ไม่ได้ login → return `{ "tickers": [] }` ฝั่ง frontend แสดง empty state
 
 ---
 
@@ -586,6 +586,42 @@ Authorization: Bearer <access_token>
 | `SENT`       | ส่งสำเร็จ      |
 | `FAILED`     | ส่งไม่สำเร็จ   |
 | `PROCESSING` | กำลังส่ง       |
+
+---
+
+### 9.4 Telegram Message Format — ข้อความที่ Bot ส่งให้ user
+
+**Trigger:** Backend ส่งข้อความเมื่อมีข่าว `impact = "high"` ที่กล่าวถึง ticker ใน **watchlist** ของ user
+
+**Format (Telegram Markdown):**
+
+```
+🚨 *High Impact Alert — $NVDA*
+
+📰 NVIDIA Blackwell chips face supply constraints amid surging AI demand
+
+Impact: 🔴 HIGH
+Sentiment: 📉 Negative (-7/10)
+Source: REUTERS
+
+🔗 [Read more](https://newsweb.com/ticker/nvda)
+```
+
+**Fields ที่ใช้สร้างข้อความ:**
+
+| Field | มาจาก | ตัวอย่าง |
+|-------|--------|----------|
+| Symbol | `news.tickers[].symbol` (ตัวที่ match watchlist) | `NVDA` |
+| Headline | `news.headline` | `NVIDIA Blackwell chips...` |
+| Impact | `news.impact` | `high` → 🔴 HIGH |
+| Sentiment + Score | `news.tickers[].sentiment` + `sentimentScore` | 📉 Negative (-7/10) |
+| Source | `news.sources[0].name` | `REUTERS` |
+| Link | URL ไปหน้า ticker detail | `https://newsweb.com/ticker/nvda` |
+
+**หมายเหตุ:**
+- ส่งแค่ข่าว **high impact** เท่านั้น เพื่อไม่ให้ spam user
+- ถ้าข่าวเดียวกล่าวถึงหลาย ticker ใน watchlist → ส่ง 1 ข้อความ แต่ใส่ทุก symbol ที่ match
+- Backend ควรทำ deduplication — ข่าวเดียวกัน ห้ามส่งซ้ำ
 
 ---
 

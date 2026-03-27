@@ -46,7 +46,7 @@ export default function TopStockCard({ item }: TopStockCardProps) {
         <div className="flex items-center justify-between">
           <span className="text-white text-xs font-medium">AVG Score</span>
           <span className="text-white font-semibold text-sm">
-            {item.score}
+            {item.score}<span className="text-slate-500 font-normal">/{item.sentiment === 'down' ? '-10' : '10'}</span>
           </span>
         </div>
         {/* Progress bar */}
