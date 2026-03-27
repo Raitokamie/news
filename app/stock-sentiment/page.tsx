@@ -39,9 +39,40 @@ const sentimentConfig = {
   flat: { label: 'Neutral', icon: Minus, textColor: 'text-[#808080]', iconColor: 'text-[#808080]', bg: 'bg-[#262626]' },
 };
 
+function TableSkeleton({ rows = 8 }: { rows?: number }) {
+  return (
+    <div className="border border-[#222F44] rounded-xl overflow-hidden">
+      <table className="w-full min-w-[700px]">
+        <thead>
+          <tr className="border-b border-[#222F44]">
+            {['Ticker', 'Impact', 'Sentiment', 'Mention', 'Sentiment Historical', 'Score'].map((h) => (
+              <th key={h} className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">
+                <div className="h-3 w-16 bg-slate-700/50 rounded animate-pulse" />
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {Array.from({ length: rows }).map((_, i) => (
+            <tr key={i} className="border-b border-[#222F44]">
+              <td className="px-4 py-3"><div className="h-4 w-14 bg-slate-700/40 rounded animate-pulse" /></td>
+              <td className="px-4 py-3"><div className="h-5 w-16 bg-slate-700/30 rounded-full animate-pulse" /></td>
+              <td className="px-4 py-3"><div className="h-5 w-20 bg-slate-700/30 rounded-full animate-pulse" /></td>
+              <td className="px-4 py-3"><div className="h-4 w-8 bg-slate-700/30 rounded animate-pulse mx-auto" /></td>
+              <td className="px-4 py-3"><div className="h-3 w-full bg-slate-700/20 rounded animate-pulse" /></td>
+              <td className="px-4 py-3"><div className="h-6 w-10 bg-slate-700/30 rounded-full animate-pulse ml-auto" /></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export default function StockSentimentPage() {
   const router = useRouter();
   const { sentimentTickers, addSentimentTicker, removeSentimentTicker } = useTerminalStore();
+  const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [rppOpen, setRppOpen] = useState(false);
@@ -81,6 +112,11 @@ export default function StockSentimentPage() {
   const filteredToAdd = addSearch.trim()
     ? availableToAdd.filter((s) => s.toLowerCase().includes(addSearch.trim().toLowerCase()))
     : availableToAdd;
+
+  useEffect(() => {
+    const t = setTimeout(() => setIsLoading(false), 1500);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -257,7 +293,10 @@ export default function StockSentimentPage() {
           {/* Content */}
           <div className="px-6 pb-6 pt-0 flex flex-col gap-4">
             {/* Table */}
-            <div className="border border-[#222F44] rounded-xl">
+            {isLoading ? (
+              <TableSkeleton rows={rowsPerPage} />
+            ) : null}
+            <div className={isLoading ? 'hidden' : 'border border-[#222F44] rounded-xl'}>
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[700px]">
                   <thead>
