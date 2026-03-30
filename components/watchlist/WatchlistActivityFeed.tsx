@@ -163,67 +163,65 @@ export default function WatchlistActivityFeed({ trackedSymbols }: WatchlistActiv
       </div>
 
       {/* Section Header - Mobile with sentiment toggle */}
-      <div className="md:hidden flex flex-col gap-5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            <h2 className="text-sm font-extrabold tracking-widest uppercase text-white">
-              RECENT ACTIVITY
-            </h2>
+      <div className="md:hidden flex flex-col gap-3">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+          <h2 className="text-sm font-extrabold tracking-widest uppercase text-white">
+            RECENT ACTIVITY
+          </h2>
+        </div>
+        <div className="flex items-center gap-2 text-xs">
+          {/* Category dropdown - Mobile */}
+          <div className="relative flex-1" ref={mobileCategoryRef}>
+            <button
+              onClick={() => setCategoryOpen(!categoryOpen)}
+              className="w-full px-3 py-1.5 bg-[#1A1A1A] border border-[#222F44] rounded-xl text-sm text-white hover:bg-[#2A2A2A] transition-colors flex items-center justify-between gap-2"
+            >
+              {categoryOptions.find((c) => c.id === category)?.label ?? 'All'}
+              <ChevronDown size={12} className={cn('text-white transition-transform shrink-0', categoryOpen && 'rotate-180')} />
+            </button>
+            {categoryOpen && (
+              <div className="absolute top-full mt-1 left-0 z-50 bg-[#1A1A1A] border border-[#4D4D4D] rounded-lg shadow-xl overflow-hidden min-w-[160px] max-h-[300px] overflow-y-auto">
+                {categoryOptions.map((opt) => (
+                  <button
+                    key={opt.id}
+                    onClick={() => { setCategory(opt.id); setCategoryOpen(false); }}
+                    className={cn(
+                      'block w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-white/8 transition-colors',
+                      category === opt.id ? 'text-[#0D7FF2] bg-white/5' : 'text-white'
+                    )}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-          <div className="flex items-center gap-2 text-xs">
-            {/* Category dropdown - Mobile */}
-            <div className="relative" ref={mobileCategoryRef}>
-              <button
-                onClick={() => setCategoryOpen(!categoryOpen)}
-                className="px-3 py-1.5 bg-[#1A1A1A] border border-[#222F44] rounded-xl text-sm text-white hover:bg-[#2A2A2A] transition-colors flex items-center gap-2"
-              >
-                {categoryOptions.find((c) => c.id === category)?.label ?? 'All'}
-                <ChevronDown size={12} className={cn('text-white transition-transform', categoryOpen && 'rotate-180')} />
-              </button>
-              {categoryOpen && (
-                <div className="absolute top-full mt-1 right-0 z-50 bg-[#1A1A1A] border border-[#4D4D4D] rounded-lg shadow-xl overflow-hidden min-w-[160px] max-h-[300px] overflow-y-auto">
-                  {categoryOptions.map((opt) => (
-                    <button
-                      key={opt.id}
-                      onClick={() => { setCategory(opt.id); setCategoryOpen(false); }}
-                      className={cn(
-                        'block w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-white/8 transition-colors',
-                        category === opt.id ? 'text-[#0D7FF2] bg-white/5' : 'text-white'
-                      )}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-            {/* Range dropdown - Mobile */}
-            <div className="relative" ref={mobileRangeRef}>
-              <button
-                onClick={() => setRangeOpen(!rangeOpen)}
-                className="px-3 py-1.5 bg-[#1A1A1A] border border-[#222F44] rounded-xl text-sm text-white hover:bg-[#2A2A2A] transition-colors flex items-center gap-2"
-              >
-                {RANGE_LABEL[range]}
-                <ChevronDown size={12} className={cn('text-white transition-transform', rangeOpen && 'rotate-180')} />
-              </button>
-              {rangeOpen && (
-                <div className="absolute top-full mt-1 right-0 z-50 bg-[#1A1A1A] border border-[#4D4D4D] rounded-lg shadow-xl overflow-hidden min-w-[140px]">
-                  {(['24h', '7d', '30d', 'all'] as RangeOption[]).map((opt) => (
-                    <button
-                      key={opt}
-                      onClick={() => { setRange(opt); setRangeOpen(false); }}
-                      className={cn(
-                        'block w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-white/8 transition-colors',
-                        range === opt ? 'text-[#0D7FF2] bg-white/5' : 'text-white'
-                      )}
-                    >
-                      {RANGE_LABEL[opt]}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+          {/* Range dropdown - Mobile */}
+          <div className="relative" ref={mobileRangeRef}>
+            <button
+              onClick={() => setRangeOpen(!rangeOpen)}
+              className="px-3 py-1.5 bg-[#1A1A1A] border border-[#222F44] rounded-xl text-sm text-white hover:bg-[#2A2A2A] transition-colors flex items-center gap-2"
+            >
+              {RANGE_LABEL[range]}
+              <ChevronDown size={12} className={cn('text-white transition-transform', rangeOpen && 'rotate-180')} />
+            </button>
+            {rangeOpen && (
+              <div className="absolute top-full mt-1 right-0 z-50 bg-[#1A1A1A] border border-[#4D4D4D] rounded-lg shadow-xl overflow-hidden min-w-[140px]">
+                {(['24h', '7d', '30d', 'all'] as RangeOption[]).map((opt) => (
+                  <button
+                    key={opt}
+                    onClick={() => { setRange(opt); setRangeOpen(false); }}
+                    className={cn(
+                      'block w-full text-left px-4 py-2.5 text-sm font-bold hover:bg-white/8 transition-colors',
+                      range === opt ? 'text-[#0D7FF2] bg-white/5' : 'text-white'
+                    )}
+                  >
+                    {RANGE_LABEL[opt]}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
         <MobileSentimentToggle />

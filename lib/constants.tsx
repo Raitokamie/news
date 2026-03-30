@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Globe } from 'lucide-react';
 import { Category, Region, RegionTab, SortOrder } from './types';
 import { mockNews } from './api';
@@ -34,7 +34,7 @@ export const otherCategoryIds: Category[] = otherOptions.map((o) => o.id);
 
 // For Mobile: Combined list (main tabs first, then others, "All" at top)
 export const categoryOptions: { id: Category; label: string }[] = [
-  { id: 'all', label: 'All Categories' },
+  { id: 'all', label: 'All' },
   { id: 'markets', label: 'Markets' },
   { id: 'economy', label: 'Economy' },
   { id: 'geopolitics', label: 'Geopolitics' },
