@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 export interface RangeOption<T extends string = string> {
   value: T;
   label: string;
+
 }
 
 interface RangeDropdownProps<T extends string = string> {
@@ -57,7 +58,7 @@ export default function RangeDropdown<T extends string = string>({
           />
         </button>
         {open && (
-          <div className="absolute top-full mt-1 right-0 z-50 bg-[#1A1A1A] border border-[#4D4D4D] rounded-lg shadow-xl overflow-hidden min-w-[140px]">
+          <div className="absolute top-full mt-1 right-0 z-50 bg-[#1A1A1A] border border-[#4D4D4D] rounded-lg shadow-xl overflow-hidden min-w-[140px] max-h-[300px] overflow-y-auto">
             {options.map((opt) => (
               <button
                 key={opt.value}
