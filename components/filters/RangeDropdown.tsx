@@ -14,6 +14,7 @@ interface RangeDropdownProps<T extends string = string> {
   value: T;
   onChange: (value: T) => void;
   showLabel?: boolean;
+  fullWidth?: boolean;
 }
 
 export default function RangeDropdown<T extends string = string>({
@@ -21,6 +22,7 @@ export default function RangeDropdown<T extends string = string>({
   value,
   onChange,
   showLabel = true,
+  fullWidth = false,
 }: RangeDropdownProps<T>) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -38,12 +40,15 @@ export default function RangeDropdown<T extends string = string>({
   const currentLabel = options.find((o) => o.value === value)?.label ?? options[0]?.label ?? '';
 
   return (
-    <div className="flex items-center gap-2 shrink-0">
+    <div className={cn("flex items-center gap-2", fullWidth ? "flex-1" : "shrink-0")}>
       {showLabel && <span className="text-sm font-medium text-white hidden sm:inline">Range:</span>}
-      <div className="relative" ref={ref}>
+      <div className={cn("relative", fullWidth && "flex-1")} ref={ref}>
         <button
           onClick={() => setOpen(!open)}
-          className="px-3 py-1.5 bg-[#1A1A1A] border border-[#222F44] rounded-xl text-sm text-white hover:bg-[#2A2A2A] transition-colors flex items-center gap-2"
+          className={cn(
+            "px-3 py-1.5 bg-[#1A1A1A] border border-[#222F44] rounded-xl text-sm text-white hover:bg-[#2A2A2A] transition-colors flex items-center gap-2",
+            fullWidth && "w-full justify-between"
+          )}
         >
           {currentLabel}
           <ChevronDown
