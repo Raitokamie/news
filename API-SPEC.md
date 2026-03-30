@@ -92,9 +92,39 @@ Base URL: `https://api.ideatrade1.com` (หรือตามที่ backend �
 
 ---
 
-## 1. Authentication
+## 1. Health
 
-### 1.1 Login (OAuth Authorization Code Flow)
+### 1.1 GET /health — ตรวจสอบสถานะ server
+
+ใช้สำหรับ monitoring / uptime check — ไม่ต้อง auth
+
+```
+GET /health
+```
+
+**Response 200:**
+
+```json
+{
+  "status": "ok",
+  "timestamp": "2026-03-30T12:00:00.000Z"
+}
+```
+
+**Response 503:** server ไม่พร้อม (database หรือ dependency ล้ม)
+
+```json
+{
+  "status": "degraded",
+  "timestamp": "2026-03-30T12:00:00.000Z"
+}
+```
+
+---
+
+## 2. Authentication
+
+### 2.1 Login (OAuth Authorization Code Flow)
 
 ใช้ Authorization Code flow มาตรฐาน — ไม่ส่ง token ผ่าน URL เพื่อป้องกัน token leak
 
@@ -114,7 +144,7 @@ https://newsweb.com/auth/callback?code=<AUTHORIZATION_CODE>
 
 ---
 
-### 1.2 POST /auth/token — แลก authorization code เป็น token
+### 2.2 POST /auth/token — แลก authorization code เป็น token
 
 ```
 POST /auth/token
@@ -150,9 +180,11 @@ Content-Type: application/json
 
 ---
 
-### 1.3 POST /auth/refresh — ขอ Access Token ใหม่
+### 2.3 POST /auth/refresh — ขอ Access Token ใหม่
 
 เมื่อ Access Token หมดอายุ (ได้ 401) → Frontend จะเรียก API นี้เพื่อขอ token ใหม่โดยไม่ต้อง login ใหม่
+
+> **Refresh Token Rotation:** ทุกครั้งที่เรียก endpoint นี้สำเร็จ server จะ **invalidate token เก่าทันที** และออก refresh token ใหม่ — แต่ละ refresh token ใช้ได้ **ครั้งเดียวเท่านั้น (one-time use)** หากพบว่า token เก่าถูกนำมาใช้ซ้ำ ให้ถือว่า token ทั้งหมดของ session นั้นถูก compromise และ invalidate ทันที
 
 ```
 POST /auth/refresh
@@ -170,13 +202,13 @@ Content-Type: application/json
 }
 ```
 
-**Response 401:** refresh token หมดอายุ → user ต้อง login ใหม่
+**Response 401:** refresh token หมดอายุหรือถูกใช้ไปแล้ว → user ต้อง login ใหม่
 
 ```json
 {
   "error": {
     "code": "REFRESH_TOKEN_EXPIRED",
-    "message": "Refresh token expired",
+    "message": "Refresh token expired or already used",
     "status": 401
   }
 }
@@ -191,7 +223,7 @@ Content-Type: application/json
 
 ---
 
-### 1.4 POST /auth/logout — Logout
+### 2.4 POST /auth/logout — Logout
 
 ลบ refresh token ฝั่ง server เพื่อป้องกันการใช้ token ต่อหลัง logout
 
@@ -210,7 +242,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-### 1.5 GET /auth/me — ดึงข้อมูล user ปัจจุบัน
+### 2.5 GET /auth/me — ดึงข้อมูล user ปัจจุบัน
 
 ```
 GET /auth/me
@@ -247,9 +279,9 @@ Authorization: Bearer <access_token>
 
 ---
 
-## 2. News Feed (หน้า Dashboard `/`)
+## 3. News Feed (หน้า Dashboard `/`)
 
-### 2.1 GET /news — ดึงข่าวทั้งหมด
+### 3.1 GET /news — ดึงข่าวทั้งหมด
 
 ```
 GET /news?range=24h
@@ -312,7 +344,7 @@ GET /news?range=24h
 
 ---
 
-## 3. Search
+## 4. Search
 
 ### Note: Search Overlay ทำงานอย่างไร
 
@@ -324,7 +356,7 @@ Frontend มี Search Overlay ที่ค้นหาได้ 2 tab:
 
 ---
 
-### 3.1 GET /tickers/search — ค้นหา ticker สำหรับ autocomplete
+### 4.1 GET /tickers/search — ค้นหา ticker สำหรับ autocomplete
 
 ใช้ใน Search Overlay (Symbols tab) และ AddTickerModal เพื่อค้นหา ticker ที่จะเพิ่มเข้า watchlist หรือ sentiment monitor
 
@@ -354,9 +386,9 @@ GET /tickers/search?q=goo&limit=10
 
 ---
 
-## 4. Watchlist News (PREMIUM)
+## 5. Watchlist News (PREMIUM)
 
-### 4.1 GET /news/watchlist — ดึงข่าวของทุก ticker ใน watchlist
+### 5.1 GET /news/watchlist — ดึงข่าวของทุก ticker ใน watchlist
 
 Backend ดึง watchlist ของ user แล้วส่งข่าวที่เกี่ยวข้องกลับมาทั้งหมดในครั้งเดียว ไม่ต้องเรียกทีละ ticker
 
@@ -421,9 +453,9 @@ Authorization: Bearer <access_token>
 
 ---
 
-## 5. Live Update (Widget ที่แสดงข่าวด่วน)
+## 6. Live Update (Widget ที่แสดงข่าวด่วน)
 
-### 5.1 GET /live-update — ข่าวด่วนล่าสุด
+### 6.1 GET /live-update — ข่าวด่วนล่าสุด
 
 ```
 GET /live-update
@@ -443,9 +475,9 @@ GET /live-update
 
 ---
 
-## 6. Ticker Analysis (หน้า Stock Sentiment + Market Trends)
+## 7. Ticker Analysis (หน้า Stock Sentiment + Market Trends)
 
-### 6.1 GET /tickers/analysis — ดึงข้อมูลวิเคราะห์ ticker
+### 7.1 GET /tickers/analysis — ดึงข้อมูลวิเคราะห์ ticker
 
 ```
 GET /tickers/analysis?range=24h
@@ -485,7 +517,7 @@ GET /tickers/analysis?range=24h
 
 ---
 
-### 6.2 GET /tickers/:symbol/outlook — AI Outlook ของ ticker
+### 7.2 GET /tickers/:symbol/outlook — AI Outlook ของ ticker
 
 ```
 GET /tickers/NVDA/outlook
@@ -504,11 +536,11 @@ GET /tickers/NVDA/outlook
 
 ---
 
-## 7. Sentiment Monitor (หน้า Stock Sentiment)
+## 8. Sentiment Monitor (หน้า Stock Sentiment)
 
 จัดการรายการ ticker ที่ user ต้องการ monitor sentiment (แยกจาก Watchlist)
 
-### 7.1 GET /sentiment/tickers — ดึงรายการ ticker ที่ monitor อยู่
+### 8.1 GET /sentiment/tickers — ดึงรายการ ticker ที่ monitor อยู่
 
 ```
 GET /sentiment/tickers
@@ -529,7 +561,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-### 7.2 POST /sentiment/tickers — เพิ่ม ticker เข้า monitor list
+### 8.2 POST /sentiment/tickers — เพิ่ม ticker เข้า monitor list
 
 ```
 POST /sentiment/tickers
@@ -547,7 +579,7 @@ Content-Type: application/json
 
 ---
 
-### 7.3 DELETE /sentiment/tickers/:symbol — ลบ ticker ออกจาก monitor list
+### 8.3 DELETE /sentiment/tickers/:symbol — ลบ ticker ออกจาก monitor list
 
 ```
 DELETE /sentiment/tickers/MSFT
@@ -562,9 +594,9 @@ Authorization: Bearer <access_token>
 
 ---
 
-## 8. Watchlist Management (PREMIUM)
+## 9. Watchlist Management (PREMIUM)
 
-### 8.1 GET /watchlist — ดึง watchlist ของ user
+### 9.1 GET /watchlist — ดึง watchlist ของ user
 
 ```
 GET /watchlist
@@ -593,7 +625,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-### 8.2 POST /watchlist — เพิ่ม ticker เข้า watchlist
+### 9.2 POST /watchlist — เพิ่ม ticker เข้า watchlist
 
 ```
 POST /watchlist
@@ -623,7 +655,7 @@ Content-Type: application/json
 
 ---
 
-### 8.3 DELETE /watchlist/:symbol — ลบ ticker ออกจาก watchlist
+### 9.3 DELETE /watchlist/:symbol — ลบ ticker ออกจาก watchlist
 
 ```
 DELETE /watchlist/MSFT
@@ -638,9 +670,9 @@ Authorization: Bearer <access_token>
 
 ---
 
-## 9. Telegram Notifications (PREMIUM)
+## 10. Telegram Notifications (PREMIUM)
 
-### 9.1 POST /telegram/connect — เชื่อมต่อ Telegram
+### 10.1 POST /telegram/connect — เชื่อมต่อ Telegram
 
 ```
 POST /telegram/connect
@@ -658,7 +690,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-### 9.2 POST /telegram/disconnect — ยกเลิกการเชื่อมต่อ
+### 10.2 POST /telegram/disconnect — ยกเลิกการเชื่อมต่อ
 
 ```
 POST /telegram/disconnect
@@ -673,7 +705,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-### 9.3 GET /telegram/status — สถานะการแจ้งเตือน
+### 10.3 GET /telegram/status — สถานะการแจ้งเตือน
 
 ```
 GET /telegram/status
@@ -708,7 +740,7 @@ Authorization: Bearer <access_token>
 
 ---
 
-### 9.4 Telegram Message Format — ข้อความที่ Bot ส่งให้ user
+### 10.4 Telegram Message Format — ข้อความที่ Bot ส่งให้ user
 
 **Trigger:** Backend ส่งข้อความเมื่อมีข่าว `impact = "high"` ที่กล่าวถึง ticker ใน **watchlist** ของ user
 
@@ -744,55 +776,56 @@ Source: REUTERS
 
 ---
 
-## 10. Security Requirements
+## 11. Security Requirements
 
-### 10.1 Token Strategy (Access + Refresh)
+### 11.1 Token Strategy (Access + Refresh)
 - **Access Token** อายุ 15 นาที — ใช้เรียก API ทุก request
-- **Refresh Token** อายุ 30 วัน — ใช้ขอ Access Token ใหม่
+- **Refresh Token** อายุ 30 วัน — ใช้ขอ Access Token ใหม่ (one-time use, rotation ทุกครั้ง)
 - เมื่อ Access Token หมดอายุ (401) → Frontend เรียก `POST /auth/refresh` อัตโนมัติ
-- เมื่อ Refresh Token หมดอายุ → user ต้อง login ใหม่
+- เมื่อ Refresh Token หมดอายุหรือถูกใช้ซ้ำ → user ต้อง login ใหม่
 - แนะนำเก็บ token เป็น **httpOnly cookie** เพื่อป้องกัน XSS
 
-### 10.2 CORS
+### 11.2 CORS
 - ตั้งค่า `Access-Control-Allow-Origin` ให้รับ request จาก domain ของ newsweb เท่านั้น
 - ห้ามใช้ `*` ใน production
 
-### 10.3 Rate Limiting
+### 11.3 Rate Limiting
 - จำกัดจำนวน request ต่อ IP/user (เช่น 100 req/นาที)
 - ป้องกัน spam และ DDoS
 
-### 10.4 Authorization (สิทธิ์)
+### 11.4 Authorization (สิทธิ์)
 - API ที่ต้อง Premium (`/watchlist`, `/telegram`, `/news/watchlist`) → backend ต้องเช็ค plan ทุก request
 - ห้ามเชื่อ frontend อย่างเดียว เพราะ user สามารถเรียก API ตรงได้
 - ถ้า free user เรียก premium API → ตอบ `403` ด้วย structured error format
 
-### 10.5 OAuth Callback
+### 11.5 OAuth Callback
 - `redirect_uri` ต้อง whitelist เฉพาะ domain ของ newsweb
 - ห้ามรับ redirect ไป URL อื่นที่ไม่ได้ลงทะเบียนไว้
 
 ---
 
-## สรุป API ทั้งหมด (21 endpoints)
+## สรุป API ทั้งหมด (22 endpoints)
 
 | #  | Method | Endpoint                     | Auth | Plan    | ใช้ในหน้า                         |
 | -- | ------ | ---------------------------- | ---- | ------- | --------------------------------- |
-| 1  | -      | OAuth redirect (Auth Code)   | -    | -       | Login                             |
-| 2  | POST   | `/auth/token`                | No   | Any     | Login callback (แลก code → token) |
-| 3  | POST   | `/auth/refresh`              | No   | Any     | ทุกหน้า (auto refresh)            |
-| 4  | POST   | `/auth/logout`               | Yes  | Any     | Logout                            |
-| 5  | GET    | `/auth/me`                   | Yes  | Any     | ทุกหน้า                           |
-| 6  | GET    | `/news`                      | No   | Free    | Dashboard, Ticker Detail, Search Overlay (News tab) |
-| 7  | GET    | `/news/watchlist`            | Yes  | Premium | Watchlist (Activity Feed)         |
-| 8  | GET    | `/tickers/search`            | No   | Free    | Search Overlay (Symbols tab), AddTickerModal |
-| 9  | GET    | `/live-update`               | No   | Free    | ทุกหน้า (widget)                  |
-| 10 | GET    | `/tickers/analysis`          | No   | Free    | Stock Sentiment, Market Trends    |
-| 11 | GET    | `/tickers/:symbol/outlook`   | No   | Free    | Sentiment Detail, Ticker Detail   |
-| 12 | GET    | `/sentiment/tickers`         | Yes  | Free    | Stock Sentiment                   |
-| 13 | POST   | `/sentiment/tickers`         | Yes  | Free    | Stock Sentiment                   |
-| 14 | DELETE | `/sentiment/tickers/:symbol` | Yes  | Free    | Stock Sentiment                   |
-| 15 | GET    | `/watchlist`                 | Yes  | Premium | Watchlist                         |
-| 16 | POST   | `/watchlist`                 | Yes  | Premium | Watchlist                         |
-| 17 | DELETE | `/watchlist/:symbol`         | Yes  | Premium | Watchlist                         |
-| 18 | POST   | `/telegram/connect`          | Yes  | Premium | Watchlist                         |
-| 19 | POST   | `/telegram/disconnect`       | Yes  | Premium | Watchlist                         |
-| 20 | GET    | `/telegram/status`           | Yes  | Premium | Watchlist                         |
+| 1  | GET    | `/health`                    | No   | Any     | Monitoring                        |
+| 2  | -      | OAuth redirect (Auth Code)   | -    | -       | Login                             |
+| 3  | POST   | `/auth/token`                | No   | Any     | Login callback (แลก code → token) |
+| 4  | POST   | `/auth/refresh`              | No   | Any     | ทุกหน้า (auto refresh)            |
+| 5  | POST   | `/auth/logout`               | Yes  | Any     | Logout                            |
+| 6  | GET    | `/auth/me`                   | Yes  | Any     | ทุกหน้า                           |
+| 7  | GET    | `/news`                      | No   | Free    | Dashboard, Ticker Detail, Search Overlay (News tab) |
+| 8  | GET    | `/news/watchlist`            | Yes  | Premium | Watchlist (Activity Feed)         |
+| 9  | GET    | `/tickers/search`            | No   | Free    | Search Overlay (Symbols tab), AddTickerModal |
+| 10 | GET    | `/live-update`               | No   | Free    | ทุกหน้า (widget)                  |
+| 11 | GET    | `/tickers/analysis`          | No   | Free    | Stock Sentiment, Market Trends    |
+| 12 | GET    | `/tickers/:symbol/outlook`   | No   | Free    | Sentiment Detail, Ticker Detail   |
+| 13 | GET    | `/sentiment/tickers`         | Yes  | Free    | Stock Sentiment                   |
+| 14 | POST   | `/sentiment/tickers`         | Yes  | Free    | Stock Sentiment                   |
+| 15 | DELETE | `/sentiment/tickers/:symbol` | Yes  | Free    | Stock Sentiment                   |
+| 16 | GET    | `/watchlist`                 | Yes  | Premium | Watchlist                         |
+| 17 | POST   | `/watchlist`                 | Yes  | Premium | Watchlist                         |
+| 18 | DELETE | `/watchlist/:symbol`         | Yes  | Premium | Watchlist                         |
+| 19 | POST   | `/telegram/connect`          | Yes  | Premium | Watchlist                         |
+| 20 | POST   | `/telegram/disconnect`       | Yes  | Premium | Watchlist                         |
+| 21 | GET    | `/telegram/status`           | Yes  | Premium | Watchlist                         |
