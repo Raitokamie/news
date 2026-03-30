@@ -44,7 +44,7 @@ Base URL: `https://api.ideatrade1.com` (หรือตามที่ backend �
 | `energy`      | Energy      | น้ำมัน, ก๊าซ, นิวเคลียร์, พลังงานทดแทน   |
 | `commodities` | Commodities | ทองคำ, เงิน, เกษตร, โลหะ                 |
 | `healthcare`  | Healthcare  | ยา, biotech, สาธารณสุข                    |
-| `real-estate` | Real Estate | อสังหาริมทรัพย์, REITs, ที่อยู่อาศัย       |
+| `realEstate`  | Real Estate | อสังหาริมทรัพย์, REITs, ที่อยู่อาศัย       |
 | `climate`     | Climate     | Climate change, ESG, carbon                |
 | `defense`     | Defense     | กลาโหม, อาวุธ, cybersecurity              |
 | `banking`     | Banking     | ธนาคาร, fintech, ประกันภัย                |
@@ -151,7 +151,7 @@ POST /auth/token
 Content-Type: application/json
 
 {
-  "grantType": "authorization_code",
+  "grantType": "authorizationCode",
   "code": "<AUTHORIZATION_CODE>",
   "redirectUri": "https://newsweb.com/auth/callback"
 }
@@ -322,13 +322,32 @@ GET /news?range=24h
         }
       ],
       "narrativeGroupId": "ng-google-antitrust",
-      "logoUrl": null,
-      "imageUrl": "/images/1.png"
+      "logoUrl": "https://cdn.example.com/logos/reuters.png",
+      "imageUrl": "https://cdn.example.com/images/news-1.jpg"
     }
   ],
   "total": 150
 }
 ```
+
+**News field:**
+
+| Field               | Type   | Required | คำอธิบาย                                                           |
+| ------------------- | ------ | -------- | ------------------------------------------------------------------ |
+| `id`                | string | Yes      | รหัสข่าว                                                           |
+| `headline`          | string | Yes      | หัวข้อข่าว                                                         |
+| `body`              | string | Yes      | เนื้อหาข่าว                                                        |
+| `sources`           | array  | Yes      | แหล่งข่าว (ดูตาราง Sources field ด้านล่าง)                        |
+| `publishedAt`       | string | Yes      | เวลาที่ระบบรวมข่าว (ISO 8601)                                      |
+| `regionTag`         | string | Yes      | ภูมิภาค (ดู Enum Reference)                                        |
+| `countryCode`       | string | Yes      | รหัสประเทศ ISO 3166-1 alpha-2                                      |
+| `category`          | string | Yes      | หมวดหมู่ (ดู Enum Reference)                                       |
+| `impact`            | string | Yes      | ระดับผลกระทบ: `high`, `medium`, `low`                              |
+| `sentiment`         | string | Yes      | ความรู้สึกต่อข่าว: `good`, `bad`, `neutral`                        |
+| `tickers`           | array  | Yes      | รายการหุ้นที่เกี่ยวข้อง                                            |
+| `narrativeGroupId`  | string | No       | รหัสกลุ่มข่าวที่เกี่ยวข้องกัน                                      |
+| `logoUrl`           | string | No       | Company/source logo URL (absolute URL to CDN/storage)              |
+| `imageUrl`          | string | No       | Featured image URL (absolute URL to CDN/storage)                   |
 
 **Sources field:**
 
@@ -402,7 +421,7 @@ Authorization: Bearer <access_token>
 | Param      | Type   | Default | ค่าที่เป็นไปได้ |
 | ---------- | ------ | ------- | --------------- |
 | `range`    | string | `24h`   | `24h`, `7d`, `30d`, `all` |
-| `category` | string | `all`   | `all`, `markets`, `economy`, `geopolitics`, `tech`, `ai`, `crypto`, `energy`, `commodities`, `healthcare`, `real-estate`, `climate`, `defense`, `banking`, `automotive`, `trade` |
+| `category` | string | `all`   | `all`, `markets`, `economy`, `geopolitics`, `tech`, `ai`, `crypto`, `energy`, `commodities`, `healthcare`, `realEstate`, `climate`, `defense`, `banking`, `automotive`, `trade` |
 | `page`     | number | `1`     | สำหรับ pagination |
 | `limit`    | number | `50`    | จำนวนข่าวต่อ page |
 
@@ -426,7 +445,8 @@ Authorization: Bearer <access_token>
         { "symbol": "NVDA", "name": "NVIDIA Corporation", "sentiment": "up", "sentimentScore": 9 }
       ],
       "narrativeGroupId": "ng-tech-earnings",
-      "logoUrl": null
+      "logoUrl": "https://cdn.example.com/logos/nvidia.png",
+      "imageUrl": "https://cdn.example.com/images/news-3.jpg"
     }
   ],
   "total": 85,
@@ -489,7 +509,7 @@ GET /tickers/analysis?range=24h
 | -------- | ------ | ---------------- | -------------------------------------------------------- |
 | `range`  | string | `24h`            | `24h`, `7d`, `30d`, `all`                                |
 
-> Filter (top_positive, top_negative, most_mention) ทำฝั่ง Frontend — แต่ละ filter มี default sort ในตัว
+> Filter (topPositive, topNegative, mostMention) ทำฝั่ง Frontend — แต่ละ filter มี default sort ในตัว
 
 **Response 200:**
 
@@ -517,7 +537,11 @@ GET /tickers/analysis?range=24h
 
 ---
 
-### 7.2 GET /tickers/:symbol/outlook — AI Outlook ของ ticker
+### 7.2 GET /tickers/:symbol/outlook — AI-generated market outlook
+
+Returns AI-generated analysis of the ticker's market position based on recent news.
+
+**Request:**
 
 ```
 GET /tickers/NVDA/outlook
@@ -528,9 +552,33 @@ GET /tickers/NVDA/outlook
 ```json
 {
   "symbol": "NVDA",
-  "outlook": "NVIDIA's data center dominance continues to accelerate..."
+  "outlook": "NVIDIA's data center dominance continues to accelerate with the Blackwell architecture launch. Recent supply constraints reflect surging AI infrastructure demand rather than production issues. The company's pricing power remains strong with data center revenue growing 217% YoY. Key risks include potential export restrictions to China and increasing competition from custom AI chips. Near-term sentiment remains bullish but valuation concerns persist at current multiples.",
+  "generatedAt": "2026-03-25T10:15:00Z",
+  "confidenceScore": 0.85
 }
 ```
+
+**Response 404:** Symbol not found or insufficient data
+
+```json
+{
+  "error": {
+    "code": "TICKER_NOT_FOUND",
+    "message": "Ticker not found or insufficient data for analysis",
+    "status": 404
+  }
+}
+```
+
+**Outlook field:**
+
+| Field             | Type   | Required | Description                                            |
+| ----------------- | ------ | -------- | ------------------------------------------------------ |
+| `symbol`          | string | Yes      | Ticker symbol                                          |
+| `outlook`         | string | Yes      | AI-generated analysis (100-300 words, plain text)      |
+| `generatedAt`     | string | Yes      | ISO 8601 timestamp of when analysis was generated      |
+| `confidenceScore` | number | Yes      | 0.0-1.0 confidence in analysis quality                 |
+
 
 **ใช้ในหน้า:** Stock Sentiment Detail (`/stock-sentiment/[symbol]`), Ticker Detail (`/ticker/[symbol]`)
 
