@@ -44,7 +44,7 @@ Base URL: `https://api.ideatrade1.com` (หรือตามที่ backend �
 | `energy`      | Energy      | น้ำมัน, ก๊าซ, นิวเคลียร์, พลังงานทดแทน   |
 | `commodities` | Commodities | ทองคำ, เงิน, เกษตร, โลหะ                 |
 | `healthcare`  | Healthcare  | ยา, biotech, สาธารณสุข                    |
-| `realEstate`  | Real Estate | อสังหาริมทรัพย์, REITs, ที่อยู่อาศัย       |
+| `real-estate` | Real Estate | อสังหาริมทรัพย์, REITs, ที่อยู่อาศัย       |
 | `climate`     | Climate     | Climate change, ESG, carbon                |
 | `defense`     | Defense     | กลาโหม, อาวุธ, cybersecurity              |
 | `banking`     | Banking     | ธนาคาร, fintech, ประกันภัย                |
@@ -421,7 +421,7 @@ Authorization: Bearer <access_token>
 | Param      | Type   | Default | ค่าที่เป็นไปได้ |
 | ---------- | ------ | ------- | --------------- |
 | `range`    | string | `24h`   | `24h`, `7d`, `30d`, `all` |
-| `category` | string | `all`   | `all`, `markets`, `economy`, `geopolitics`, `tech`, `ai`, `crypto`, `energy`, `commodities`, `healthcare`, `realEstate`, `climate`, `defense`, `banking`, `automotive`, `trade` |
+| `category` | string | `all`   | `all`, `markets`, `economy`, `geopolitics`, `tech`, `ai`, `crypto`, `energy`, `commodities`, `healthcare`, `real-estate`, `climate`, `defense`, `banking`, `automotive`, `trade` |
 | `page`     | number | `1`     | สำหรับ pagination |
 | `limit`    | number | `50`    | จำนวนข่าวต่อ page |
 
@@ -475,21 +475,48 @@ Authorization: Bearer <access_token>
 
 ## 6. Live Update (Widget ที่แสดงข่าวด่วน)
 
-### 6.1 GET /live-update — ข่าวด่วนล่าสุด
+### 6.1 GET /live-update — SSE stream ข่าวด่วน
+
+ใช้ **Server-Sent Events (SSE)** — server push ข้อมูลมาฝ่ายเดียวเมื่อมีข่าวใหม่ connection เปิดค้างไว้ตลอด
 
 ```
 GET /live-update
+Accept: text/event-stream
+Cache-Control: no-cache
 ```
 
-**Response 200:**
+**Response:** `Content-Type: text/event-stream`
 
-```json
-{
-  "headline": "The Federal Reserve keeps interest rates unchanged at 3.50% - 3.75%",
-  "shortHeadline": "Fed holds rates at 3.50%-3.75% after FOMC meeting.",
-  "publishedAt": "2026-03-25T10:00:00Z"
-}
 ```
+id: evt-001
+event: breaking
+data: {"headline":"The Federal Reserve keeps interest rates unchanged at 3.50% - 3.75%","shortHeadline":"Fed holds rates at 3.50%-3.75% after FOMC meeting.","publishedAt":"2026-03-25T10:00:00Z"}
+
+id: evt-002
+event: breaking
+data: {"headline":"Nvidia surges 5% after earnings beat","shortHeadline":"NVDA beats Q1 estimates.","publishedAt":"2026-03-25T10:15:00Z"}
+```
+
+**Event fields:**
+
+| Field           | Type   | คำอธิบาย                                      |
+| --------------- | ------ | --------------------------------------------- |
+| `id`            | string | Event ID สำหรับ reconnect (`Last-Event-ID`)    |
+| `event`         | string | ประเภท event — ตอนนี้มีแค่ `breaking`          |
+| `data`          | JSON   | ข้อมูลข่าว (ดูตารางด้านล่าง)                  |
+
+**Data object:**
+
+| Field           | Type   | คำอธิบาย                        |
+| --------------- | ------ | ------------------------------- |
+| `headline`      | string | หัวข้อข่าวเต็ม                  |
+| `shortHeadline` | string | หัวข้อย่อสำหรับ banner          |
+| `publishedAt`   | string | เวลาที่เผยแพร่ (ISO 8601)       |
+
+**Reconnection:**
+- Browser จะ reconnect อัตโนมัติเมื่อ connection หลุด
+- ส่ง `Last-Event-ID` header มาเพื่อให้ server ส่งข่าวที่ยังไม่ได้รับต่อ
+- Server ควรตั้ง `retry: 3000` (ms) ใน stream
 
 **ใช้ในหน้า:** ทุกหน้า (Sidebar widget)
 
@@ -865,7 +892,7 @@ Source: REUTERS
 | 7  | GET    | `/news`                      | No   | Free    | Dashboard, Ticker Detail, Search Overlay (News tab) |
 | 8  | GET    | `/news/watchlist`            | Yes  | Premium | Watchlist (Activity Feed)         |
 | 9  | GET    | `/tickers/search`            | No   | Free    | Search Overlay (Symbols tab), AddTickerModal |
-| 10 | GET    | `/live-update`               | No   | Free    | ทุกหน้า (widget)                  |
+| 10 | SSE    | `/live-update`               | No   | Free    | ทุกหน้า (widget)                  |
 | 11 | GET    | `/tickers/analysis`          | No   | Free    | Stock Sentiment, Market Trends    |
 | 12 | GET    | `/tickers/:symbol/outlook`   | No   | Free    | Sentiment Detail, Ticker Detail   |
 | 13 | GET    | `/sentiment/tickers`         | Yes  | Free    | Stock Sentiment                   |
