@@ -56,8 +56,10 @@ export default function WatchlistActivityFeed({ trackedSymbols }: WatchlistActiv
     }
 
     // Filter by selected range
-    const cutoff = new Date(Date.now() - RANGE_MS[range]);
-    items = items.filter((n) => n.publishedAt >= cutoff);
+    if (range !== 'all') {
+      const cutoff = new Date(Date.now() - RANGE_MS[range]);
+      items = items.filter((n) => n.publishedAt >= cutoff);
+    }
 
     // Sort by latest
     items = [...items].sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
