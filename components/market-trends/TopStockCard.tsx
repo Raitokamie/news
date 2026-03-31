@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { TickerAnalysis } from '@/lib/types';
-import { TrendingUp, TrendingDown, Minus, X } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, X, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Tooltip from '@/components/ui/Tooltip';
 
@@ -47,11 +47,14 @@ export default function StockCard({ item, onRemove }: StockCardProps) {
         {/* Sentiment Score */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <Tooltip content="Score ranges from -10 to 10">
-              <span className="text-white text-xs font-medium">AVG Score</span>
-            </Tooltip>
+            <span className="text-white text-xs font-medium flex items-center gap-1">
+              AVG Score
+              <Tooltip content="Score ranges from -10 to 10">
+                <Info size={14} className="text-slate-500 cursor-help" />
+              </Tooltip>
+            </span>
             <span className="text-white font-semibold text-sm">
-              {item.score}<span className="text-slate-500 font-normal">/{item.sentiment === 'down' ? '-10' : '10'}</span>
+              {item.score}
             </span>
           </div>
           {/* Progress bar */}
