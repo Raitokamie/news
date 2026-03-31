@@ -160,18 +160,26 @@ export default function MarketTrendsPage() {
               <>
                 {/* Top Stock Cards */}
                 <TopStocksRow items={sortedTopStocks} />
-
-                {/* Filter Tabs */}
-                <TrendFilterTabs
-                  activeFilter={activeFilter}
-                  onFilterChange={setActiveFilter}
-                />
-
-                {/* Data Table */}
-                <TrendDataTable key={activeFilter} items={filteredTrends} />
               </>
             )}
           </div>
+
+          {/* Filter Tabs - outside content padding */}
+          {!isLoading && (
+            <div className="px-4 md:px-6 pb-4">
+              <TrendFilterTabs
+                activeFilter={activeFilter}
+                onFilterChange={setActiveFilter}
+              />
+            </div>
+          )}
+
+          {/* Data Table */}
+          {!isLoading && (
+            <div className="px-6 pb-6">
+              <TrendDataTable key={activeFilter} items={filteredTrends} />
+            </div>
+          )}
         </div>
       </div>
 
