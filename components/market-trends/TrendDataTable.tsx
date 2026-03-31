@@ -269,7 +269,7 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between px-4 py-3 border-t border-[#222F44]">
+      <div className="flex items-center justify-between px-4 py-3 border-t border-[#222F44] bg-[#0a1017]">
         <div className="flex items-center gap-2">
           <span className="text-sm text-white">Rows per page:</span>
           <div className="relative" ref={rowsDropdownRef}>

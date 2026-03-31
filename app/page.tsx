@@ -18,7 +18,7 @@ export default function DashboardPage() {
         <TopBar />
         <MobileFilterRow />
         <RegionRibbon />
-        <div ref={scrollRef} className="flex-1 overflow-y-auto pb-28 md:pb-0">
+        <div ref={scrollRef} className="flex-1 overflow-y-auto pb-28 lg:pb-0">
           <BreakingNews />
           <ImpactFeed />
         </div>

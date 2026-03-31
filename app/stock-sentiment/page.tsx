@@ -199,7 +199,7 @@ export default function StockSentimentPage() {
         <TopBar />
 
         {/* Center content area */}
-        <div ref={scrollRef} className="flex-1 overflow-y-auto pb-28 md:pb-0">
+        <div ref={scrollRef} className="flex-1 overflow-y-auto pb-28 lg:pb-0">
           {/* Header */}
           <div className="px-4 md:px-6 py-5 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 shrink-0">

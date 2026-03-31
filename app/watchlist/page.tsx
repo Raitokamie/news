@@ -33,7 +33,7 @@ export default function WatchlistPage() {
       <div className="flex-1 flex flex-col overflow-hidden">
         <TopBar />
 
-        <div className="flex-1 overflow-y-auto pb-28 md:pb-0">
+        <div className="flex-1 overflow-y-auto pb-28 lg:pb-0">
           {/* Header with ADD button */}
           <div className="relative">
             <WatchlistHeader onAddClick={() => setAddModalOpen(!addModalOpen)} />

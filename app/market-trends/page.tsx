@@ -122,7 +122,7 @@ export default function MarketTrendsPage() {
         <TopBar />
 
         {/* Center content area */}
-        <div className="flex-1 overflow-y-auto pb-28 md:pb-0">
+        <div className="flex-1 overflow-y-auto pb-28 lg:pb-0">
           {/* Header */}
           <div className="px-6 py-5 flex items-center justify-between">
             <div className="flex items-center gap-2">
