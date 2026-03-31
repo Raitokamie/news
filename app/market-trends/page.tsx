@@ -140,7 +140,7 @@ export default function MarketTrendsPage() {
           </div>
 
           {/* Content */}
-          <div className="px-6 pb-6 pt-0 flex flex-col gap-4">
+          <div className="pl-6 pr-8 pb-6 pt-0 flex flex-col gap-4">
             {isLoading ? (
               <>
                 {/* Top Stock Cards Skeleton */}

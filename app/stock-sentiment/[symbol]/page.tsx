@@ -7,6 +7,7 @@ import RightSidebar from '@/components/layout/RightSidebar';
 import RangeDropdown, { RangeOption } from '@/components/filters/RangeDropdown';
 import { SentimentDonutChart, SentimentScoreCard, StockDetailNewsFeed } from '@/components/stock-detail';
 import { mockStockSentiment, mockAIOutlook } from '@/lib/api';
+import { TooltipProvider } from '@/components/ui/Tooltip';
 
 type TimeRange = '24H' | '7D' | '30D' | 'All';
 
@@ -42,47 +43,49 @@ export default function StockDetailPage() {
   }
 
   return (
-    <div className="flex h-full bg-[#0a1017]">
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <TopBar showBack />
+    <TooltipProvider>
+      <div className="flex h-full bg-[#0a1017]">
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <TopBar showBack />
 
-        {/* Center content area */}
-        <div className="flex-1 overflow-y-auto pb-28 lg:pb-0">
-          {/* Header */}
-          <div className="px-6 py-5 flex items-center justify-between">
-            <h1 className="text-lg font-extrabold text-white uppercase tracking-wide">
-              <span className="text-white">${symbol}</span>
-            </h1>
+          {/* Center content area */}
+          <div className="flex-1 overflow-y-auto pb-27 lg:pb-0">
+            {/* Header */}
+            <div className="px-6 py-5 flex items-center justify-between">
+              <h1 className="text-lg font-extrabold text-white uppercase tracking-wide">
+                <span className="text-white">${symbol}</span>
+              </h1>
 
-            <RangeDropdown
-              options={rangeOptions}
-              value={selectedRange}
-              onChange={setSelectedRange}
-            />
-          </div>
-
-          {/* Content */}
-          <div className="px-6 pb-6 pt-0 flex flex-col gap-5">
-            {/* Top row: Donut + Score/AI */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
-              <SentimentDonutChart
-                historical={row.sentimentHistorical}
-                mentionCount={row.mentionCount}
-              />
-              <SentimentScoreCard
-                sentiment={row.sentiment}
-                score={row.score}
-                aiOutlook={aiOutlook}
+              <RangeDropdown
+                options={rangeOptions}
+                value={selectedRange}
+                onChange={setSelectedRange}
               />
             </div>
 
-            {/* News Feed */}
-            <StockDetailNewsFeed symbol={symbol} />
+            {/* Content */}
+            <div className="pl-6 pr-8 pb-6 pt-0 flex flex-col gap-5">
+              {/* Top row: Donut + Score/AI */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
+                <SentimentDonutChart
+                  historical={row.sentimentHistorical}
+                  mentionCount={row.mentionCount}
+                />
+                <SentimentScoreCard
+                  sentiment={row.sentiment}
+                  score={row.score}
+                  aiOutlook={aiOutlook}
+                />
+              </div>
+
+              {/* News Feed */}
+              <StockDetailNewsFeed symbol={symbol} />
+            </div>
           </div>
         </div>
-      </div>
 
-      <RightSidebar />
-    </div>
+        <RightSidebar />
+      </div>
+    </TooltipProvider>
   );
 }
