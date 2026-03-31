@@ -2,6 +2,7 @@
 
 import { TrendingUp, TrendingDown, Minus, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import Tooltip from '@/components/ui/Tooltip';
 
 const sentimentConfig = {
   up: { label: 'Positive', icon: TrendingUp, textColor: 'text-[#22C55E]', iconColor: 'text-[#10B981]', bg: 'bg-[#17382D]', border: 'border-[#10B981]/30' },
@@ -38,7 +39,9 @@ export default function SentimentScoreCard({ sentiment, score, aiOutlook }: Sent
 
           {/* Score */}
           <div className="flex flex-col items-center">
-            <h3 className="text-sm font-bold text-white mb-3">AVG Score</h3>
+            <Tooltip content="Score ranges from -10 to 10">
+              <h3 className="text-sm font-bold text-white mb-3">AVG Score</h3>
+            </Tooltip>
             <div className="flex items-center justify-center w-full px-4 py-3 rounded-lg border border-[#333333] bg-[#0a1017]">
               <span className="text-xl font-extrabold text-white">{score}<span className="text-slate-500">/10</span></span>
             </div>
