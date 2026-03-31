@@ -168,7 +168,7 @@ export default function MarketTrendsPage() {
                 />
 
                 {/* Data Table */}
-                <TrendDataTable items={filteredTrends} />
+                <TrendDataTable key={activeFilter} items={filteredTrends} />
               </>
             )}
           </div>

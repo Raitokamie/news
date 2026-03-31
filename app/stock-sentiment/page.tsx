@@ -286,7 +286,7 @@ export default function StockSentimentPage() {
           <div className="px-4 md:px-6 pt-2 pb-6">
             <SentimentFilterRibbon
               activeFilter={activeFilter}
-              onFilterChange={(filter) => { setActiveFilter(filter); setPage(0); }}
+              onFilterChange={(filter) => { setActiveFilter(filter); setSortColumn(null); setSortDirection('asc'); setPage(0); }}
             />
           </div>
 
