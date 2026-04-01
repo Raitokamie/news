@@ -13,6 +13,7 @@ import { Rss, X, Plus, TrendingUp, TrendingDown, Minus, ChevronDown, ChevronLeft
 import { ImpactLevel, TrendFilter } from '@/lib/types';
 import SentimentFilterRibbon from '@/components/filters/SentimentFilterRibbon';
 import ScrollToTopButton from '@/components/ui/ScrollToTopButton';
+import { usePagination } from '@/hooks/usePagination';
 
 type TimeRange = '24H' | '7D';
 
@@ -73,8 +74,6 @@ export default function StockSentimentPage() {
   const router = useRouter();
   const { sentimentTickers, addSentimentTicker, removeSentimentTicker } = useTerminalStore();
   const [isLoading, setIsLoading] = useState(true);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [rppOpen, setRppOpen] = useState(false);
   const rppRef = useRef<HTMLDivElement>(null);
   const [addOpen, setAddOpen] = useState(false);
@@ -95,7 +94,7 @@ export default function StockSentimentPage() {
       setSortColumn(column);
       setSortDirection('asc');
     }
-    setPage(0);
+    pagination.setPage(0);
   };
 
   const SortIcon = ({ column }: { column: SortColumn }) => {
@@ -114,7 +113,7 @@ export default function StockSentimentPage() {
     : availableToAdd;
 
   useEffect(() => {
-    const t = setTimeout(() => setIsLoading(false), 300);
+    const t = setTimeout(() => setIsLoading(false), 1200);
     return () => clearTimeout(t);
   }, []);
 
@@ -182,16 +181,12 @@ export default function StockSentimentPage() {
     return sortDirection === 'asc' ? comparison : -comparison;
   });
 
-  const totalPages = Math.max(1, Math.ceil(rows.length / rowsPerPage));
+  const pagination = usePagination({
+    totalItems: rows.length,
+    initialRowsPerPage: 10,
+  });
 
-  // Reset page if current page exceeds total pages
-  useEffect(() => {
-    if (page >= totalPages) {
-      setPage(Math.max(0, totalPages - 1));
-    }
-  }, [totalPages, page]);
-
-  const paged = rows.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
+  const paged = rows.slice(pagination.startIndex, pagination.endIndex);
 
   return (
     <div className="flex h-full bg-[#0a1017]">
@@ -286,7 +281,7 @@ export default function StockSentimentPage() {
           <div className="px-4 md:px-6 pt-2 pb-6">
             <SentimentFilterRibbon
               activeFilter={activeFilter}
-              onFilterChange={(filter) => { setActiveFilter(filter); setSortColumn(null); setSortDirection('asc'); setPage(0); }}
+              onFilterChange={(filter) => { setActiveFilter(filter); setSortColumn(null); setSortDirection('asc'); pagination.setPage(0); }}
             />
           </div>
 
@@ -294,7 +289,7 @@ export default function StockSentimentPage() {
           <div className="px-6 pb-6 pt-0 flex flex-col gap-4">
             {/* Table */}
             {isLoading ? (
-              <TableSkeleton rows={rowsPerPage} />
+              <TableSkeleton rows={pagination.rowsPerPage} />
             ) : (
             <div className="border border-[#222F44] rounded-xl">
               <div className="overflow-x-auto">
@@ -393,7 +388,7 @@ export default function StockSentimentPage() {
                       onClick={() => setRppOpen(!rppOpen)}
                       className="flex items-center gap-1 px-2 py-1 rounded-md bg-[#333333] text-white text-sm hover:bg-[#444] transition-colors"
                     >
-                      {rowsPerPage}
+                      {pagination.rowsPerPage}
                       <ChevronDown size={14} className={cn('transition-transform', rppOpen && 'rotate-180')} />
                     </button>
                     {rppOpen && (
@@ -401,10 +396,10 @@ export default function StockSentimentPage() {
                         {[10, 50, 100].map((n) => (
                           <button
                             key={n}
-                            onClick={() => { setRowsPerPage(n); setPage(0); setRppOpen(false); }}
+                            onClick={() => { pagination.setRowsPerPage(n); setRppOpen(false); }}
                             className={cn(
                               'block w-full text-left px-4 py-2 text-sm font-bold hover:bg-white/8 transition-colors',
-                              rowsPerPage === n ? 'text-[#0D7FF2] bg-white/5' : 'text-white'
+                              pagination.rowsPerPage === n ? 'text-[#0D7FF2] bg-white/5' : 'text-white'
                             )}
                           >
                             {n}
@@ -416,31 +411,35 @@ export default function StockSentimentPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => setPage((p) => Math.max(0, p - 1))}
-                    disabled={page === 0}
+                    onClick={pagination.prevPage}
+                    disabled={!pagination.canGoPrev}
                     className="p-1 rounded hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed text-slate-400"
                   >
                     <ChevronLeft size={16} />
                   </button>
                   <div className="flex items-center gap-1">
-                    {Array.from({ length: totalPages }, (_, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setPage(i)}
-                        className={cn(
-                          'min-w-[28px] h-7 px-2 rounded text-sm font-medium transition-colors',
-                          page === i
-                            ? 'bg-[#0D7FF2] text-white'
-                            : 'text-slate-400 hover:bg-white/10'
-                        )}
-                      >
-                        {i + 1}
-                      </button>
-                    ))}
+                    {pagination.pageNumbers.map((pageNum, idx) =>
+                      pageNum === 'ellipsis' ? (
+                        <span key={`ellipsis-${idx}`} className="px-2 text-slate-400">...</span>
+                      ) : (
+                        <button
+                          key={pageNum}
+                          onClick={() => pagination.setPage(pageNum - 1)}
+                          className={cn(
+                            'min-w-[28px] h-7 px-2 rounded text-sm font-medium transition-colors',
+                            pagination.currentPage === pageNum - 1
+                              ? 'bg-[#0D7FF2] text-white'
+                              : 'text-slate-400 hover:bg-white/10'
+                          )}
+                        >
+                          {pageNum}
+                        </button>
+                      )
+                    )}
                   </div>
                   <button
-                    onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
-                    disabled={page >= totalPages - 1}
+                    onClick={pagination.nextPage}
+                    disabled={!pagination.canGoNext}
                     className="p-1 rounded hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed text-slate-400"
                   >
                     <ChevronRight size={16} />

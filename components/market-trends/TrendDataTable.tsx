@@ -4,6 +4,9 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { TickerAnalysis, ImpactLevel } from '@/lib/types';
 import { TrendingUp, TrendingDown, Minus, ChevronLeft, ChevronRight, ChevronDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import SentimentHistoricalBar from './SentimentHistoricalBar';
+import { usePagination } from '@/hooks/usePagination';
 
 type SortColumn = 'symbol' | 'impact' | 'sentiment' | 'mention' | 'score';
 type SortDirection = 'asc' | 'desc';
@@ -12,8 +15,6 @@ const impactOrder: Record<ImpactLevel, number> = { high: 3, medium: 2, low: 1 };
 const sentimentOrder: Record<'up' | 'down' | 'flat', number> = { up: 3, flat: 2, down: 1 };
 
 const ROWS_PER_PAGE_OPTIONS = [10, 50, 100] as const;
-import { cn } from '@/lib/utils';
-import SentimentHistoricalBar from './SentimentHistoricalBar';
 
 interface TrendDataTableProps {
   items: TickerAnalysis[];
@@ -69,8 +70,6 @@ const sentimentConfig = {
 
 export default function TrendDataTable({ items }: TrendDataTableProps) {
   const router = useRouter();
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [currentPage, setCurrentPage] = useState(1);
   const [rowsDropdownOpen, setRowsDropdownOpen] = useState(false);
   const rowsDropdownRef = useRef<HTMLDivElement>(null);
   const [sortColumn, setSortColumn] = useState<SortColumn | null>(null);
@@ -83,7 +82,7 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
       setSortColumn(column);
       setSortDirection('asc');
     }
-    setCurrentPage(1);
+    pagination.setPage(0);
   };
 
   const sortedItems = [...items].sort((a, b) => {
@@ -110,6 +109,11 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
     return sortDirection === 'asc' ? comparison : -comparison;
   });
 
+  const pagination = usePagination({
+    totalItems: sortedItems.length,
+    initialRowsPerPage: 10,
+  });
+
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (rowsDropdownRef.current && !rowsDropdownRef.current.contains(e.target as Node)) {
@@ -121,22 +125,11 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
   }, []);
 
   const handleRowsPerPageChange = (value: number) => {
-    setRowsPerPage(value);
-    setCurrentPage(1); // Reset to first page
+    pagination.setRowsPerPage(value);
     setRowsDropdownOpen(false);
   };
 
-  const totalPages = Math.max(1, Math.ceil(sortedItems.length / rowsPerPage));
-
-  // Reset page if current page exceeds total pages
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(Math.max(1, totalPages));
-    }
-  }, [totalPages, currentPage]);
-
-  const startIndex = (currentPage - 1) * rowsPerPage;
-  const paginatedItems = sortedItems.slice(startIndex, startIndex + rowsPerPage);
+  const paginatedItems = sortedItems.slice(pagination.startIndex, pagination.endIndex);
 
   const SortIcon = ({ column }: { column: SortColumn }) => {
     if (sortColumn !== column) return <ArrowUp size={12} className="text-slate-600" />;
@@ -277,7 +270,7 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
               className="flex items-center gap-1 px-2 py-1 rounded-md bg-[#333333] text-white text-sm"
               onClick={() => setRowsDropdownOpen(!rowsDropdownOpen)}
             >
-              {rowsPerPage}
+              {pagination.rowsPerPage}
               <ChevronDown size={14} className={cn('transition-transform', rowsDropdownOpen && 'rotate-180')} />
             </button>
             {rowsDropdownOpen && (
@@ -288,7 +281,7 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
                     onClick={() => handleRowsPerPageChange(option)}
                     className={cn(
                       'block w-full text-left px-3 py-2 text-sm hover:bg-white/10 transition-colors',
-                      rowsPerPage === option ? 'text-[#0D7FF2] bg-white/5' : 'text-white'
+                      pagination.rowsPerPage === option ? 'text-[#0D7FF2] bg-white/5' : 'text-white'
                     )}
                   >
                     {option}
@@ -301,31 +294,35 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
 
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-            disabled={currentPage === 1}
+            onClick={pagination.prevPage}
+            disabled={!pagination.canGoPrev}
             className="p-1 rounded hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed text-white"
           >
             <ChevronLeft size={16} />
           </button>
           <div className="flex items-center gap-1">
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentPage(i + 1)}
-                className={cn(
-                  'min-w-[28px] h-7 px-2 rounded text-sm font-medium transition-colors',
-                  currentPage === i + 1
-                    ? 'bg-[#0D7FF2] text-white'
-                    : 'text-slate-400 hover:bg-white/10'
-                )}
-              >
-                {i + 1}
-              </button>
-            ))}
+            {pagination.pageNumbers.map((pageNum, idx) =>
+              pageNum === 'ellipsis' ? (
+                <span key={`ellipsis-${idx}`} className="px-2 text-slate-400">...</span>
+              ) : (
+                <button
+                  key={pageNum}
+                  onClick={() => pagination.setPage(pageNum - 1)}
+                  className={cn(
+                    'min-w-[28px] h-7 px-2 rounded text-sm font-medium transition-colors',
+                    pagination.currentPage === pageNum - 1
+                      ? 'bg-[#0D7FF2] text-white'
+                      : 'text-slate-400 hover:bg-white/10'
+                  )}
+                >
+                  {pageNum}
+                </button>
+              )
+            )}
           </div>
           <button
-            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-            disabled={currentPage === totalPages}
+            onClick={pagination.nextPage}
+            disabled={!pagination.canGoNext}
             className="p-1 rounded hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed text-white"
           >
             <ChevronRight size={16} />
