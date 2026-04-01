@@ -5,6 +5,7 @@ import { mockNews } from '@/lib/api';
 import { Category } from '@/lib/types';
 import { categoryOptions } from '@/lib/constants';
 import NewsCard from '@/components/news/NewsCard';
+import NewsCardSkeleton from '@/components/news/NewsCardSkeleton';
 import MobileSentimentToggle from '@/components/news/MobileSentimentToggle';
 import RangeDropdown, { RangeOption } from '@/components/filters/RangeDropdown';
 import { TrendingDown, TrendingUp } from 'lucide-react';
@@ -33,9 +34,10 @@ const categoryDropdownOptions: RangeOption<Category>[] = categoryOptions.map((op
 
 interface WatchlistActivityFeedProps {
   trackedSymbols: string[];
+  isLoading?: boolean;
 }
 
-export default function WatchlistActivityFeed({ trackedSymbols }: WatchlistActivityFeedProps) {
+export default function WatchlistActivityFeed({ trackedSymbols, isLoading = false }: WatchlistActivityFeedProps) {
   const [range, setRange] = useState<TimeRangeValue>('24h');
   const [category, setCategory] = useState<Category>('all');
   const { mobileSentiment } = useTerminalStore();
@@ -73,6 +75,33 @@ export default function WatchlistActivityFeed({ trackedSymbols }: WatchlistActiv
   const totalInsights = filtered.length;
 
   const mobileItems = mobileSentiment === 'bad' ? badItems : goodItems;
+
+  // Show skeleton while loading
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-4">
+        {/* Header skeleton */}
+        <div className="hidden md:flex items-center justify-between">
+          <div className="h-4 w-48 bg-slate-700/30 rounded animate-pulse" />
+          <div className="h-8 w-32 bg-slate-700/20 rounded-full animate-pulse" />
+        </div>
+
+        {/* Mobile skeleton */}
+        <div className="md:hidden flex flex-col gap-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <NewsCardSkeleton key={i} />
+          ))}
+        </div>
+
+        {/* Desktop skeleton - two columns */}
+        <div className="hidden md:grid md:grid-cols-2 gap-x-5 gap-y-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <NewsCardSkeleton key={i} />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4">

@@ -9,14 +9,68 @@ import StockCard from '@/components/market-trends/TopStockCard';
 interface WatchlistStocksRowProps {
   trackedSymbols: string[];
   onRemove: (symbol: string) => void;
+  isLoading?: boolean;
 }
 
-export default function WatchlistStocksRow({ trackedSymbols, onRemove }: WatchlistStocksRowProps) {
+function StockCardSkeleton() {
+  return (
+    <div className="bg-[#0a1017] border border-[#222F44] rounded-xl p-4 flex flex-col gap-3 h-full animate-pulse">
+      {/* Header: Symbol + Trend Icon */}
+      <div className="flex items-start justify-between">
+        <div>
+          <div className="h-4 w-16 bg-slate-700/50 rounded mb-1" />
+          <div className="h-8 w-24 bg-slate-700/30 rounded" /> {/* min-h-[32px] for name */}
+        </div>
+        <div className="w-8 h-8 bg-slate-700/30 rounded-full shrink-0" />
+      </div>
+
+      {/* Sentiment Score Section */}
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <div className="h-3 w-20 bg-slate-700/40 rounded" />
+          <div className="h-4 w-8 bg-slate-700/40 rounded" />
+        </div>
+        {/* Progress bar */}
+        <div className="h-2 w-full bg-[#2A2A2A] rounded-full" />
+      </div>
+
+      {/* Sentiment Badge */}
+      <div className="flex items-center gap-2">
+        <div className="w-2 h-2 bg-slate-700/40 rounded-full" />
+        <div className="h-3 w-16 bg-slate-700/30 rounded" />
+      </div>
+    </div>
+  );
+}
+
+export default function WatchlistStocksRow({ trackedSymbols, onRemove, isLoading = false }: WatchlistStocksRowProps) {
   const trackedStocks = useMemo(() => {
     return trackedSymbols
       .map((s) => mockMarketTrends.find((t) => t.symbol === s))
       .filter(Boolean) as TickerAnalysis[];
   }, [trackedSymbols]);
+
+  if (isLoading) {
+    return (
+      <>
+        {/* Mobile: Horizontal scroll skeleton */}
+        <div className="flex gap-4 overflow-x-auto pb-2 sm:hidden snap-x snap-mandatory scrollbar-hide">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="flex-shrink-0 w-[280px] snap-start">
+              <StockCardSkeleton />
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop: Grid skeleton */}
+        <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <StockCardSkeleton key={i} />
+          ))}
+        </div>
+      </>
+    );
+  }
 
   if (trackedStocks.length === 0) {
     return (
@@ -29,7 +83,6 @@ export default function WatchlistStocksRow({ trackedSymbols, onRemove }: Watchli
       </div>
     );
   }
-
 
   return (
     <>

@@ -17,13 +17,30 @@ function TopStocksSkeleton() {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
       {Array.from({ length: 4 }).map((_, i) => (
-        <div key={i} className="bg-[#111722] border border-[#222F44] rounded-xl p-4 animate-pulse">
-          <div className="flex items-center justify-between mb-3">
-            <div className="h-3 w-10 bg-slate-700/50 rounded" />
-            <div className="h-5 w-14 bg-slate-700/30 rounded-full" />
+        <div key={i} className="bg-[#0a1017] border border-[#222F44] rounded-xl p-4 flex flex-col gap-3 h-full animate-pulse">
+          {/* Header: Symbol + Trend Icon */}
+          <div className="flex items-start justify-between">
+            <div>
+              <div className="h-4 w-16 bg-slate-700/50 rounded mb-1" />
+              <div className="h-8 w-24 bg-slate-700/30 rounded" />
+            </div>
+            <div className="w-8 h-8 bg-slate-700/30 rounded-full shrink-0" />
           </div>
-          <div className="h-5 w-16 bg-slate-700/40 rounded mb-2" />
-          <div className="h-3 w-full bg-slate-700/20 rounded" />
+
+          {/* Sentiment Score Section */}
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <div className="h-3 w-20 bg-slate-700/40 rounded" />
+              <div className="h-4 w-8 bg-slate-700/40 rounded" />
+            </div>
+            <div className="h-2 w-full bg-[#2A2A2A] rounded-full" />
+          </div>
+
+          {/* Sentiment Badge */}
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-slate-700/40 rounded-full" />
+            <div className="h-3 w-16 bg-slate-700/30 rounded" />
+          </div>
         </div>
       ))}
     </div>
@@ -97,7 +114,7 @@ export default function MarketTrendsPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const t = setTimeout(() => setIsLoading(false), 300);
+    const t = setTimeout(() => setIsLoading(false), 1200);
     return () => clearTimeout(t);
   }, []);
 

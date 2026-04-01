@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TopBar from '@/components/layout/TopBar';
 import { useTerminalStore } from '@/lib/store';
 import { mockTelegramNotifications } from '@/lib/api';
@@ -16,6 +16,12 @@ import PremiumLock from '@/components/premium/PremiumLock';
 export default function WatchlistPage() {
   const { trackedTickers, addTicker, removeTicker, userPlan } = useTerminalStore();
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   if (userPlan === 'free') {
     return (
@@ -48,10 +54,10 @@ export default function WatchlistPage() {
           {/* Main Content */}
           <div className="px-6 pb-6 pt-0 flex flex-col gap-4">
             {/* Stock Cards Row */}
-            <WatchlistStocksRow trackedSymbols={trackedTickers} onRemove={removeTicker} />
+            <WatchlistStocksRow trackedSymbols={trackedTickers} onRemove={removeTicker} isLoading={isLoading} />
 
             {/* Recent Activity Section */}
-            <WatchlistActivityFeed trackedSymbols={trackedTickers} />
+            <WatchlistActivityFeed trackedSymbols={trackedTickers} isLoading={isLoading} />
           </div>
         </div>
       </div>
