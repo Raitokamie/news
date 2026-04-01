@@ -4,14 +4,16 @@ import { Fragment, useMemo } from 'react';
 import { mockNews } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
 import NewsCard from '@/components/news/NewsCard';
+import NewsCardSkeleton from '@/components/news/NewsCardSkeleton';
 import MobileSentimentToggle from '@/components/news/MobileSentimentToggle';
 import { TrendingDown, TrendingUp } from 'lucide-react';
 
 interface StockDetailNewsFeedProps {
   symbol: string;
+  isLoading?: boolean;
 }
 
-export default function StockDetailNewsFeed({ symbol }: StockDetailNewsFeedProps) {
+export default function StockDetailNewsFeed({ symbol, isLoading = false }: StockDetailNewsFeedProps) {
   const mobileSentiment = useTerminalStore((s) => s.mobileSentiment);
 
   const filtered = useMemo(() => {
@@ -25,6 +27,26 @@ export default function StockDetailNewsFeed({ symbol }: StockDetailNewsFeedProps
   const maxRows = Math.max(badItems.length, goodItems.length);
 
   const mobileItems = mobileSentiment === 'bad' ? badItems : goodItems;
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-3">
+        {/* Mobile skeleton */}
+        <div className="md:hidden space-y-3">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <NewsCardSkeleton key={i} />
+          ))}
+        </div>
+
+        {/* Desktop skeleton - two columns */}
+        <div className="hidden md:grid grid-cols-2 gap-x-5 gap-y-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <NewsCardSkeleton key={i} />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-3">

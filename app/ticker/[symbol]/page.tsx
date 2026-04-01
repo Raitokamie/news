@@ -1,11 +1,12 @@
 'use client';
 
-import { Fragment, useMemo, useState } from 'react';
+import { Fragment, useMemo, useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { mockNews } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
 import TopBar from '@/components/layout/TopBar';
 import NewsCard from '@/components/news/NewsCard';
+import NewsCardSkeleton from '@/components/news/NewsCardSkeleton';
 import { TelegramStatusWidget } from '@/components/watchlist';
 import { mockTelegramNotifications } from '@/lib/api';
 import MobileSentimentToggle from '@/components/news/MobileSentimentToggle';
@@ -37,9 +38,15 @@ export default function TickerDetailPage() {
   const router = useRouter();
   const symbol = (params.symbol as string).toUpperCase();
   const [range, setRange] = useState<TimeRange>('24h');
+  const [isLoading, setIsLoading] = useState(true);
   const selectedSymbols = useTerminalStore((s) => s.selectedSymbols);
   const userPlan = useTerminalStore((s) => s.userPlan);
   const mobileSentiment = useTerminalStore((s) => s.mobileSentiment);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   if (userPlan === 'free') {
     return (
@@ -136,58 +143,82 @@ export default function TickerDetailPage() {
             <p className="text-[#808080] text-sm mt-1 ml-12">{tickerName}</p>
           </div>
 
-          {/* News Feed — Mobile */}
-          <div className="md:hidden px-4 pb-6">
-            <div className="py-3">
-              <MobileSentimentToggle />
-            </div>
-            <div className="space-y-3">
-              {(mobileSentiment === 'bad' ? badItems : goodItems).length > 0 ? (
-                (mobileSentiment === 'bad' ? badItems : goodItems).map((item) => (
-                  <NewsCard key={item.id} item={item} />
-                ))
-              ) : (
-                <div className="text-center py-12 text-slate-600 text-sm">
-                  No {mobileSentiment} sentiment news
+          {isLoading ? (
+            <>
+              {/* Mobile skeleton */}
+              <div className="md:hidden px-4 pb-6">
+                <div className="space-y-3">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <NewsCardSkeleton key={i} />
+                  ))}
                 </div>
-              )}
-            </div>
-          </div>
-
-          {/* News Feed — Desktop */}
-          <div className="hidden md:block px-6 pb-6">
-            <div className="grid grid-cols-2 gap-x-5 gap-y-3">
-              {/* Column Headers */}
-              <div className="flex items-center gap-2 mb-1">
-                <TrendingDown size={18} className="text-red-400" />
-                <h2 className="text-base font-bold tracking-widest uppercase text-red-400">Bad Sentiment</h2>
-                <span className="ml-auto text-xs text-slate-600 bg-white/5 px-2 py-0.5 rounded-full">
-                  {badItems.length}
-                </span>
-              </div>
-              <div className="flex items-center gap-2 mb-1">
-                <TrendingUp size={18} className="text-green-400" />
-                <h2 className="text-base font-bold tracking-widest uppercase text-green-400">Good Sentiment</h2>
-                <span className="ml-auto text-xs text-slate-600 bg-white/5 px-2 py-0.5 rounded-full">
-                  {goodItems.length}
-                </span>
               </div>
 
-              {Array.from({ length: maxRows }).map((_, i) => (
-                <Fragment key={i}>
-                  {badItems[i] ? <NewsCard item={badItems[i]} /> : <div />}
-                  {goodItems[i] ? <NewsCard item={goodItems[i]} /> : <div />}
-                </Fragment>
-              ))}
+              {/* Desktop skeleton */}
+              <div className="hidden md:block px-6 pb-6">
+                <div className="grid grid-cols-2 gap-x-5 gap-y-3">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <NewsCardSkeleton key={i} />
+                  ))}
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* News Feed — Mobile */}
+              <div className="md:hidden px-4 pb-6">
+                <div className="py-3">
+                  <MobileSentimentToggle />
+                </div>
+                <div className="space-y-3">
+                  {(mobileSentiment === 'bad' ? badItems : goodItems).length > 0 ? (
+                    (mobileSentiment === 'bad' ? badItems : goodItems).map((item) => (
+                      <NewsCard key={item.id} item={item} />
+                    ))
+                  ) : (
+                    <div className="text-center py-12 text-slate-600 text-sm">
+                      No {mobileSentiment} sentiment news
+                    </div>
+                  )}
+                </div>
+              </div>
 
-              {maxRows === 0 && (
-                <>
-                  <div className="text-center py-12 text-slate-600 text-sm">No bad sentiment news</div>
-                  <div className="text-center py-12 text-slate-600 text-sm">No good sentiment news</div>
-                </>
-              )}
-            </div>
-          </div>
+              {/* News Feed — Desktop */}
+              <div className="hidden md:block px-6 pb-6">
+                <div className="grid grid-cols-2 gap-x-5 gap-y-3">
+                  {/* Column Headers */}
+                  <div className="flex items-center gap-2 mb-1">
+                    <TrendingDown size={18} className="text-red-400" />
+                    <h2 className="text-base font-bold tracking-widest uppercase text-red-400">Bad Sentiment</h2>
+                    <span className="ml-auto text-xs text-slate-600 bg-white/5 px-2 py-0.5 rounded-full">
+                      {badItems.length}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <TrendingUp size={18} className="text-green-400" />
+                    <h2 className="text-base font-bold tracking-widest uppercase text-green-400">Good Sentiment</h2>
+                    <span className="ml-auto text-xs text-slate-600 bg-white/5 px-2 py-0.5 rounded-full">
+                      {goodItems.length}
+                    </span>
+                  </div>
+
+                  {Array.from({ length: maxRows }).map((_, i) => (
+                    <Fragment key={i}>
+                      {badItems[i] ? <NewsCard item={badItems[i]} /> : <div />}
+                      {goodItems[i] ? <NewsCard item={goodItems[i]} /> : <div />}
+                    </Fragment>
+                  ))}
+
+                  {maxRows === 0 && (
+                    <>
+                      <div className="text-center py-12 text-slate-600 text-sm">No bad sentiment news</div>
+                      <div className="text-center py-12 text-slate-600 text-sm">No good sentiment news</div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
