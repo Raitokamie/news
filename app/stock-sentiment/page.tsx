@@ -298,8 +298,8 @@ export default function StockSentimentPage() {
                   <tbody>
                     {paged.length === 0 ? (
                       <tr>
-                        <td colSpan={6} className="px-4 py-12 text-center text-slate-500 text-sm">
-                          No results found
+                        <td colSpan={6} className="px-4 py-8 text-center text-slate-500 text-sm">
+                          {sentimentTickers.length === 0 ? 'Add tickers to get started' : 'No results found'}
                         </td>
                       </tr>
                     ) : paged.map((row) => {
