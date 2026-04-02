@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 import { NewsItem, Region } from '@/lib/types';
 import { cn, timeAgo } from '@/lib/utils';
 import { impactConfigFull, CountryFlag } from '@/lib/constants';
@@ -77,7 +78,7 @@ export default function NewsCard({ item, compact = false }: NewsCardProps) {
         <div className="flex items-center gap-2">
           <div className="flex -space-x-1.5">
             {item.sources.map((s) => (
-              <img key={s.name} src={`https://www.google.com/s2/favicons?domain=${getDomain(s.url)}&sz=32`} alt={s.name} className="w-6 h-6 rounded-full border-2 border-[#0d0d0d] bg-[#333]" />
+              <Image key={s.name} src={`https://www.google.com/s2/favicons?domain=${getDomain(s.url)}&sz=32`} alt={s.name} width={24} height={24} className="w-6 h-6 rounded-full border-2 border-[#0d0d0d] bg-[#333]" unoptimized />
             ))}
           </div>
           <span className="text-sm text-slate-400">
@@ -139,7 +140,7 @@ function SourcesPopup({ sources }: { sources: { name: string; url: string }[] })
               onClick={(e) => e.stopPropagation()}
               className="flex items-center gap-2 px-3 py-2 text-xs text-slate-300 hover:bg-white/5 hover:text-cyan-400 transition-colors"
             >
-              <img src={`https://www.google.com/s2/favicons?domain=${getDomain(s.url)}&sz=32`} alt={s.name} className="w-3 h-3 rounded-full shrink-0 bg-[#333]" />
+              <Image src={`https://www.google.com/s2/favicons?domain=${getDomain(s.url)}&sz=32`} alt={s.name} width={12} height={12} className="w-3 h-3 rounded-full shrink-0 bg-[#333]" unoptimized />
               {s.name.charAt(0) + s.name.slice(1).toLowerCase()}
             </a>
           ))}

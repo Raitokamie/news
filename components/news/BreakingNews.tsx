@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import Image from 'next/image';
 import { mockNews } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
 import { NewsItem } from '@/lib/types';
@@ -28,10 +29,11 @@ function BreakingCard({ item, large = false }: { item: NewsItem; large?: boolean
       {/* Image */}
       <div className={`relative overflow-hidden ${large ? 'aspect-[16/10]' : 'aspect-[16/9]'}`}>
         {item.imageUrl ? (
-          <img
+          <Image
             src={item.imageUrl}
             alt={item.headline}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="h-full w-full bg-gradient-to-br from-[#1a2332] to-[#0a1017]" />
@@ -62,10 +64,13 @@ function BreakingCard({ item, large = false }: { item: NewsItem; large?: boolean
         <div className="flex items-center gap-2 pt-3 mt-auto border-t border-[#222F44] leading-none">
           {src && (
             <>
-              <img
+              <Image
                 src={`https://www.google.com/s2/favicons?domain=${getDomain(src.url)}&sz=32`}
                 alt={src.name}
+                width={16}
+                height={16}
                 className="h-4 w-4 rounded-full bg-[#333]"
+                unoptimized
               />
               <span className="text-sm text-slate-400">
                 {src.name.charAt(0) + src.name.slice(1).toLowerCase()} Reporting
@@ -95,7 +100,8 @@ export default function BreakingNews() {
   const { activeCategory } = useTerminalStore();
 
   const breakingItems = useMemo(() => {
-    const cutoff = new Date(Date.now() - HOURS_24);
+    const now = new Date();
+    const cutoff = new Date(now.getTime() - HOURS_24);
     let items = mockNews
       .filter((n) => n.impact === 'high' && n.publishedAt >= cutoff);
 
