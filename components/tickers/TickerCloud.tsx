@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import { useTerminalStore } from '@/lib/store';
 import { mockNews } from '@/lib/api';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
@@ -30,7 +30,6 @@ function buildRankedTickers(): RankedTicker[] {
     .sort((a, b) => {
       const scoreDiff = Math.abs(b[1].score) - Math.abs(a[1].score);
       if (scoreDiff !== 0) return scoreDiff;
-      // Secondary sort by symbol for deterministic order
       return a[0].localeCompare(b[0]);
     })
     .slice(0, 5)
@@ -40,11 +39,7 @@ function buildRankedTickers(): RankedTicker[] {
 export default function TickerCloud() {
   const setTicker = useTerminalStore((s) => s.setTicker);
   const activeTicker = useTerminalStore((s) => s.activeTicker);
-  const [tickers, setTickers] = useState<RankedTicker[]>([]);
-
-  useEffect(() => {
-    setTickers(buildRankedTickers());
-  }, []);
+  const tickers = useMemo(() => buildRankedTickers(), []);
 
   return (
     <div className="bg-[#111722] border border-[#222F44] rounded-xl overflow-hidden">

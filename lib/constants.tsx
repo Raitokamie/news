@@ -1,4 +1,5 @@
 
+import Image from 'next/image';
 import { Globe } from 'lucide-react';
 import { Category, Region, RegionTab, SortOrder, ImpactLevel } from './types';
 import { mockNews } from './api';
@@ -127,11 +128,13 @@ export function CountryFlag({ code, size = 20 }: { code: Region | 'all'; size?: 
     return <Globe size={size} className="text-white" />;
   }
   return (
-    <img
+    <Image
       src={`https://flagcdn.com/w40/${code}.png`}
-      srcSet={`https://flagcdn.com/w80/${code}.png 2x`}
       alt={code.toUpperCase()}
+      width={size}
+      height={size}
       className="w-5 h-5 rounded-full object-cover"
+      unoptimized
     />
   );
 }

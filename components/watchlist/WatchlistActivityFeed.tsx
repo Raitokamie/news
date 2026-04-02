@@ -41,6 +41,7 @@ export default function WatchlistActivityFeed({ trackedSymbols, isLoading = fals
   const [range, setRange] = useState<TimeRangeValue>('24h');
   const [category, setCategory] = useState<Category>('all');
   const { mobileSentiment } = useTerminalStore();
+  const nowRef = new Date();
 
   const filtered = useMemo(() => {
     if (trackedSymbols.length === 0) return [];
@@ -59,7 +60,7 @@ export default function WatchlistActivityFeed({ trackedSymbols, isLoading = fals
 
     // Filter by selected range
     if (range !== 'all') {
-      const cutoff = new Date(Date.now() - RANGE_MS[range]);
+      const cutoff = new Date(nowRef.getTime() - RANGE_MS[range]);
       items = items.filter((n) => n.publishedAt >= cutoff);
     }
 
@@ -67,7 +68,7 @@ export default function WatchlistActivityFeed({ trackedSymbols, isLoading = fals
     items = [...items].sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
 
     return items;
-  }, [trackedSymbols, range, category]);
+  }, [trackedSymbols, range, category, nowRef]);
 
   const badItems = filtered.filter((n) => n.sentiment === 'bad' || n.sentiment === 'neutral');
   const goodItems = filtered.filter((n) => n.sentiment === 'good');

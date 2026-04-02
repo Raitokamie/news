@@ -45,6 +45,13 @@ const sentimentConfig = {
   },
 };
 
+function SortIcon({ column, sortColumn, sortDirection }: { column: SortColumn; sortColumn: SortColumn | null; sortDirection: SortDirection }) {
+  if (sortColumn !== column) return <ArrowUp size={12} className="text-slate-600" />;
+  return sortDirection === 'asc'
+    ? <ArrowUp size={12} className="text-[#3B82F6]" />
+    : <ArrowDown size={12} className="text-[#3B82F6]" />;
+}
+
 export default function TrendDataTable({ items }: TrendDataTableProps) {
   const router = useRouter();
   const [rowsDropdownOpen, setRowsDropdownOpen] = useState(false);
@@ -108,13 +115,6 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
 
   const paginatedItems = sortedItems.slice(pagination.startIndex, pagination.endIndex);
 
-  const SortIcon = ({ column }: { column: SortColumn }) => {
-    if (sortColumn !== column) return <ArrowUp size={12} className="text-slate-600" />;
-    return sortDirection === 'asc'
-      ? <ArrowUp size={12} className="text-[#3B82F6]" />
-      : <ArrowDown size={12} className="text-[#3B82F6]" />;
-  };
-
   return (
     <div className="border border-[#222F44] rounded-xl">
       <div className="overflow-x-auto">
@@ -126,7 +126,7 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
               className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
             >
               <span className="inline-flex items-center gap-1">
-                TICKER <SortIcon column="symbol" />
+                TICKER <SortIcon column="symbol" sortColumn={sortColumn} sortDirection={sortDirection} />
               </span>
             </th>
             <th
@@ -134,7 +134,7 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
               className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
             >
               <span className="inline-flex items-center gap-1">
-                IMPACT <SortIcon column="impact" />
+                IMPACT <SortIcon column="impact" sortColumn={sortColumn} sortDirection={sortDirection} />
               </span>
             </th>
             <th
@@ -142,7 +142,7 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
               className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
             >
               <span className="inline-flex items-center gap-1">
-                SENTIMENT <SortIcon column="sentiment" />
+                SENTIMENT <SortIcon column="sentiment" sortColumn={sortColumn} sortDirection={sortDirection} />
               </span>
             </th>
             <th
@@ -150,7 +150,7 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
               className="text-center text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
             >
               <span className="inline-flex items-center gap-1 justify-center">
-                MENTION <SortIcon column="mention" />
+                MENTION <SortIcon column="mention" sortColumn={sortColumn} sortDirection={sortDirection} />
               </span>
             </th>
             <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">
@@ -162,7 +162,7 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
             >
               <span className="inline-flex flex-col items-end">
                 <span className="inline-flex items-center gap-1">
-                  SCORE <SortIcon column="score" />
+                  SCORE <SortIcon column="score" sortColumn={sortColumn} sortDirection={sortDirection} />
                 </span>
                 <span className="text-[11px] font-medium text-slate-400 tracking-normal">(-10 to 10)</span>
               </span>

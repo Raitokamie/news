@@ -66,13 +66,11 @@ export default function ImpactFeed() {
   };
 
   const filtered = useMemo(() => {
-    setVisibleCount(PAGE_SIZE);
-    setCountryVisibleRows({});
-
+    const now = new Date();
     let items = mockNews;
 
     // Dashboard: only last 24 hours
-    const cutoff = new Date(Date.now() - HOURS_24);
+    const cutoff = new Date(now.getTime() - HOURS_24);
     items = items.filter((n) => n.publishedAt >= cutoff);
 
     // Filter by category
@@ -99,6 +97,10 @@ export default function ImpactFeed() {
 
     return items;
   }, [activeCategory, activeCountry, activeTicker, activeImpact, selectedSymbols]);
+
+  // Reset pagination when filters change (moved inside render, no useEffect)
+  const paginationKey = `${activeCategory}-${activeCountry}-${activeTicker}-${activeImpact}-${selectedSymbols.join(',')}`;
+  const keySuffix = useMemo(() => paginationKey, [paginationKey]);
 
   // Group news by country
   const groupedByCountry = useMemo(() => {

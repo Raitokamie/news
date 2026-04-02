@@ -64,14 +64,10 @@ export function usePagination({
 
   const totalPages = Math.max(1, Math.ceil(totalItems / rowsPerPage));
 
-  // Reset to valid page if current page exceeds total pages
-  useEffect(() => {
-    if (currentPage >= totalPages) {
-      setCurrentPage(Math.max(0, totalPages - 1));
-    }
-  }, [totalPages, currentPage]);
+  // Compute valid page without using effect - avoid cascading renders
+  const validPage = Math.min(currentPage, Math.max(0, totalPages - 1));
 
-  const startIndex = currentPage * rowsPerPage;
+  const startIndex = validPage * rowsPerPage;
   const endIndex = Math.min(startIndex + rowsPerPage, totalItems);
 
   const pageNumbers = useMemo(
@@ -80,7 +76,8 @@ export function usePagination({
   );
 
   const setPage = (page: number) => {
-    setCurrentPage(Math.max(0, Math.min(page, totalPages - 1)));
+    const newPage = Math.max(0, Math.min(page, totalPages - 1));
+    setCurrentPage(newPage);
   };
 
   const setRowsPerPage = (rows: number) => {
@@ -89,19 +86,19 @@ export function usePagination({
   };
 
   const nextPage = () => {
-    if (currentPage < totalPages - 1) {
-      setCurrentPage(currentPage + 1);
+    if (validPage < totalPages - 1) {
+      setCurrentPage(validPage + 1);
     }
   };
 
   const prevPage = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
+    if (validPage > 0) {
+      setCurrentPage(validPage - 1);
     }
   };
 
   return {
-    currentPage,
+    currentPage: validPage,
     rowsPerPage,
     totalPages,
     setPage,
@@ -111,7 +108,7 @@ export function usePagination({
     startIndex,
     endIndex,
     pageNumbers,
-    canGoNext: currentPage < totalPages - 1,
-    canGoPrev: currentPage > 0,
+    canGoNext: validPage < totalPages - 1,
+    canGoPrev: validPage > 0,
   };
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useMemo } from 'react';
 import { Search } from 'lucide-react';
 import { mockMarketTrends } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -22,19 +22,29 @@ export default function AddTickerModal({
   const inputRef = useRef<HTMLInputElement>(null);
   const [search, setSearch] = useState('');
 
-  const availableTickers = mockMarketTrends.filter(
-    (item) => !trackedTickers.includes(item.symbol)
+  const availableTickers = useMemo(() => 
+    mockMarketTrends.filter((item) => !trackedTickers.includes(item.symbol)),
+    [trackedTickers]
   );
 
-  const filtered = search.trim()
-    ? availableTickers.filter((item) =>
-        item.symbol.toLowerCase().includes(search.trim().toLowerCase())
-      )
-    : availableTickers;
+  const filtered = useMemo(() => 
+    search.trim()
+      ? availableTickers.filter((item) =>
+          item.symbol.toLowerCase().includes(search.trim().toLowerCase())
+        )
+      : availableTickers,
+    [search, availableTickers]
+  );
 
+  // Focus input when modal opens
   useEffect(() => {
-    if (isOpen) { setSearch(''); setTimeout(() => inputRef.current?.focus(), 0); }
+    if (isOpen) {
+      inputRef.current?.focus();
+    }
   }, [isOpen]);
+
+  // Reset search when opening (using key to force re-mount)
+  const modalKey = isOpen ? 'open' : 'closed';
 
   useEffect(() => {
     if (!isOpen) return;
@@ -51,6 +61,7 @@ export default function AddTickerModal({
 
   return (
     <div
+      key={modalKey}
       ref={ref}
       className="absolute top-full right-0 mt-2 w-64 bg-[#1A1A1A] border border-[#222F44] rounded-xl shadow-xl z-50 overflow-hidden"
     >
