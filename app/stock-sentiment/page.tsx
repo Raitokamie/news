@@ -9,6 +9,7 @@ import { SentimentHistoricalBar } from '@/components/market-trends';
 import { mockStockSentiment } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
+import { impactConfigCompact } from '@/lib/constants';
 import { Rss, X, Plus, TrendingUp, TrendingDown, Minus, ChevronDown, ChevronLeft, ChevronRight, Search, ArrowUp, ArrowDown } from 'lucide-react';
 import { ImpactLevel, TrendFilter } from '@/lib/types';
 import SentimentFilterRibbon from '@/components/filters/SentimentFilterRibbon';
@@ -28,52 +29,15 @@ type SortDirection = 'asc' | 'desc';
 const impactOrder: Record<ImpactLevel, number> = { high: 3, medium: 2, low: 1 };
 const sentimentOrder: Record<'up' | 'down' | 'flat', number> = { up: 3, flat: 2, down: 1 };
 
-const impactConfig: Record<ImpactLevel, { label: string; bg: string; text: string; border: string }> = {
-  high: { label: 'HIGH', bg: 'bg-transparent', text: 'text-red-400', border: 'border border-red-400/20' },
-  medium: { label: 'MEDIUM', bg: 'bg-transparent', text: 'text-amber-400', border: 'border border-amber-400/20' },
-  low: { label: 'LOW', bg: 'bg-transparent', text: 'text-blue-400', border: 'border border-blue-400/20' },
-};
-
 const sentimentConfig = {
   up: { label: 'Positive', icon: TrendingUp, textColor: 'text-[#22C55E]', iconColor: 'text-[#10B981]', bg: 'bg-[#17382D]' },
   down: { label: 'Negative', icon: TrendingDown, textColor: 'text-[#EF4444]', iconColor: 'text-[#EF4444]', bg: 'bg-[#2F1E1E]' },
   flat: { label: 'Neutral', icon: Minus, textColor: 'text-[#808080]', iconColor: 'text-[#808080]', bg: 'bg-[#262626]' },
 };
 
-function TableSkeleton({ rows = 8 }: { rows?: number }) {
-  return (
-    <div className="border border-[#222F44] rounded-xl overflow-hidden">
-      <table className="w-full min-w-[700px]">
-        <thead>
-          <tr className="border-b border-[#222F44]">
-            {['Ticker', 'Impact', 'Sentiment', 'Mention', 'Sentiment Historical', 'Score'].map((h) => (
-              <th key={h} className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">
-                <div className="h-3 w-16 bg-slate-700/50 rounded animate-pulse" />
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {Array.from({ length: rows }).map((_, i) => (
-            <tr key={i} className="border-b border-[#222F44]">
-              <td className="px-4 py-3"><div className="h-4 w-14 bg-slate-700/40 rounded animate-pulse" /></td>
-              <td className="px-4 py-3"><div className="h-5 w-16 bg-slate-700/30 rounded-full animate-pulse" /></td>
-              <td className="px-4 py-3"><div className="h-5 w-20 bg-slate-700/30 rounded-full animate-pulse" /></td>
-              <td className="px-4 py-3"><div className="h-4 w-8 bg-slate-700/30 rounded animate-pulse mx-auto" /></td>
-              <td className="px-4 py-3"><div className="h-3 w-full bg-slate-700/20 rounded animate-pulse" /></td>
-              <td className="px-4 py-3"><div className="h-6 w-10 bg-slate-700/30 rounded-full animate-pulse ml-auto" /></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
 export default function StockSentimentPage() {
   const router = useRouter();
   const { sentimentTickers, addSentimentTicker, removeSentimentTicker } = useTerminalStore();
-  const [isLoading, setIsLoading] = useState(true);
   const [rppOpen, setRppOpen] = useState(false);
   const rppRef = useRef<HTMLDivElement>(null);
   const [addOpen, setAddOpen] = useState(false);
@@ -111,11 +75,6 @@ export default function StockSentimentPage() {
   const filteredToAdd = addSearch.trim()
     ? availableToAdd.filter((s) => s.toLowerCase().includes(addSearch.trim().toLowerCase()))
     : availableToAdd;
-
-  useEffect(() => {
-    const t = setTimeout(() => setIsLoading(false), 1200);
-    return () => clearTimeout(t);
-  }, []);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -288,9 +247,6 @@ export default function StockSentimentPage() {
           {/* Content */}
           <div className="px-6 pb-6 pt-0 flex flex-col gap-4">
             {/* Table */}
-            {isLoading ? (
-              <TableSkeleton rows={pagination.rowsPerPage} />
-            ) : (
             <div className="border border-[#222F44] rounded-xl">
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[700px]">
@@ -341,7 +297,7 @@ export default function StockSentimentPage() {
                   </thead>
                   <tbody>
                     {paged.map((row) => {
-                      const impact = impactConfig[row.impactLevel];
+                      const impact = impactConfigCompact[row.impactLevel];
                       const sent = sentimentConfig[row.sentiment];
                       const SentIcon = sent.icon;
 
@@ -447,7 +403,6 @@ export default function StockSentimentPage() {
                 </div>
               </div>
             </div>
-            )}
           </div>
         </div>
       </div>

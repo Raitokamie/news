@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useMemo, useState, useEffect } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { mockNews } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
@@ -38,15 +38,9 @@ export default function TickerDetailPage() {
   const router = useRouter();
   const symbol = (params.symbol as string).toUpperCase();
   const [range, setRange] = useState<TimeRange>('24h');
-  const [isLoading, setIsLoading] = useState(true);
   const selectedSymbols = useTerminalStore((s) => s.selectedSymbols);
   const userPlan = useTerminalStore((s) => s.userPlan);
   const mobileSentiment = useTerminalStore((s) => s.mobileSentiment);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1200);
-    return () => clearTimeout(timer);
-  }, []);
 
   if (userPlan === 'free') {
     return (
@@ -143,33 +137,11 @@ export default function TickerDetailPage() {
             <p className="text-[#808080] text-sm mt-1 ml-12">{tickerName}</p>
           </div>
 
-          {isLoading ? (
-            <>
-              {/* Mobile skeleton */}
-              <div className="md:hidden px-4 pb-6">
-                <div className="space-y-3">
-                  {Array.from({ length: 3 }).map((_, i) => (
-                    <NewsCardSkeleton key={i} />
-                  ))}
-                </div>
-              </div>
-
-              {/* Desktop skeleton */}
-              <div className="hidden md:block px-6 pb-6">
-                <div className="grid grid-cols-2 gap-x-5 gap-y-3">
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <NewsCardSkeleton key={i} />
-                  ))}
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-              {/* News Feed — Mobile */}
-              <div className="md:hidden px-4 pb-6">
-                <div className="py-3">
-                  <MobileSentimentToggle />
-                </div>
+          {/* News Feed — Mobile */}
+          <div className="md:hidden px-4 pb-6">
+            <div className="py-3">
+              <MobileSentimentToggle />
+            </div>
                 <div className="space-y-3">
                   {(mobileSentiment === 'bad' ? badItems : goodItems).length > 0 ? (
                     (mobileSentiment === 'bad' ? badItems : goodItems).map((item) => (
@@ -217,8 +189,6 @@ export default function TickerDetailPage() {
                   )}
                 </div>
               </div>
-            </>
-          )}
         </div>
       </div>
 
