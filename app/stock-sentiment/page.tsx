@@ -35,6 +35,13 @@ const sentimentConfig = {
   flat: { label: 'Neutral', icon: Minus, textColor: 'text-[#808080]', iconColor: 'text-[#808080]', bg: 'bg-[#262626]' },
 };
 
+function SortIcon({ column, sortColumn, sortDirection }: { column: SortColumn; sortColumn: SortColumn | null; sortDirection: SortDirection }) {
+  if (sortColumn !== column) return <ArrowUp size={12} className="text-slate-600" />;
+  return sortDirection === 'asc'
+    ? <ArrowUp size={12} className="text-[#3B82F6]" />
+    : <ArrowDown size={12} className="text-[#3B82F6]" />;
+}
+
 export default function StockSentimentPage() {
   const router = useRouter();
   const { sentimentTickers, addSentimentTicker, removeSentimentTicker } = useTerminalStore();
@@ -59,13 +66,6 @@ export default function StockSentimentPage() {
       setSortDirection('asc');
     }
     pagination.setPage(0);
-  };
-
-  const SortIcon = ({ column }: { column: SortColumn }) => {
-    if (sortColumn !== column) return <ArrowUp size={12} className="text-slate-600" />;
-    return sortDirection === 'asc'
-      ? <ArrowUp size={12} className="text-[#3B82F6]" />
-      : <ArrowDown size={12} className="text-[#3B82F6]" />;
   };
 
   const availableToAdd = mockStockSentiment
@@ -257,7 +257,7 @@ export default function StockSentimentPage() {
                         className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
                       >
                         <span className="inline-flex items-center gap-1">
-                          Ticker <SortIcon column="symbol" />
+                          Ticker <SortIcon column="symbol" sortColumn={sortColumn} sortDirection={sortDirection} />
                         </span>
                       </th>
                       <th
@@ -265,7 +265,7 @@ export default function StockSentimentPage() {
                         className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
                       >
                         <span className="inline-flex items-center gap-1">
-                          Impact <SortIcon column="impact" />
+                          Impact <SortIcon column="impact" sortColumn={sortColumn} sortDirection={sortDirection} />
                         </span>
                       </th>
                       <th
@@ -273,7 +273,7 @@ export default function StockSentimentPage() {
                         className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
                       >
                         <span className="inline-flex items-center gap-1">
-                          Sentiment <SortIcon column="sentiment" />
+                          Sentiment <SortIcon column="sentiment" sortColumn={sortColumn} sortDirection={sortDirection} />
                         </span>
                       </th>
                       <th
@@ -281,7 +281,7 @@ export default function StockSentimentPage() {
                         className="text-center text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
                       >
                         <span className="inline-flex items-center gap-1 justify-center">
-                          Mention <SortIcon column="mention" />
+                          Mention <SortIcon column="mention" sortColumn={sortColumn} sortDirection={sortDirection} />
                         </span>
                       </th>
                       <th className="text-left text-xs font-bold text-white uppercase tracking-wider px-4 py-3">Sentiment Historical</th>
@@ -290,7 +290,7 @@ export default function StockSentimentPage() {
                         className="text-right text-xs font-bold text-white uppercase tracking-wider px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors"
                       >
                         <span className="inline-flex items-center gap-1 justify-end">
-                          Score <SortIcon column="score" />
+                          Score <SortIcon column="score" sortColumn={sortColumn} sortDirection={sortDirection} />
                         </span>
                       </th>
                     </tr>
