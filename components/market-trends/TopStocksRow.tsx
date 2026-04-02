@@ -9,6 +9,8 @@ interface TopStocksRowProps {
 }
 
 export default function TopStocksRow({ items }: TopStocksRowProps) {
+  if (items.length === 0) return null;
+
   return (
     <>
       {/* Mobile: Horizontal scroll */}

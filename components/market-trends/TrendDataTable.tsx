@@ -170,7 +170,13 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
           </tr>
         </thead>
         <tbody>
-          {paginatedItems.map((item) => {
+          {paginatedItems.length === 0 ? (
+            <tr>
+              <td colSpan={6} className="px-4 py-12 text-center text-slate-500 text-sm">
+                No results found
+              </td>
+            </tr>
+          ) : paginatedItems.map((item) => {
             const impact = impactConfigCompact[item.impactLevel];
             const sentiment = sentimentConfig[item.sentiment];
             const SentimentIcon = sentiment.icon;

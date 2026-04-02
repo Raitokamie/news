@@ -296,7 +296,13 @@ export default function StockSentimentPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {paged.map((row) => {
+                    {paged.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} className="px-4 py-12 text-center text-slate-500 text-sm">
+                          No results found
+                        </td>
+                      </tr>
+                    ) : paged.map((row) => {
                       const impact = impactConfigCompact[row.impactLevel];
                       const sent = sentimentConfig[row.sentiment];
                       const SentIcon = sent.icon;
