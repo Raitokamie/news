@@ -7,6 +7,7 @@ import { TrendingUp, TrendingDown, Minus, ChevronLeft, ChevronRight, ChevronDown
 import { cn } from '@/lib/utils';
 import SentimentHistoricalBar from './SentimentHistoricalBar';
 import { usePagination } from '@/hooks/usePagination';
+import { impactConfigCompact } from '@/lib/constants';
 
 type SortColumn = 'symbol' | 'impact' | 'sentiment' | 'mention' | 'score';
 type SortDirection = 'asc' | 'desc';
@@ -19,30 +20,6 @@ const ROWS_PER_PAGE_OPTIONS = [10, 50, 100] as const;
 interface TrendDataTableProps {
   items: TickerAnalysis[];
 }
-
-const impactConfig: Record<
-  ImpactLevel,
-  { label: string; bg: string; text: string; border: string }
-> = {
-  high: {
-    label: 'HIGH',
-    bg: 'bg-transparent',
-    text: 'text-red-400',
-    border: 'border border-red-400/20',
-  },
-  medium: {
-    label: 'MEDIUM',
-    bg: 'bg-transparent',
-    text: 'text-amber-400',
-    border: 'border border-amber-400/20',
-  },
-  low: {
-    label: 'LOW',
-    bg: 'bg-transparent',
-    text: 'text-blue-400',
-    border: 'border border-blue-400/20',
-  },
-};
 
 const sentimentConfig = {
   up: {
@@ -194,7 +171,7 @@ export default function TrendDataTable({ items }: TrendDataTableProps) {
         </thead>
         <tbody>
           {paginatedItems.map((item) => {
-            const impact = impactConfig[item.impactLevel];
+            const impact = impactConfigCompact[item.impactLevel];
             const sentiment = sentimentConfig[item.sentiment];
             const SentimentIcon = sentiment.icon;
 

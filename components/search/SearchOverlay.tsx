@@ -2,22 +2,13 @@
 
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { Search, X, Check } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, timeAgo } from '@/lib/utils';
 import { mockMarketTrends, mockNews } from '@/lib/api';
 import { TickerAnalysis, NewsItem } from '@/lib/types';
 import { useTerminalStore } from '@/lib/store';
 import { useRouter, usePathname } from 'next/navigation';
 
 type SearchTab = 'stocks' | 'news';
-
-function timeAgo(date: Date): string {
-  const diff = Date.now() - date.getTime();
-  const m = Math.floor(diff / 60000);
-  if (m < 60) return `${m}m ago`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
-}
 
 // Deterministic avatar colour per symbol
 const AVATAR_PALETTE = [

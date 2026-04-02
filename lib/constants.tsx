@@ -1,6 +1,6 @@
 
 import { Globe } from 'lucide-react';
-import { Category, Region, RegionTab, SortOrder } from './types';
+import { Category, Region, RegionTab, SortOrder, ImpactLevel } from './types';
 import { mockNews } from './api';
 
 // ─── Categories ──────────────────────────────────────────────────────────
@@ -74,7 +74,54 @@ for (const key of Object.keys(countriesByRegion) as RegionTab[]) {
   countriesByRegion[key].sort();
 }
 
-// Shared Country Flag Component
+// ─── Impact Level Configs ────────────────────────────────────────────
+
+// Full labels with colored backgrounds - used in NewsCard
+export const impactConfigFull: Record<ImpactLevel, { label: string; bg: string; text: string; border: string }> = {
+  high: {
+    label: 'HIGH IMPACT',
+    bg: 'bg-red-500/10',
+    text: 'text-red-400',
+    border: 'border-red-500/30',
+  },
+  medium: {
+    label: 'MEDIUM IMPACT',
+    bg: 'bg-amber-500/10',
+    text: 'text-amber-400',
+    border: 'border-amber-500/30',
+  },
+  low: {
+    label: 'LOW IMPACT',
+    bg: 'bg-blue-500/10',
+    text: 'text-blue-400',
+    border: 'border-blue-500/30',
+  },
+};
+
+// Compact labels with transparent backgrounds - used in tables
+export const impactConfigCompact: Record<ImpactLevel, { label: string; bg: string; text: string; border: string }> = {
+  high: {
+    label: 'HIGH',
+    bg: 'bg-transparent',
+    text: 'text-red-400',
+    border: 'border border-red-400/20',
+  },
+  medium: {
+    label: 'MEDIUM',
+    bg: 'bg-transparent',
+    text: 'text-amber-400',
+    border: 'border border-amber-400/20',
+  },
+  low: {
+    label: 'LOW',
+    bg: 'bg-transparent',
+    text: 'text-blue-400',
+    border: 'border border-blue-400/20',
+  },
+};
+
+// ─── Country Flag Component ──────────────────────────────────────────
+
 export function CountryFlag({ code, size = 20 }: { code: Region | 'all'; size?: number }) {
   if (code === 'all' || code === 'global') {
     return <Globe size={size} className="text-white" />;

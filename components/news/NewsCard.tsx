@@ -1,47 +1,13 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { NewsItem, ImpactLevel, Region } from '@/lib/types';
+import { NewsItem, Region } from '@/lib/types';
 import { cn, timeAgo } from '@/lib/utils';
+import { impactConfigFull, CountryFlag } from '@/lib/constants';
 import TickerChip from '@/components/tickers/TickerChip';
-
-const impactConfig: Record<ImpactLevel, { label: string; bg: string; text: string; border: string }> = {
-  high: {
-    label: 'HIGH IMPACT',
-    bg: 'bg-red-500/10',
-    text: 'text-red-400',
-    border: 'border-red-500/30',
-  },
-  medium: {
-    label: 'MEDIUM IMPACT',
-    bg: 'bg-amber-500/10',
-    text: 'text-amber-400',
-    border: 'border-amber-500/30',
-  },
-  low: {
-    label: 'LOW IMPACT',
-    bg: 'bg-blue-500/10',
-    text: 'text-blue-400',
-    border: 'border-blue-500/30',
-  },
-};
-
-import { Globe } from 'lucide-react';
 
 function getDomain(url: string) {
   try { return new URL(url).hostname; } catch { return ''; }
-}
-
-function CountryFlag({ code }: { code: Region }) {
-  if (code === 'global') return <Globe size={20} className="text-slate-400" />;
-  return (
-    <img
-      src={`https://flagcdn.com/w40/${code}.png`}
-      srcSet={`https://flagcdn.com/w80/${code}.png 2x`}
-      alt={code.toUpperCase()}
-      className="w-6 h-6 rounded-full object-cover"
-    />
-  );
 }
 
 interface NewsCardProps {
@@ -50,7 +16,7 @@ interface NewsCardProps {
 }
 
 export default function NewsCard({ item, compact = false }: NewsCardProps) {
-  const impact = impactConfig[item.impact];
+  const impact = impactConfigFull[item.impact];
 
   return (
     <article

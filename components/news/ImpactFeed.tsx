@@ -6,8 +6,9 @@ import { useTerminalStore } from '@/lib/store';
 import NewsCard from './NewsCard';
 import NewsCardSkeleton from './NewsCardSkeleton';
 import MobileSentimentToggle from './MobileSentimentToggle';
-import { TrendingDown, TrendingUp, Globe, ChevronDown } from 'lucide-react';
+import { TrendingDown, TrendingUp, ChevronDown } from 'lucide-react';
 import { NewsItem } from '@/lib/types';
+import { CountryFlag } from '@/lib/constants';
 
 const HOURS_24 = 24 * 60 * 60 * 1000;
 const PAGE_SIZE = 10;
@@ -44,21 +45,6 @@ const COUNTRY_NAMES: Record<string, string> = {
   'ie': 'Ireland',
   'global': 'Global',
 };
-
-function CountryFlag({ code, size = 20 }: { code: string; size?: number }) {
-  if (code === 'global') {
-    return <Globe size={size} className="text-white" />;
-  }
-  return (
-    <img
-      src={`https://flagcdn.com/w40/${code}.png`}
-      srcSet={`https://flagcdn.com/w80/${code}.png 2x`}
-      alt={COUNTRY_NAMES[code] || code.toUpperCase()}
-      className="rounded-sm object-cover"
-      style={{ width: size, height: size * 0.75 }}
-    />
-  );
-}
 
 export default function ImpactFeed() {
   const { activeCountry, activeCategory, activeTicker, activeImpact, sortOrder, selectedSymbols, mobileSentiment, scrollToNewsId, setScrollToNewsId } = useTerminalStore();
