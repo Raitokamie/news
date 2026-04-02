@@ -42,16 +42,6 @@ export default function TickerDetailPage() {
   const userPlan = useTerminalStore((s) => s.userPlan);
   const mobileSentiment = useTerminalStore((s) => s.mobileSentiment);
 
-  if (userPlan === 'free') {
-    return (
-      <div className="flex h-full bg-[#0a1017]">
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <PremiumLock featureName="Ticker Detail" />
-        </div>
-      </div>
-    );
-  }
-
   // Find ticker name from news data
   const tickerName = useMemo(() => {
     for (const news of mockNews) {
@@ -62,28 +52,26 @@ export default function TickerDetailPage() {
   }, [symbol]);
 
   // Compute avg score and trend
-  const { avgScore, trend } = useMemo(() => {
+  const trend = useMemo(() => {
     const scores: number[] = [];
     for (const news of mockNews) {
       for (const t of news.tickers) {
         if (t.symbol === symbol) scores.push(t.sentimentScore);
       }
     }
-    if (scores.length === 0) return { avgScore: 0, trend: 'flat' as const };
+    if (scores.length === 0) return 'flat' as const;
     const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
-    return {
-      avgScore: Math.round(avg * 10) / 10,
-      trend: (avg > 0 ? 'up' : avg < 0 ? 'down' : 'flat') as 'up' | 'down' | 'flat',
-    };
+    return (avg > 0 ? 'up' : avg < 0 ? 'down' : 'flat') as 'up' | 'down' | 'flat';
   }, [symbol]);
 
   const filtered = useMemo(() => {
+    const now = new Date();
     let items = mockNews.filter((n) =>
       n.tickers.some((t) => t.symbol === symbol)
     );
 
     // Filter by range
-    const cutoff = new Date(Date.now() - RANGE_MS[range]);
+    const cutoff = new Date(now.getTime() - RANGE_MS[range]);
     items = items.filter((n) => n.publishedAt >= cutoff);
 
     // Filter by selected symbols
@@ -97,6 +85,16 @@ export default function TickerDetailPage() {
     items = [...items].sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
     return items;
   }, [symbol, range, selectedSymbols]);
+
+  if (userPlan === 'free') {
+    return (
+      <div className="flex h-full bg-[#0a1017]">
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <PremiumLock featureName="Ticker Detail" />
+        </div>
+      </div>
+    );
+  }
 
   const badItems = filtered.filter((n) => n.sentiment === 'bad' || n.sentiment === 'neutral');
   const goodItems = filtered.filter((n) => n.sentiment === 'good');
