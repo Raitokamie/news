@@ -205,6 +205,8 @@ export default function SearchOverlay() {
   const [newsLimit, setNewsLimit] = useState(20);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const prevQueryRef = useRef(query);
+  const prevTabRef = useRef(activeTab);
   useEffect(() => { inputRef.current?.focus(); }, []);
 
   // ── Filtering ──────────────────────────────────────────────────────────────
@@ -226,7 +228,14 @@ export default function SearchOverlay() {
   const hasMoreNews = filteredNews.length > newsLimit;
 
   const results = activeTab === 'stocks' ? filteredStocks : filteredNews;
-  useEffect(() => { setHighlighted(0); setNewsLimit(20); }, [query, activeTab]);
+  
+  // Reset pagination when query or tab changes
+  if (query !== prevQueryRef.current || activeTab !== prevTabRef.current) {
+    prevQueryRef.current = query;
+    prevTabRef.current = activeTab;
+    setHighlighted(0);
+    setNewsLimit(20);
+  }
 
   // ── Handlers ───────────────────────────────────────────────────────────────
   const handleClose = useCallback(() => closeSearchOverlay(), [closeSearchOverlay]);
