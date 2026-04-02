@@ -232,8 +232,13 @@ export default function SearchOverlay() {
   const handleClose = useCallback(() => closeSearchOverlay(), [closeSearchOverlay]);
 
   const handleSelectStock = useCallback((symbol: string) => {
-    toggleSymbol(symbol);
-  }, [toggleSymbol]);
+    if (pathname === '/') {
+      toggleSymbol(symbol);
+    } else {
+      router.push(`/stock-sentiment/${symbol.toLowerCase()}`);
+      closeSearchOverlay();
+    }
+  }, [pathname, toggleSymbol, router, closeSearchOverlay]);
 
   const handleSelectNews = useCallback((item: NewsItem) => {
     // Reset filters so the news card is visible
