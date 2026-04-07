@@ -28,7 +28,7 @@ export default function NotFound() {
           </h2>
           
           <p className="text-slate-400 mb-10 max-w-sm mx-auto leading-relaxed text-sm sm:text-base">
-            We couldn&apos;t find the market data or page you&apos;re looking for. The link might be broken or the page may have been moved.
+            We couldn&apos;t find the page you&apos;re looking for. The link might be broken or the page may have been moved.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
