@@ -3,6 +3,7 @@
 import { cn } from '@/lib/utils';
 import { useTerminalStore } from '@/lib/store';
 import { TrendingUp, TrendingDown, Minus, Star } from 'lucide-react';
+import { tickerToast } from '@/lib/toast';
 
 interface TickerChipProps {
   symbol: string;
@@ -23,8 +24,10 @@ export default function TickerChip({ symbol, showBookmark = true, trend = 'flat'
     e.stopPropagation();
     if (isTracked) {
       removeTicker(symbol);
+      tickerToast.removed(symbol, 'watchlist');
     } else {
       addTicker(symbol);
+      tickerToast.added(symbol, 'watchlist');
     }
   }
 

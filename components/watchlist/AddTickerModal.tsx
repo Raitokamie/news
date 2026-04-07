@@ -4,6 +4,7 @@ import { useRef, useEffect, useState, useMemo } from 'react';
 import { Search } from 'lucide-react';
 import { mockMarketTrends } from '@/lib/api';
 import { cn } from '@/lib/utils';
+import { tickerToast } from '@/lib/toast';
 
 interface AddTickerModalProps {
   isOpen: boolean;
@@ -90,6 +91,7 @@ export default function AddTickerModal({
               key={item.symbol}
               onClick={() => {
                 onAddTicker(item.symbol);
+                tickerToast.added(item.symbol, 'watchlist');
                 onClose();
               }}
               className={cn(

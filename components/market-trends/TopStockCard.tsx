@@ -5,6 +5,7 @@ import { TickerAnalysis } from '@/lib/types';
 import { TrendingUp, TrendingDown, Minus, X, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Tooltip, { TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/Tooltip';
+import { tickerToast } from '@/lib/toast';
 
 interface StockCardProps {
   item: TickerAnalysis;
@@ -76,7 +77,7 @@ export default function StockCard({ item, onRemove }: StockCardProps) {
       {/* Remove button - only shown if onRemove is provided */}
       {onRemove && (
         <button
-          onClick={(e) => { e.stopPropagation(); onRemove(item.symbol); }}
+          onClick={(e) => { e.stopPropagation(); onRemove(item.symbol); tickerToast.removed(item.symbol, 'watchlist'); }}
           className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#333333] border border-[#222F44] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500/20 hover:border-red-500/40 z-10"
         >
           <X size={12} className="text-slate-400 hover:text-red-400" />
