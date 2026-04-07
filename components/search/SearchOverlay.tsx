@@ -41,6 +41,8 @@ const CATEGORY_STYLE: Record<string, { color: string; bg: string }> = {
   climate: { color: '#22C55E', bg: 'rgba(34,197,94,0.12)' },
   defense: { color: '#64748B', bg: 'rgba(100,116,139,0.12)' },
   banking: { color: '#0EA5E9', bg: 'rgba(14,165,233,0.12)' },
+  automotive: { color: '#D946EF', bg: 'rgba(217,70,239,0.12)' },
+  trade: { color: '#14B8A6', bg: 'rgba(20,184,166,0.12)' },
 };
 
 const SENTIMENT_COLOR: Record<string, string> = {

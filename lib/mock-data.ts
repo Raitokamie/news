@@ -726,6 +726,42 @@ export const mockNews: NewsItem[] = [
     imageUrl: 'https://picsum.photos/seed/eutrade/800/450',
   },
 
+  // ── AI ─────────────────────────────────────────────
+  {
+    id: 'ai-1',
+    headline: 'OpenAI Launches GPT-5 With Autonomous Agent Capabilities, Sparking Enterprise AI Race',
+    body: 'OpenAI unveils GPT-5 with native tool use and multi-step planning. Enterprise customers report 40% productivity gains in early access. Microsoft integrates the model across Azure AI services, intensifying competition with Google and Anthropic.',
+    sources: [{ name: 'REUTERS', url: 'https://www.reuters.com/technology/openai-gpt5-agents' }],
+    publishedAt: new Date(Date.now() - 25 * 60 * 1000),
+    regionTag: 'us',
+    countryCode: 'us',
+    category: 'ai',
+    impact: 'high',
+    sentiment: 'good',
+    tickers: [
+      { symbol: 'MSFT', name: 'Microsoft Corporation', sentiment: 'up', sentimentScore: 7 },
+      { symbol: 'GOOGL', name: 'Alphabet Inc.', sentiment: 'down', sentimentScore: -3 },
+    ],
+    imageUrl: 'https://picsum.photos/seed/gpt5/800/450',
+  },
+  {
+    id: 'ai-2',
+    headline: 'EU Passes Landmark AI Act Enforcement Rules, Fines Up to 7% of Global Revenue',
+    body: 'The European Commission finalizes enforcement guidelines for the AI Act, with penalties of up to 7% of global revenue for violations. Tech companies scramble to comply as the first wave of regulations takes effect targeting high-risk AI systems in healthcare and finance.',
+    sources: [{ name: 'FT', url: 'https://www.ft.com/content/eu-ai-act-enforcement' }],
+    publishedAt: new Date(Date.now() - 50 * 60 * 1000),
+    regionTag: 'eu',
+    countryCode: 'be',
+    category: 'ai',
+    impact: 'high',
+    sentiment: 'bad',
+    tickers: [
+      { symbol: 'META', name: 'Meta Platforms, Inc.', sentiment: 'down', sentimentScore: -4 },
+      { symbol: 'GOOGL', name: 'Alphabet Inc.', sentiment: 'down', sentimentScore: -3 },
+    ],
+    imageUrl: 'https://picsum.photos/seed/aiact/800/450',
+  },
+
 ];
 
 

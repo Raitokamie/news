@@ -16,8 +16,9 @@ const COUNTRY_INITIAL_ROWS = 4;
 
 // Country ordering from big to small (major markets first)
 const COUNTRY_ORDER: string[] = [
-  'us', 'cn', 'eu', 'jp', 'de', 'gb', 'fr', 'in', 'it', 'br', 'ca',
+  'us', 'cn', 'jp', 'de', 'gb', 'fr', 'in', 'it', 'br', 'ca',
   'kr', 'au', 'es', 'mx', 'nl', 'ch', 'tw', 'th', 'sg', 'ie',
+  'be', 'no', 'dk',
   'global'
 ];
 
@@ -43,6 +44,9 @@ const COUNTRY_NAMES: Record<string, string> = {
   'th': 'Thailand',
   'sg': 'Singapore',
   'ie': 'Ireland',
+  'be': 'Belgium',
+  'no': 'Norway',
+  'dk': 'Denmark',
   'global': 'Global',
 };
 
