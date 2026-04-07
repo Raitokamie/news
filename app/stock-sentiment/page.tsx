@@ -15,6 +15,7 @@ import { ImpactLevel, TrendFilter } from '@/lib/types';
 import SentimentFilterRibbon from '@/components/filters/SentimentFilterRibbon';
 import ScrollToTopButton from '@/components/ui/ScrollToTopButton';
 import { usePagination } from '@/hooks/usePagination';
+import { tickerToast } from '@/lib/toast';
 
 type TimeRange = '24H' | '7D';
 
@@ -205,7 +206,7 @@ export default function StockSentimentPage() {
                       filteredToAdd.map((symbol) => (
                         <button
                           key={symbol}
-                          onClick={() => { addSentimentTicker(symbol); setAddOpen(false); }}
+                          onClick={() => { addSentimentTicker(symbol); tickerToast.added(symbol, 'sentiment'); setAddOpen(false); }}
                           className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors"
                         >
                           {symbol}
@@ -226,7 +227,7 @@ export default function StockSentimentPage() {
                 >
                   {symbol}
                   <button
-                    onClick={() => removeSentimentTicker(symbol)}
+                    onClick={() => { removeSentimentTicker(symbol); tickerToast.removed(symbol, 'sentiment'); }}
                     className="text-slate-400 hover:text-white transition-colors"
                   >
                     <X size={14} />
