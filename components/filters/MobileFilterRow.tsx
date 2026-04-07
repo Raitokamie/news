@@ -74,7 +74,7 @@ export default function MobileFilterRow() {
           <ChevronDown size={14} className={cn('transition-transform', countryOpen && 'rotate-180')} />
         </button>
         {countryOpen && (
-          <div className="absolute top-full mt-1 left-0 z-50 bg-[#1A1A1A] border border-[#222F44] rounded-lg shadow-xl min-w-[120px]">
+          <div className="absolute top-full mt-1 left-0 z-50 bg-[#1A1A1A] border border-[#222F44] rounded-lg shadow-xl min-w-[120px] max-h-[280px] overflow-y-auto">
             <button
               onClick={() => {
                 setCountry('all');

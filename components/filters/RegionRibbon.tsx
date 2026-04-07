@@ -1,7 +1,6 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Region, SortOrder, Category, RegionTab } from '@/lib/types';
 import { useTerminalStore } from '@/lib/store';
 import { ChevronDown, Globe } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
@@ -117,7 +116,7 @@ export default function RegionRibbon() {
               <ChevronDown size={14} className={cn('transition-transform', countryOpen && 'rotate-180')} />
             </button>
             {countryOpen && (
-              <div className="absolute top-full mt-1 right-0 z-50 bg-[#1A1A1A] border border-[#222F44] rounded-lg shadow-xl overflow-hidden min-w-[150px]">
+              <div className="absolute top-full mt-1 right-0 z-50 bg-[#1A1A1A] border border-[#222F44] rounded-lg shadow-xl overflow-hidden min-w-[150px] max-h-[280px] overflow-y-auto">
                 <button
                   onClick={() => { setCountry('all'); setCountryOpen(false); }}
                   className={cn(
