@@ -4,6 +4,7 @@ import './globals.css';
 import Sidebar from '@/components/layout/Sidebar';
 import MobileBottomNav from '@/components/layout/MobileBottomNav';
 import PlanToggle from '@/components/dev/PlanToggle';
+import Toaster from '@/components/ui/Toaster';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-poppins' });
@@ -31,6 +32,7 @@ export default function RootLayout({
           <MobileBottomNav />
           <PlanToggle />
         </div>
+        <Toaster />
       </body>
     </html>
   );
