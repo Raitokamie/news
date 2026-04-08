@@ -1,25 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Toaster as SonnerToaster } from 'sonner';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 export default function Toaster() {
-  const [position, setPosition] = useState<'bottom-right' | 'top-right'>('bottom-right');
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 768px)');
-    
-    if (mediaQuery.matches) {
-      setPosition('top-right');
-    }
-
-    const handler = (e: MediaQueryListEvent) => {
-      setPosition(e.matches ? 'top-right' : 'bottom-right');
-    };
-
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
-  }, []);
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  const position = isMobile ? 'top-right' : 'bottom-right';
 
   return (
     <SonnerToaster

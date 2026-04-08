@@ -17,6 +17,7 @@ interface TerminalStore {
   searchOverlayOpen: boolean;
   trackedTickers: string[];
   sentimentTickers: string[];
+  sentimentTickerOrder: string[];
   telegramConnected: boolean;
   userPlan: 'free' | 'premium';
   mobileSentiment: 'bad' | 'good';
@@ -33,6 +34,7 @@ interface TerminalStore {
   removeTicker: (symbol: string) => void;
   addSentimentTicker: (symbol: string) => void;
   removeSentimentTicker: (symbol: string) => void;
+  setSentimentTickerOrder: (order: string[]) => void;
   toggleSymbol: (symbol: string) => void;
   removeSymbol: (symbol: string) => void;
   clearSymbols: () => void;
@@ -93,10 +95,14 @@ export const useTerminalStore = create<TerminalStore>((set) => ({
     trackedTickers: state.trackedTickers.filter((t) => t !== symbol),
   })),
   sentimentTickers: [],
+  sentimentTickerOrder: [],
   addSentimentTicker: (symbol) => set((state) => ({
     sentimentTickers: state.sentimentTickers.includes(symbol) ? state.sentimentTickers : [...state.sentimentTickers, symbol],
+    sentimentTickerOrder: state.sentimentTickers.includes(symbol) ? state.sentimentTickerOrder : [...state.sentimentTickerOrder, symbol],
   })),
   removeSentimentTicker: (symbol) => set((state) => ({
     sentimentTickers: state.sentimentTickers.filter((t) => t !== symbol),
+    sentimentTickerOrder: state.sentimentTickerOrder.filter((t) => t !== symbol),
   })),
+  setSentimentTickerOrder: (order) => set({ sentimentTickerOrder: order }),
 }));
