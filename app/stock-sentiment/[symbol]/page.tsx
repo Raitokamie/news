@@ -1,8 +1,6 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import TopBar from '@/components/layout/TopBar';
-import RightSidebar from '@/components/layout/RightSidebar';
 import RangeDropdown, { RangeOption } from '@/components/filters/RangeDropdown';
 import { SentimentDonutChart, SentimentScoreCard, StockDetailNewsFeed } from '@/components/stock-detail';
 import { mockStockSentiment, mockAIOutlook } from '@/lib/api';
@@ -28,25 +26,15 @@ export default function StockDetailPage() {
 
   if (!row) {
     return (
-      <div className="flex h-full bg-[#0a1017]">
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <TopBar showBack />
-          <div className="flex-1 flex items-center justify-center">
-            <p className="text-slate-400 text-sm">No sentiment data found for <span className="text-[#0D7FF2] font-bold">${symbol}</span></p>
-          </div>
-        </div>
-        <RightSidebar />
+      <div className="flex-1 flex items-center justify-center">
+        <p className="text-slate-400 text-sm">No sentiment data found for <span className="text-[#0D7FF2] font-bold">${symbol}</span></p>
       </div>
     );
   }
 
   return (
     <TooltipProvider>
-      <div className="flex h-full bg-[#0a1017]">
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <TopBar showBack />
-
-          <div className="flex-1 overflow-y-auto pb-27 lg:pb-0">
+      <div className="flex-1 overflow-y-auto pb-27 lg:pb-0">
             <div className="px-6 py-5 flex items-center justify-between">
               <h1 className="text-lg font-extrabold text-white uppercase tracking-wide">
                 <span className="text-white">${symbol}</span>
@@ -73,10 +61,6 @@ export default function StockDetailPage() {
               <StockDetailNewsFeed symbol={symbol} />
             </div>
           </div>
-        </div>
-
-        <RightSidebar />
-      </div>
     </TooltipProvider>
   );
 }
