@@ -4,9 +4,8 @@ import { Fragment, useMemo, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { mockNews } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
-import TopBar from '@/components/layout/TopBar';
+import { usePageLayout } from '@/hooks/usePageLayout';
 import NewsCard from '@/components/news/NewsCard';
-import NewsCardSkeleton from '@/components/news/NewsCardSkeleton';
 import { TelegramStatusWidget } from '@/components/watchlist';
 import { mockTelegramNotifications } from '@/lib/api';
 import MobileSentimentToggle from '@/components/news/MobileSentimentToggle';
@@ -41,6 +40,25 @@ export default function TickerDetailPage() {
   const selectedSymbols = useTerminalStore((s) => s.selectedSymbols);
   const userPlan = useTerminalStore((s) => s.userPlan);
   const mobileSentiment = useTerminalStore((s) => s.mobileSentiment);
+
+  // Memoize custom sidebar to prevent recreation on every render
+  const customSidebar = useMemo(
+    () => (
+      <aside className="hidden xl:flex w-80 shrink-0 border-l border-[#222F44] overflow-y-auto p-4 flex-col gap-4 bg-[#0a1017]">
+        <TelegramStatusWidget
+          trackedSymbols={[symbol]}
+          notifications={mockTelegramNotifications}
+        />
+      </aside>
+    ),
+    [symbol]
+  );
+
+  // Custom sidebar for ticker detail
+  usePageLayout({
+    useDefaultSidebar: false,
+    rightSidebar: customSidebar,
+  });
 
   // Find ticker name from news data
   const tickerName = useMemo(() => {
@@ -88,11 +106,7 @@ export default function TickerDetailPage() {
 
   if (userPlan === 'free') {
     return (
-      <div className="flex h-full bg-[#0a1017]">
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <PremiumLock featureName="Ticker Detail" />
-        </div>
-      </div>
+      <PremiumLock featureName="Ticker Detail" />
     );
   }
 
@@ -103,11 +117,8 @@ export default function TickerDetailPage() {
   const TrendIcon = trendConfig[trend].icon;
 
   return (
-    <div className="flex h-full bg-[#0a1017]">
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <TopBar />
-
-        <div className="flex-1 overflow-y-auto pb-28 lg:pb-0">
+    <>
+      <div className="flex-1 overflow-y-auto pb-28 lg:pb-0">
           {/* Ticker Header */}
           <div className="px-6 py-5">
             <div className="flex items-center justify-between">
@@ -187,15 +198,7 @@ export default function TickerDetailPage() {
                   )}
                 </div>
               </div>
-        </div>
       </div>
-
-      <aside className="hidden xl:flex w-80 shrink-0 border-l border-[#222F44] overflow-y-auto p-4 flex-col gap-4 bg-[#0a1017]">
-        <TelegramStatusWidget
-          trackedSymbols={[symbol]}
-          notifications={mockTelegramNotifications}
-        />
-      </aside>
-    </div>
+    </>
   );
 }

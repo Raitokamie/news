@@ -1,8 +1,6 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import TopBar from '@/components/layout/TopBar';
-import RightSidebar from '@/components/layout/RightSidebar';
 import RangeDropdown, { RangeOption } from '@/components/filters/RangeDropdown';
 import { TrendingUp } from 'lucide-react';
 import { TrendFilter, TickerAnalysis } from '@/lib/types';
@@ -64,51 +62,44 @@ export default function MarketTrendsPage() {
   }, [activeFilter, filteredTrends]);
 
   return (
-    <div className="flex h-full bg-[#0a1017]">
-      {/* Left — TopBar + Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <TopBar />
-
-        {/* Center content area */}
-        <div className="flex-1 overflow-y-auto pb-28 lg:pb-0">
-          {/* Header */}
-          <div className="px-6 py-5 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <TrendingUp size={20} className="text-white" />
-              <h1 className="text-lg font-extrabold text-white uppercase tracking-wide">
-                TRENDING
-              </h1>
-            </div>
-
-            <RangeDropdown
-              options={rangeOptions}
-              value={selectedRange}
-              onChange={setSelectedRange}
-            />
+    <>
+      {/* Center content area */}
+      <div className="flex-1 overflow-y-auto pb-28 lg:pb-0">
+        {/* Header */}
+        <div className="px-6 py-5 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <TrendingUp size={20} className="text-white" />
+            <h1 className="text-lg font-extrabold text-white uppercase tracking-wide">
+              TRENDING
+            </h1>
           </div>
 
-          {/* Content */}
-          <div className="pl-6 pr-8 pb-6 pt-0 flex flex-col gap-4">
-            {/* Top Stock Cards */}
-            <TopStocksRow items={sortedTopStocks} />
-          </div>
+          <RangeDropdown
+            options={rangeOptions}
+            value={selectedRange}
+            onChange={setSelectedRange}
+          />
+        </div>
 
-          {/* Filter Tabs - outside content padding */}
-          <div className="px-4 md:px-6 pb-4">
-            <TrendFilterTabs
-              activeFilter={activeFilter}
-              onFilterChange={setActiveFilter}
-            />
-          </div>
+        {/* Content */}
+        <div className="pl-6 pr-8 pb-6 pt-0 flex flex-col gap-4">
+          {/* Top Stock Cards */}
+          <TopStocksRow items={sortedTopStocks} />
+        </div>
 
-          {/* Data Table */}
-          <div className="px-6 pb-6">
-            <TrendDataTable key={activeFilter} items={filteredTrends} />
-          </div>
+        {/* Filter Tabs - outside content padding */}
+        <div className="px-4 md:px-6 pb-4">
+          <TrendFilterTabs
+            activeFilter={activeFilter}
+            onFilterChange={setActiveFilter}
+          />
+        </div>
+
+        {/* Data Table */}
+        <div className="px-6 pb-6">
+          <TrendDataTable key={activeFilter} items={filteredTrends} />
         </div>
       </div>
-
-      <RightSidebar />
-    </div>
+    </>
   );
 }

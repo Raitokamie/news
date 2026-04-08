@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import TopBar from '@/components/layout/TopBar';
+import { useState, useMemo } from 'react';
 import { useTerminalStore } from '@/lib/store';
+import { usePageLayout } from '@/hooks/usePageLayout';
 import { mockTelegramNotifications } from '@/lib/api';
 import {
   WatchlistHeader,
@@ -17,23 +17,34 @@ export default function WatchlistPage() {
   const { trackedTickers, addTicker, removeTicker, userPlan } = useTerminalStore();
   const [addModalOpen, setAddModalOpen] = useState(false);
 
+  // Memoize custom sidebar to prevent recreation on every render
+  const customSidebar = useMemo(
+    () => (
+      <aside className="hidden xl:flex w-80 shrink-0 border-l border-[#222F44] overflow-y-auto p-4 flex-col gap-4 bg-[#0a1017]">
+        <TelegramStatusWidget
+          trackedSymbols={trackedTickers}
+          notifications={mockTelegramNotifications}
+        />
+      </aside>
+    ),
+    [trackedTickers]
+  );
+
+  // Custom sidebar for watchlist
+  usePageLayout({
+    useDefaultSidebar: false,
+    rightSidebar: customSidebar,
+  });
+
   if (userPlan === 'free') {
     return (
-      <div className="flex h-full bg-[#0a1017]">
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <PremiumLock featureName="Watchlist" />
-        </div>
-      </div>
+      <PremiumLock featureName="Watchlist" />
     );
   }
 
   return (
-    <div className="flex h-full bg-[#0a1017]">
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <TopBar />
-
-        <div className="flex-1 overflow-y-auto pb-28 lg:pb-0">
+    <>
+      <div className="flex-1 overflow-y-auto pb-28 lg:pb-0">
           {/* Header with ADD button */}
           <div className="relative">
             <WatchlistHeader onAddClick={() => setAddModalOpen(!addModalOpen)} />
@@ -54,15 +65,6 @@ export default function WatchlistPage() {
             <WatchlistActivityFeed trackedSymbols={trackedTickers} />
           </div>
         </div>
-      </div>
-
-      {/* Right Sidebar */}
-      <aside className="hidden xl:flex w-80 shrink-0 border-l border-[#222F44] overflow-y-auto p-4 flex-col gap-4 bg-[#0a1017]">
-        <TelegramStatusWidget
-          trackedSymbols={trackedTickers}
-          notifications={mockTelegramNotifications}
-        />
-      </aside>
-    </div>
+    </>
   );
 }
