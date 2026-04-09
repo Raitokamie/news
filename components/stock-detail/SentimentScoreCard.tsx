@@ -2,7 +2,7 @@
 
 import { TrendingUp, TrendingDown, Minus, Sparkles, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import Tooltip, { TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/Tooltip';
+import Tooltip, { TooltipProvider } from '@/components/ui/Tooltip';
 
 const sentimentConfig = {
   up: { label: 'Positive', icon: TrendingUp, textColor: 'text-[#22C55E]', iconColor: 'text-[#10B981]', bg: 'bg-[#17382D]', border: 'border-[#10B981]/30' },

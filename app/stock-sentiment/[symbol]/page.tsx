@@ -34,7 +34,7 @@ export default function StockDetailPage() {
 
   return (
     <TooltipProvider>
-      <div className="flex-1 overflow-y-auto pb-27 lg:pb-0">
+      <div className="flex-1 overflow-y-auto pb-28 lg:pb-0">
             <div className="px-6 py-5 flex items-center justify-between">
               <h1 className="text-lg font-extrabold text-white uppercase tracking-wide">
                 <span className="text-white">${symbol}</span>

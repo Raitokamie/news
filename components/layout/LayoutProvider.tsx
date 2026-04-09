@@ -7,6 +7,8 @@ interface LayoutContextValue {
   setRightSidebarContent: (content: ReactNode | null) => void;
   useDefaultRightSidebar: boolean;
   setUseDefaultRightSidebar: (use: boolean) => void;
+  showTopBar: boolean;
+  setShowTopBar: (show: boolean) => void;
 }
 
 const LayoutContext = createContext<LayoutContextValue | undefined>(undefined);
@@ -14,6 +16,7 @@ const LayoutContext = createContext<LayoutContextValue | undefined>(undefined);
 export function LayoutProvider({ children }: { children: ReactNode }) {
   const [rightSidebarContent, setRightSidebarContentState] = useState<ReactNode | null>(null);
   const [useDefaultRightSidebar, setUseDefaultRightSidebarState] = useState(true);
+  const [showTopBar, setShowTopBarState] = useState(true);
 
   const setRightSidebarContent = useCallback((content: ReactNode | null) => {
     setRightSidebarContentState(content);
@@ -23,6 +26,10 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
     setUseDefaultRightSidebarState(use);
   }, []);
 
+  const setShowTopBar = useCallback((show: boolean) => {
+    setShowTopBarState(show);
+  }, []);
+
   return (
     <LayoutContext.Provider
       value={{
@@ -30,6 +37,8 @@ export function LayoutProvider({ children }: { children: ReactNode }) {
         setRightSidebarContent,
         useDefaultRightSidebar,
         setUseDefaultRightSidebar,
+        showTopBar,
+        setShowTopBar,
       }}
     >
       {children}

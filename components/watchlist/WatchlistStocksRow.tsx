@@ -87,7 +87,7 @@ export default function WatchlistStocksRow({ trackedSymbols, onRemove, isLoading
   return (
     <>
       {/* Mobile: Horizontal scroll */}
-      <div className="flex gap-4 overflow-x-auto pb-2 sm:hidden snap-x snap-mandatory scrollbar-hide">
+      <div className="flex gap-4 overflow-x-auto pt-2 pb-2 pr-2 sm:hidden snap-x snap-mandatory scrollbar-hide">
         {trackedStocks.map((item) => (
           <div key={item.symbol} className="flex-shrink-0 w-[280px] snap-start">
             <StockCard item={item} onRemove={onRemove} />

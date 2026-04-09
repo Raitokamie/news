@@ -78,9 +78,9 @@ export default function StockCard({ item, onRemove }: StockCardProps) {
       {onRemove && (
         <button
           onClick={(e) => { e.stopPropagation(); onRemove(item.symbol); tickerToast.removed(item.symbol, 'watchlist'); }}
-          className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#333333] border border-[#222F44] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500/20 hover:border-red-500/40 z-10"
+          className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-red-500/20 border border-red-500/40 flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity hover:bg-red-500/40 z-10"
         >
-          <X size={12} className="text-slate-400 hover:text-red-400" />
+          <X size={12} className="text-red-400" />
         </button>
       )}
     </div>

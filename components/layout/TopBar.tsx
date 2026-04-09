@@ -1,16 +1,19 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { Search, Bell, Menu, X, ArrowLeft } from 'lucide-react';
 import { useTerminalStore } from '@/lib/store';
 import SearchOverlay from '@/components/search/SearchOverlay';
 
-interface TopBarProps {
-  showBack?: boolean;
-}
+const DETAIL_PAGE_PATTERNS = [
+  /^\/stock-sentiment\/.+/,
+  /^\/ticker\/.+/,
+];
 
-export default function TopBar({ showBack }: TopBarProps) {
+export default function TopBar() {
   const router = useRouter();
+  const pathname = usePathname();
+  const showBack = DETAIL_PAGE_PATTERNS.some((p) => p.test(pathname));
   const { toggleSidebar, searchOverlayOpen, openSearchOverlay, selectedSymbols, removeSymbol, clearSymbols } = useTerminalStore();
 
   return (

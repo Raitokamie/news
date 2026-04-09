@@ -11,15 +11,17 @@ interface PageContentProps {
 }
 
 export default function PageContent({ children }: PageContentProps) {
-  const { rightSidebarContent, useDefaultRightSidebar } = useLayout();
+  const { rightSidebarContent, useDefaultRightSidebar, showTopBar } = useLayout();
 
   return (
     <div className="flex h-full bg-[#0a1017]">
       {/* Main content area */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <ErrorBoundary>
-          <TopBar />
-        </ErrorBoundary>
+        {showTopBar && (
+          <ErrorBoundary>
+            <TopBar />
+          </ErrorBoundary>
+        )}
         {children}
       </div>
 

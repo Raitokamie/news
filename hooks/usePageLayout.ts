@@ -10,8 +10,9 @@ import { useLayout } from '@/components/layout/LayoutProvider';
 export function usePageLayout(options?: {
   rightSidebar?: ReactNode | null;
   useDefaultSidebar?: boolean;
+  showTopBar?: boolean;
 }) {
-  const { setRightSidebarContent, setUseDefaultRightSidebar } = useLayout();
+  const { setRightSidebarContent, setUseDefaultRightSidebar, setShowTopBar } = useLayout();
   const isInitialMount = useRef(true);
 
   useEffect(() => {
@@ -22,6 +23,9 @@ export function usePageLayout(options?: {
     if (options?.useDefaultSidebar !== undefined) {
       setUseDefaultRightSidebar(options.useDefaultSidebar);
     }
+    if (options?.showTopBar !== undefined) {
+      setShowTopBar(options.showTopBar);
+    }
 
     isInitialMount.current = false;
 
@@ -29,12 +33,15 @@ export function usePageLayout(options?: {
     return () => {
       setRightSidebarContent(null);
       setUseDefaultRightSidebar(true);
+      setShowTopBar(true);
     };
   }, [
     // Only depend on boolean flag, not the ReactNode content itself
     options?.useDefaultSidebar,
+    options?.showTopBar,
     setRightSidebarContent,
     setUseDefaultRightSidebar,
+    setShowTopBar,
   ]);
 
   // Update sidebar content when it changes (but not on every render)
