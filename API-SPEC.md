@@ -5,25 +5,39 @@ Base URL: `https://api.ideatrade1.com` (หรือตามที่ backend �
 
 ---
 
-## Error Response Format
+## Standard Response Format
 
-ทุก error ใช้ format เดียวกัน:
+ทุก API ยึด format เดียวกัน โดยมีโครงสร้างหลักคือ `code`, `status`, `data` เพื่อความสอดคล้องกันทั้งกรณี Success และ Error
+
+### Success Format (2xx)
 
 ```json
 {
-  "error": {
-    "code": "ERROR_CODE",
-    "message": "Human-readable message",
-    "status": 400
+  "code": 200,
+  "status": "success",
+  "data": {
+    // ข้อมูลกระดาษของแต่ละ API (และ pagination ถ้ามี)
   }
 }
 ```
 
-| Field     | Type   | คำอธิบาย                           |
-| --------- | ------ | ---------------------------------- |
-| `code`    | string | Machine-readable error code (UPPER_SNAKE_CASE) |
-| `message` | string | ข้อความอธิบาย error               |
-| `status`  | number | HTTP status code (ซ้ำกับ header)  |
+### Error Format (4xx, 5xx)
+
+```json
+{
+  "code": 400,
+  "status": "ERROR_CODE_STRING",
+  "message": "Human-readable message",
+  "data": null
+}
+```
+
+| Field     | Type         | คำอธิบาย                                                   |
+| --------- | ------------ | ---------------------------------------------------------- |
+| `code`    | number       | HTTP status code (เช่น 200, 400, 401, 500)                 |
+| `status`  | string       | `"success"` สำหรับสำเร็จ หรือ `"UPPER_SNAKE_CASE"` สำหรับระบุชนิด Error  |
+| `message` | string       | ข้อความอธิบายเพิ่มเติม (มีเฉพาะกรณี error หรือ fallback)             |
+| `data`    | object/array | ข้อมูลผลลัพธ์ (จะเป็น `null` กรณีเกิด error)                   |
 
 ---
 
@@ -106,8 +120,12 @@ GET /health
 
 ```json
 {
-  "status": "ok",
-  "timestamp": "2026-03-30T12:00:00.000Z"
+  "code": 200,
+  "status": "success",
+  "data": {
+    "nodeStatus": "ok",
+    "timestamp": "2026-03-30T12:00:00.000Z"
+  }
 }
 ```
 
@@ -115,8 +133,13 @@ GET /health
 
 ```json
 {
-  "status": "degraded",
-  "timestamp": "2026-03-30T12:00:00.000Z"
+  "code": 503,
+  "status": "DEGRADED",
+  "message": "Service degraded",
+  "data": {
+    "nodeStatus": "degraded",
+    "timestamp": "2026-03-30T12:00:00.000Z"
+  }
 }
 ```
 
@@ -161,8 +184,12 @@ Content-Type: application/json
 
 ```json
 {
-  "accessToken": "<ACCESS_TOKEN>",
-  "refreshToken": "<REFRESH_TOKEN>"
+  "code": 200,
+  "status": "success",
+  "data": {
+    "accessToken": "<ACCESS_TOKEN>",
+    "refreshToken": "<REFRESH_TOKEN>"
+  }
 }
 ```
 
@@ -170,11 +197,10 @@ Content-Type: application/json
 
 ```json
 {
-  "error": {
-    "code": "INVALID_AUTHORIZATION_CODE",
-    "message": "Authorization code is invalid or expired",
-    "status": 400
-  }
+  "code": 400,
+  "status": "INVALID_AUTHORIZATION_CODE",
+  "message": "Authorization code is invalid or expired",
+  "data": null
 }
 ```
 
@@ -197,8 +223,12 @@ Content-Type: application/json
 
 ```json
 {
-  "accessToken": "<NEW_ACCESS_TOKEN>",
-  "refreshToken": "<NEW_REFRESH_TOKEN>"
+  "code": 200,
+  "status": "success",
+  "data": {
+    "accessToken": "<NEW_ACCESS_TOKEN>",
+    "refreshToken": "<NEW_REFRESH_TOKEN>"
+  }
 }
 ```
 
@@ -206,11 +236,10 @@ Content-Type: application/json
 
 ```json
 {
-  "error": {
-    "code": "REFRESH_TOKEN_EXPIRED",
-    "message": "Refresh token expired or already used",
-    "status": 401
-  }
+  "code": 401,
+  "status": "REFRESH_TOKEN_EXPIRED",
+  "message": "Refresh token expired or already used",
+  "data": null
 }
 ```
 
@@ -235,7 +264,11 @@ Authorization: Bearer <access_token>
 **Response 200:**
 
 ```json
-{ "success": true }
+{
+  "code": 200,
+  "status": "success",
+  "data": null
+}
 ```
 
 > Frontend จะลบ token ออกจาก storage + redirect ไปหน้า login
@@ -253,11 +286,15 @@ Authorization: Bearer <access_token>
 
 ```json
 {
-  "id": "user_123",
-  "name": "John Doe",
-  "email": "john@example.com",
-  "avatar": "https://...",
-  "plan": "premium"
+  "code": 200,
+  "status": "success",
+  "data": {
+    "id": "user_123",
+    "name": "John Doe",
+    "email": "john@example.com",
+    "avatar": "https://...",
+    "plan": "premium"
+  }
 }
 ```
 
@@ -267,11 +304,10 @@ Authorization: Bearer <access_token>
 
 ```json
 {
-  "error": {
-    "code": "UNAUTHORIZED",
-    "message": "Unauthorized",
-    "status": 401
-  }
+  "code": 401,
+  "status": "UNAUTHORIZED",
+  "message": "Unauthorized",
+  "data": null
 }
 ```
 
@@ -301,32 +337,36 @@ GET /news?range=24h
 
 ```json
 {
-  "data": [
-    {
-      "id": "1",
-      "headline": "DOJ Closing Arguments Focus on Google's Default Search Deals",
-      "body": "The landmark trial enters its final phase...",
-      "sources": [{ "name": "REUTERS", "url": "https://...", "publishedAt": "2026-03-25T09:45:00Z" }],
-      "publishedAt": "2026-03-25T10:00:00Z",
-      "regionTag": "us",
-      "countryCode": "us",
-      "category": "tech",
-      "impact": "high",
-      "sentiment": "bad",
-      "tickers": [
-        {
-          "symbol": "GOOGL",
-          "name": "Alphabet Inc.",
-          "sentiment": "down",
-          "sentimentScore": -7
-        }
-      ],
-      "narrativeGroupId": "ng-google-antitrust",
-      "logoUrl": "https://cdn.example.com/logos/reuters.png",
-      "imageUrl": "https://cdn.example.com/images/news-1.jpg"
-    }
-  ],
-  "total": 150
+  "code": 200,
+  "status": "success",
+  "data": {
+    "items": [
+      {
+        "id": "1",
+        "headline": "DOJ Closing Arguments Focus on Google's Default Search Deals",
+        "body": "The landmark trial enters its final phase...",
+        "sources": [{ "name": "REUTERS", "url": "https://...", "publishedAt": "2026-03-25T09:45:00Z" }],
+        "publishedAt": "2026-03-25T10:00:00Z",
+        "regionTag": "us",
+        "countryCode": "us",
+        "category": "tech",
+        "impact": "high",
+        "sentiment": "bad",
+        "tickers": [
+          {
+            "symbol": "GOOGL",
+            "name": "Alphabet Inc.",
+            "sentiment": "down",
+            "sentimentScore": -7
+          }
+        ],
+        "narrativeGroupId": "ng-google-antitrust",
+        "logoUrl": "https://cdn.example.com/logos/reuters.png",
+        "imageUrl": "https://cdn.example.com/images/news-1.jpg"
+      }
+    ],
+    "total": 150
+  }
 }
 ```
 
@@ -394,6 +434,8 @@ GET /tickers/search?q=goo&limit=10
 
 ```json
 {
+  "code": 200,
+  "status": "success",
   "data": [
     { "symbol": "GOOGL", "name": "Alphabet Inc." },
     { "symbol": "GOOG", "name": "Alphabet Inc. (Class C)" }
@@ -429,29 +471,33 @@ Authorization: Bearer <access_token>
 
 ```json
 {
-  "data": [
-    {
-      "id": "3",
-      "headline": "Nvidia Accelerates Data Center Dominance...",
-      "body": "$NVDA begins mass shipments of GB200 Blackwell GPUs...",
-      "sources": [{ "name": "REUTERS", "url": "https://...", "publishedAt": "2026-03-25T09:40:00Z" }],
-      "publishedAt": "2026-03-25T09:48:00Z",
-      "regionTag": "us",
-      "countryCode": "us",
-      "category": "tech",
-      "impact": "high",
-      "sentiment": "good",
-      "tickers": [
-        { "symbol": "NVDA", "name": "NVIDIA Corporation", "sentiment": "up", "sentimentScore": 9 }
-      ],
-      "narrativeGroupId": "ng-tech-earnings",
-      "logoUrl": "https://cdn.example.com/logos/nvidia.png",
-      "imageUrl": "https://cdn.example.com/images/news-3.jpg"
-    }
-  ],
-  "total": 85,
-  "page": 1,
-  "limit": 50
+  "code": 200,
+  "status": "success",
+  "data": {
+    "items": [
+      {
+        "id": "3",
+        "headline": "Nvidia Accelerates Data Center Dominance...",
+        "body": "$NVDA begins mass shipments of GB200 Blackwell GPUs...",
+        "sources": [{ "name": "REUTERS", "url": "https://...", "publishedAt": "2026-03-25T09:40:00Z" }],
+        "publishedAt": "2026-03-25T09:48:00Z",
+        "regionTag": "us",
+        "countryCode": "us",
+        "category": "tech",
+        "impact": "high",
+        "sentiment": "good",
+        "tickers": [
+          { "symbol": "NVDA", "name": "NVIDIA Corporation", "sentiment": "up", "sentimentScore": 9 }
+        ],
+        "narrativeGroupId": "ng-tech-earnings",
+        "logoUrl": "https://cdn.example.com/logos/nvidia.png",
+        "imageUrl": "https://cdn.example.com/images/news-3.jpg"
+      }
+    ],
+    "total": 85,
+    "page": 1,
+    "limit": 50
+  }
 }
 ```
 
@@ -461,11 +507,10 @@ Authorization: Bearer <access_token>
 
 ```json
 {
-  "error": {
-    "code": "PREMIUM_REQUIRED",
-    "message": "Premium required",
-    "status": 403
-  }
+  "code": 403,
+  "status": "PREMIUM_REQUIRED",
+  "message": "Premium required",
+  "data": null
 }
 ```
 
@@ -542,6 +587,8 @@ GET /tickers/analysis?range=24h
 
 ```json
 {
+  "code": 200,
+  "status": "success",
   "data": [
     {
       "symbol": "GOOGL",
@@ -578,10 +625,14 @@ GET /tickers/NVDA/outlook
 
 ```json
 {
-  "symbol": "NVDA",
-  "outlook": "NVIDIA's data center dominance continues to accelerate with the Blackwell architecture launch. Recent supply constraints reflect surging AI infrastructure demand rather than production issues. The company's pricing power remains strong with data center revenue growing 217% YoY. Key risks include potential export restrictions to China and increasing competition from custom AI chips. Near-term sentiment remains bullish but valuation concerns persist at current multiples.",
-  "generatedAt": "2026-03-25T10:15:00Z",
-  "confidenceScore": 0.85
+  "code": 200,
+  "status": "success",
+  "data": {
+    "symbol": "NVDA",
+    "outlook": "NVIDIA's data center dominance continues to accelerate with the Blackwell architecture launch. Recent supply constraints reflect surging AI infrastructure demand rather than production issues. The company's pricing power remains strong with data center revenue growing 217% YoY. Key risks include potential export restrictions to China and increasing competition from custom AI chips. Near-term sentiment remains bullish but valuation concerns persist at current multiples.",
+    "generatedAt": "2026-03-25T10:15:00Z",
+    "confidenceScore": 0.85
+  }
 }
 ```
 
@@ -589,11 +640,10 @@ GET /tickers/NVDA/outlook
 
 ```json
 {
-  "error": {
-    "code": "TICKER_NOT_FOUND",
-    "message": "Ticker not found or insufficient data for analysis",
-    "status": 404
-  }
+  "code": 404,
+  "status": "TICKER_NOT_FOUND",
+  "message": "Ticker not found or insufficient data for analysis",
+  "data": null
 }
 ```
 
@@ -626,13 +676,17 @@ Authorization: Bearer <access_token>
 
 ```json
 {
-  "tickers": ["NVDA", "GOOGL", "TSLA", "AAPL"]
+  "code": 200,
+  "status": "success",
+  "data": {
+    "tickers": ["NVDA", "GOOGL", "TSLA", "AAPL"]
+  }
 }
 ```
 
-> ถ้า user ยังไม่เคยตั้งค่า → return `{ "tickers": [] }` (หน้าเปล่า ให้ user เลือกเอง เพื่อไม่ให้ซ้ำกับหน้า Market Trends)
+> ถ้า user ยังไม่เคยตั้งค่า → return `{ "code": 200, "status": "success", "data": { "tickers": [] } }` (หน้าเปล่า ให้ user เลือกเอง เพื่อไม่ให้ซ้ำกับหน้า Market Trends)
 
-**Response 401:** ไม่ได้ login → return `{ "tickers": [] }` ฝั่ง frontend แสดง empty state
+**Response 401:** ไม่ได้ login → return `{ "code": 200, "status": "success", "data": { "tickers": [] } }` ฝั่ง frontend แสดง empty state
 
 ---
 
@@ -649,7 +703,13 @@ Content-Type: application/json
 **Response 200:**
 
 ```json
-{ "success": true, "tickers": ["NVDA", "GOOGL", "TSLA", "AAPL", "MSFT"] }
+{
+  "code": 200,
+  "status": "success",
+  "data": {
+    "tickers": ["NVDA", "GOOGL", "TSLA", "AAPL", "MSFT"]
+  }
+}
 ```
 
 ---
@@ -664,7 +724,13 @@ Authorization: Bearer <access_token>
 **Response 200:**
 
 ```json
-{ "success": true, "tickers": ["NVDA", "GOOGL", "TSLA", "AAPL"] }
+{
+  "code": 200,
+  "status": "success",
+  "data": {
+    "tickers": ["NVDA", "GOOGL", "TSLA", "AAPL"]
+  }
+}
 ```
 
 ---
@@ -690,11 +756,10 @@ Authorization: Bearer <access_token>
 
 ```json
 {
-  "error": {
-    "code": "PREMIUM_REQUIRED",
-    "message": "Premium required",
-    "status": 403
-  }
+  "code": 403,
+  "status": "PREMIUM_REQUIRED",
+  "message": "Premium required",
+  "data": null
 }
 ```
 
@@ -713,18 +778,23 @@ Content-Type: application/json
 **Response 200:**
 
 ```json
-{ "success": true, "tickers": ["NVDA", "TSLA", "AAPL", "GOOGL", "MSFT"] }
+{
+  "code": 200,
+  "status": "success",
+  "data": {
+    "tickers": ["NVDA", "TSLA", "AAPL", "GOOGL", "MSFT"]
+  }
+}
 ```
 
 **Response 400:** watchlist เต็ม (สูงสุด 50 ตัว)
 
 ```json
 {
-  "error": {
-    "code": "WATCHLIST_LIMIT_REACHED",
-    "message": "Watchlist limit reached (max 50)",
-    "status": 400
-  }
+  "code": 400,
+  "status": "WATCHLIST_LIMIT_REACHED",
+  "message": "Watchlist limit reached (max 50)",
+  "data": null
 }
 ```
 
@@ -740,7 +810,13 @@ Authorization: Bearer <access_token>
 **Response 200:**
 
 ```json
-{ "success": true, "tickers": ["NVDA", "TSLA", "AAPL", "GOOGL"] }
+{
+  "code": 200,
+  "status": "success",
+  "data": {
+    "tickers": ["NVDA", "TSLA", "AAPL", "GOOGL"]
+  }
+}
 ```
 
 ---
@@ -758,8 +834,12 @@ Authorization: Bearer <access_token>
 
 ```json
 {
-  "connected": true,
-  "botUrl": "https://t.me/ImpactTerminalBot?start=<user_token>"
+  "code": 200,
+  "status": "success",
+  "data": {
+    "connected": true,
+    "botUrl": "https://t.me/ImpactTerminalBot?start=<user_token>"
+  }
 }
 ```
 
@@ -775,7 +855,13 @@ Authorization: Bearer <access_token>
 **Response 200:**
 
 ```json
-{ "connected": false }
+{
+  "code": 200,
+  "status": "success",
+  "data": {
+    "connected": false
+  }
+}
 ```
 
 ---
@@ -791,19 +877,23 @@ Authorization: Bearer <access_token>
 
 ```json
 {
-  "connected": true,
-  "notifications": [
-    {
-      "symbol": "NVDA",
-      "status": "SENT",
-      "timestamp": "2026-03-25T10:00:00Z"
-    },
-    {
-      "symbol": "TSLA",
-      "status": "FAILED",
-      "timestamp": "2026-03-25T09:55:00Z"
-    }
-  ]
+  "code": 200,
+  "status": "success",
+  "data": {
+    "connected": true,
+    "notifications": [
+      {
+        "symbol": "NVDA",
+        "status": "SENT",
+        "timestamp": "2026-03-25T10:00:00Z"
+      },
+      {
+        "symbol": "TSLA",
+        "status": "FAILED",
+        "timestamp": "2026-03-25T09:55:00Z"
+      }
+    ]
+  }
 }
 ```
 
