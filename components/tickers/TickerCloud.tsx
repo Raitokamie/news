@@ -17,7 +17,7 @@ function buildRankedTickers(): RankedTicker[] {
   const latestMap = new Map<string, { name: string; score: number; time: number }>();
 
   for (const news of mockNews) {
-    const time = news.publishedAt.getTime();
+    const time = new Date(news.publishedAt).getTime();
     for (const ticker of news.tickers) {
       const existing = latestMap.get(ticker.symbol);
       if (!existing || time > existing.time) {

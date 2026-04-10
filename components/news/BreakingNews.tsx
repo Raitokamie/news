@@ -103,14 +103,14 @@ export default function BreakingNews() {
     const now = new Date();
     const cutoff = new Date(now.getTime() - HOURS_24);
     let items = mockNews
-      .filter((n) => n.impact === 'high' && n.publishedAt >= cutoff);
+      .filter((n) => n.impact === 'high' && new Date(n.publishedAt) >= cutoff);
 
     if (activeCategory !== 'all') {
       items = items.filter((n) => n.category === activeCategory);
     }
 
     // Sort by latest first
-    items.sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
+    items.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 
     return items.slice(0, 3);
   }, [activeCategory]);

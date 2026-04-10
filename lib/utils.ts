@@ -5,8 +5,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function timeAgo(date: Date): string {
-  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+export function toDate(d: string | Date): Date {
+  return d instanceof Date ? d : new Date(d);
+}
+
+export function timeAgo(date: string | Date): string {
+  const seconds = Math.floor((Date.now() - toDate(date).getTime()) / 1000);
   if (seconds < 60) return `${seconds} SEC AGO`;
   const minutes = Math.floor(seconds / 60);
   if (minutes < 60) return `${minutes} MIN AGO`;

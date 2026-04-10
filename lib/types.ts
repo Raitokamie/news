@@ -28,7 +28,7 @@ export interface NewsItem {
   headline: string;
   body: string;
   sources: { name: string; url: string }[];
-  publishedAt: Date;
+  publishedAt: string | Date;
   regionTag: RegionTab;
   countryCode: Region;
   category: Category;
@@ -60,7 +60,7 @@ export interface TickerAnalysis {
 export interface LiveUpdate {
   headline: string;
   shortHeadline: string;
-  publishedAt: Date;
+  publishedAt: string | Date;
 }
 
 export interface NarrativeGroup {
@@ -75,5 +75,5 @@ export type TrendFilter = 'all' | 'top_positive' | 'top_negative' | 'most_mentio
 export interface TelegramNotificationStatus {
   symbol: string;
   status: 'SENT' | 'FAILED' | 'PROCESSING';
-  timestamp: Date;
+  timestamp: string | Date;
 }

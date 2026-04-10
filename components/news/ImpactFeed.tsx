@@ -75,7 +75,7 @@ export default function ImpactFeed() {
 
     // Dashboard: only last 24 hours
     const cutoff = new Date(now.getTime() - HOURS_24);
-    items = items.filter((n) => n.publishedAt >= cutoff);
+    items = items.filter((n) => new Date(n.publishedAt) >= cutoff);
 
     // Filter by category
     if (activeCategory !== 'all') {
@@ -166,12 +166,12 @@ export default function ImpactFeed() {
     const impactOrder: Record<string, number> = { high: 0, medium: 1, low: 2 };
     if (sortOrder === 'latest') {
       return [...list].sort((a, b) => {
-        const timeDiff = b.publishedAt.getTime() - a.publishedAt.getTime();
+        const timeDiff = new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
         return timeDiff !== 0 ? timeDiff : impactOrder[a.impact] - impactOrder[b.impact];
       });
     } else if (sortOrder === 'oldest') {
       return [...list].sort((a, b) => {
-        const timeDiff = a.publishedAt.getTime() - b.publishedAt.getTime();
+        const timeDiff = new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime();
         return timeDiff !== 0 ? timeDiff : impactOrder[a.impact] - impactOrder[b.impact];
       });
     } else if (sortOrder === 'impact') {

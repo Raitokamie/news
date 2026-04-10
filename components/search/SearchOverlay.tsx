@@ -219,7 +219,7 @@ export default function SearchOverlay() {
 
   const filteredNews = useMemo<NewsItem[]>(() => {
     // Sort by latest first
-    const sorted = [...mockNews].sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
+    const sorted = [...mockNews].sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
     if (!query.trim()) return sorted; // Show all news instead of just top 10/20
     return sorted.filter((n) =>
       fuzzyMatch(query, n.headline, n.body, n.category, n.sources[0]?.name || '', ...n.tickers.map((t) => t.symbol), ...n.tickers.map((t) => t.name))

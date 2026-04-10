@@ -1,7 +1,7 @@
 'use client';
 
 import { Fragment, useMemo, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { mockNews } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
 import { usePageLayout } from '@/hooks/usePageLayout';
@@ -10,7 +10,7 @@ import { TelegramStatusWidget } from '@/components/watchlist';
 import { mockTelegramNotifications } from '@/lib/api';
 import MobileSentimentToggle from '@/components/news/MobileSentimentToggle';
 import RangeDropdown, { RangeOption as RangeDropdownOption } from '@/components/filters/RangeDropdown';
-import { ArrowLeft, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import PremiumLock from '@/components/premium/PremiumLock';
 
@@ -90,7 +90,7 @@ export default function TickerDetailPage() {
 
     // Filter by range
     const cutoff = new Date(now.getTime() - RANGE_MS[range]);
-    items = items.filter((n) => n.publishedAt >= cutoff);
+    items = items.filter((n) => new Date(n.publishedAt) >= cutoff);
 
     // Filter by selected symbols
     if (selectedSymbols.length > 0) {
@@ -100,7 +100,7 @@ export default function TickerDetailPage() {
     }
 
     // Sort latest first
-    items = [...items].sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
+    items = [...items].sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
     return items;
   }, [symbol, range, selectedSymbols]);
 
@@ -122,18 +122,10 @@ export default function TickerDetailPage() {
           {/* Ticker Header */}
           <div className="px-6 py-5">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={() => router.back()}
-                  className="w-8 h-8 rounded-lg bg-[#1A1A1A] border border-[#222F44] flex items-center justify-center hover:bg-[#2A2A2A] transition-colors"
-                >
-                  <ArrowLeft size={16} className="text-white" />
-                </button>
-                <div className="flex items-center gap-3">
-                  <h1 className="text-2xl font-extrabold text-white">${symbol}</h1>
-                  <div className={cn('w-8 h-8 rounded-full flex items-center justify-center', trendConfig[trend].bg)}>
-                    <TrendIcon size={16} className={trendConfig[trend].color} />
-                  </div>
+              <div className="flex items-center gap-3">
+                <h1 className="text-2xl font-extrabold text-white">${symbol}</h1>
+                <div className={cn('w-8 h-8 rounded-full flex items-center justify-center', trendConfig[trend].bg)}>
+                  <TrendIcon size={16} className={trendConfig[trend].color} />
                 </div>
               </div>
 
@@ -143,7 +135,7 @@ export default function TickerDetailPage() {
                 onChange={setRange}
               />
             </div>
-            <p className="text-[#808080] text-sm mt-1 ml-12">{tickerName}</p>
+            <p className="text-[#808080] text-sm mt-1">{tickerName}</p>
           </div>
 
           {/* News Feed — Mobile */}
