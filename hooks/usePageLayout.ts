@@ -36,7 +36,7 @@ export function usePageLayout(options?: {
       setShowTopBar(true);
     };
   }, [
-    // Only depend on boolean flag, not the ReactNode content itself
+    options?.rightSidebar,
     options?.useDefaultSidebar,
     options?.showTopBar,
     setRightSidebarContent,

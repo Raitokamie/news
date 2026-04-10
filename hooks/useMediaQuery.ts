@@ -13,13 +13,15 @@ import { useEffect, useState } from 'react';
  * const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
  */
 export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState<boolean>(false);
+  const [matches, setMatches] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return window.matchMedia(query).matches;
+    }
+    return false;
+  });
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(query);
-
-    // Set initial value
-    setMatches(mediaQuery.matches);
 
     // Create event listener
     const handler = (e: MediaQueryListEvent) => {
