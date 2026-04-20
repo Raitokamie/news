@@ -34,7 +34,6 @@ const trendConfig = {
 
 export default function TickerDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const symbol = (params.symbol as string).toUpperCase();
   const [range, setRange] = useState<TimeRange>('24h');
   const selectedSymbols = useTerminalStore((s) => s.selectedSymbols);
