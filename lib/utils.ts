@@ -1,0 +1,36 @@
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+export function toDate(d: string | Date): Date {
+  return d instanceof Date ? d : new Date(d);
+}
+
+export function timeAgo(date: string | Date): string {
+  const seconds = Math.floor((Date.now() - toDate(date).getTime()) / 1000);
+  if (seconds < 60) return `${seconds} SEC AGO`;
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} MIN AGO`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} HR AGO`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days} DAY${days > 1 ? 'S' : ''} AGO`;
+  const months = Math.floor(days / 30);
+  return `${months} MONTH${months > 1 ? 'S' : ''} AGO`;
+}
+
+export function formatPrice(price: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+  }).format(price);
+}
+
+export function formatChangePercent(pct: number): string {
+  const sign = pct > 0 ? '+' : '';
+  return `${sign}${pct.toFixed(2)}%`;
+}

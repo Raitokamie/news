@@ -1,0 +1,15 @@
+{
+  "users": {
+    "user-1": {
+      "trackedSymbols": [
+        "AAPL",
+        "TSLA",
+        "MSFT",
+        "GOOGL",
+        "NVDA"
+      ],
+      "telegramChatId": 8715055612
+    }
+  },
+  "pendingLinks": {}
+}
