@@ -17,7 +17,8 @@ export type Category =
   | 'defense'
   | 'banking'
   | 'automotive'
-  | 'trade';
+  | 'trade'
+  | 'entertainment';
 export type ImpactLevel = 'high' | 'medium' | 'low';
 export type Sentiment = 'good' | 'bad' | 'neutral';
 export type SortOrder = 'latest' | 'oldest' | 'impact';
@@ -76,4 +77,16 @@ export interface TelegramNotificationStatus {
   symbol: string;
   status: 'SENT' | 'FAILED' | 'PROCESSING';
   timestamp: string | Date;
+}
+
+export interface AppNotification {
+  id: string;
+  newsId: string;
+  headline: string;
+  impact: ImpactLevel;
+  sentiment: Sentiment;
+  tickers: string[];
+  publishedAt: string | Date;
+  read: boolean;
+  type: 'high-impact' | 'watchlist' | 'both';
 }

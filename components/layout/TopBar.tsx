@@ -1,9 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Search, Bell, Menu, X, ArrowLeft } from 'lucide-react';
 import { useTerminalStore } from '@/lib/store';
 import SearchOverlay from '@/components/search/SearchOverlay';
+import NotificationDropdown from './NotificationDropdown';
 
 const DETAIL_PAGE_PATTERNS = [
   /^\/stock-sentiment\/.+/,
@@ -14,7 +16,8 @@ export default function TopBar() {
   const router = useRouter();
   const pathname = usePathname();
   const showBack = DETAIL_PAGE_PATTERNS.some((p) => p.test(pathname));
-  const { toggleSidebar, searchOverlayOpen, openSearchOverlay, selectedSymbols, removeSymbol, clearSymbols } = useTerminalStore();
+  const { toggleSidebar, searchOverlayOpen, openSearchOverlay, selectedSymbols, removeSymbol, clearSymbols, unreadNotificationCount } = useTerminalStore();
+  const [notificationOpen, setNotificationOpen] = useState(false);
 
   return (
     <>
@@ -102,10 +105,24 @@ export default function TopBar() {
           </div>
 
           {/* Bell */}
-          <button className="relative p-2 rounded-lg bg-[#111722] hover:bg-[#252525] transition-colors text-white">
-            <Bell size={17} />
-            <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full" />
-          </button>
+          <div className="relative">
+            <button
+              onClick={() => setNotificationOpen(!notificationOpen)}
+              className="relative p-2 rounded-lg bg-[#111722] hover:bg-[#1C2635] transition-colors text-white flex items-center justify-center border border-white/5 hover:border-white/10"
+              aria-label="Notifications"
+            >
+              <Bell size={17} />
+              {unreadNotificationCount > 0 && (
+                <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 bg-red-500 text-white rounded-full flex items-center justify-center text-[9px] font-bold border border-[#0a1017]">
+                  {unreadNotificationCount}
+                </span>
+              )}
+            </button>
+            <NotificationDropdown
+              isOpen={notificationOpen}
+              onClose={() => setNotificationOpen(false)}
+            />
+          </div>
         </div>
       </div>
 

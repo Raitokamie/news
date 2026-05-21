@@ -1,7 +1,6 @@
 'use client';
 
 import { Fragment, useEffect, useMemo, useState } from 'react';
-import { mockNews } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
 import NewsCard from './NewsCard';
 import NewsCardSkeleton from './NewsCardSkeleton';
@@ -51,7 +50,7 @@ const COUNTRY_NAMES: Record<string, string> = {
 };
 
 export default function ImpactFeed() {
-  const { activeCountry, activeCategory, activeTicker, activeImpact, sortOrder, selectedSymbols, mobileSentiment, scrollToNewsId, setScrollToNewsId } = useTerminalStore();
+  const { news, activeCountry, activeCategory, activeTicker, activeImpact, sortOrder, selectedSymbols, mobileSentiment, scrollToNewsId, setScrollToNewsId } = useTerminalStore();
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [countryVisibleRows, setCountryVisibleRows] = useState<Record<string, number>>({});
   const [isLoading, setIsLoading] = useState(true);
@@ -71,7 +70,7 @@ export default function ImpactFeed() {
 
   const filtered = useMemo(() => {
     const now = new Date();
-    let items = mockNews;
+    let items = news;
 
     // Dashboard: only last 24 hours
     const cutoff = new Date(now.getTime() - HOURS_24);

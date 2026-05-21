@@ -1,7 +1,9 @@
 'use client';
 
 import { create } from 'zustand';
-import { RegionTab, Region, ImpactLevel, SortOrder, Category } from './types';
+import { RegionTab, Region, ImpactLevel, SortOrder, Category, NewsItem, AppNotification } from './types';
+import { mockNews } from './mock-data';
+import { toast } from './toast';
 
 interface TerminalStore {
   activeRegion: RegionTab;
@@ -44,6 +46,14 @@ interface TerminalStore {
   closeSearchOverlay: () => void;
   connectTelegram: () => void;
   disconnectTelegram: () => void;
+  news: NewsItem[];
+  notifications: AppNotification[];
+  unreadNotificationCount: number;
+  setNews: (news: NewsItem[]) => void;
+  addNewsItem: (item: NewsItem) => void;
+  markAllNotificationsAsRead: () => void;
+  markNotificationAsRead: (id: string) => void;
+  clearNotifications: () => void;
 }
 
 export const useTerminalStore = create<TerminalStore>((set) => ({
@@ -87,7 +97,7 @@ export const useTerminalStore = create<TerminalStore>((set) => ({
   setMobileSentiment: (sentiment) => set({ mobileSentiment: sentiment }),
   connectTelegram: () => set({ telegramConnected: true }),
   disconnectTelegram: () => set({ telegramConnected: false }),
-  trackedTickers: [],
+  trackedTickers: ['AAPL', 'TSLA', 'MSFT', 'GOOGL', 'NVDA'],
   addTicker: (symbol) => set((state) => {
     if (!state.trackedTickers.includes(symbol)) {
       fetch('/api/telegram/notify-add', {
@@ -102,9 +112,17 @@ export const useTerminalStore = create<TerminalStore>((set) => ({
     }
     return {};
   }),
-  removeTicker: (symbol) => set((state) => ({
-    trackedTickers: state.trackedTickers.filter((t) => t !== symbol),
-  })),
+  removeTicker: (symbol) => set((state) => {
+    fetch('/api/telegram/notify-remove', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ticker: symbol }),
+    }).catch((err) => console.error('Failed to send remove ticker notification:', err));
+
+    return {
+      trackedTickers: state.trackedTickers.filter((t) => t !== symbol),
+    };
+  }),
   sentimentTickers: [],
   sentimentTickerOrder: [],
   addSentimentTicker: (symbol) => set((state) => ({
@@ -116,4 +134,82 @@ export const useTerminalStore = create<TerminalStore>((set) => ({
     sentimentTickerOrder: state.sentimentTickerOrder.filter((t) => t !== symbol),
   })),
   setSentimentTickerOrder: (order) => set({ sentimentTickerOrder: order }),
+  news: mockNews,
+  notifications: [],
+  unreadNotificationCount: 0,
+  setNews: (news) => set({ news }),
+  addNewsItem: (item) => set((state) => {
+    const updatedNews = [item, ...state.news];
+
+    // Check if item contains any ticker in watchlist
+    const isWatchlist = item.tickers.some(t => state.trackedTickers.includes(t.symbol.toUpperCase()));
+    const isHighImpact = item.impact === 'high';
+    const shouldNotify = isWatchlist || isHighImpact;
+
+    // Send the news update to the Telegram Bot API so users receive it at the exact same time
+    fetch('/api/telegram/mock-news', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        headline: item.headline,
+        messageBody: item.body,
+        tickers: item.tickers.map(t => t.symbol),
+        sentiment: item.sentiment,
+        impact: item.impact
+      }),
+    }).catch((err) => console.error('Failed to trigger Telegram notification:', err));
+
+    if (shouldNotify) {
+      const type = isWatchlist && isHighImpact ? 'both' : isHighImpact ? 'high-impact' : 'watchlist';
+      const notificationId = `notif-${Date.now()}-${item.id}`;
+      
+      const newNotif: AppNotification = {
+        id: notificationId,
+        newsId: item.id,
+        headline: item.headline,
+        impact: item.impact,
+        sentiment: item.sentiment,
+        tickers: item.tickers.map(t => t.symbol),
+        publishedAt: new Date(),
+        read: false,
+        type
+      };
+
+      const title = type === 'both' 
+        ? '🔥 High Impact Watchlist Alert' 
+        : type === 'high-impact' 
+          ? '⚡ High Impact News Alert' 
+          : '🔔 Watchlist News Alert';
+          
+      const tickerText = item.tickers.map(t => `$${t.symbol}`).join(', ');
+      const desc = tickerText ? `[${tickerText}] ${item.headline}` : item.headline;
+
+      toast.info(title, desc);
+
+      return {
+        news: updatedNews,
+        notifications: [newNotif, ...state.notifications],
+        unreadNotificationCount: state.unreadNotificationCount + 1
+      };
+    }
+
+    return {
+      news: updatedNews
+    };
+  }),
+  markAllNotificationsAsRead: () => set((state) => ({
+    notifications: state.notifications.map(n => ({ ...n, read: true })),
+    unreadNotificationCount: 0
+  })),
+  markNotificationAsRead: (id) => set((state) => {
+    const notifications = state.notifications.map(n => 
+      n.id === id ? { ...n, read: true } : n
+    );
+    const unreadNotificationCount = notifications.filter(n => !n.read).length;
+    return { notifications, unreadNotificationCount };
+  }),
+  clearNotifications: () => set({
+    notifications: [],
+    unreadNotificationCount: 0
+  }),
 }));

@@ -1,7 +1,6 @@
 'use client';
 
 import { Fragment, useMemo, useState } from 'react';
-import { mockNews } from '@/lib/api';
 import { Category } from '@/lib/types';
 import { categoryOptions } from '@/lib/constants';
 import NewsCard from '@/components/news/NewsCard';
@@ -40,13 +39,13 @@ interface WatchlistActivityFeedProps {
 export default function WatchlistActivityFeed({ trackedSymbols, isLoading = false }: WatchlistActivityFeedProps) {
   const [range, setRange] = useState<TimeRangeValue>('24h');
   const [category, setCategory] = useState<Category>('all');
-  const { mobileSentiment } = useTerminalStore();
+  const { news, mobileSentiment } = useTerminalStore();
   const nowRef = new Date();
 
   const filtered = useMemo(() => {
     if (trackedSymbols.length === 0) return [];
 
-    let items = mockNews;
+    let items = news;
 
     // Only news that mention tracked tickers
     items = items.filter((n) =>
@@ -68,7 +67,7 @@ export default function WatchlistActivityFeed({ trackedSymbols, isLoading = fals
     items = [...items].sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 
     return items;
-  }, [trackedSymbols, range, category, nowRef]);
+  }, [trackedSymbols, range, category, nowRef, news]);
 
   const badItems = filtered.filter((n) => n.sentiment === 'bad' || n.sentiment === 'neutral');
   const goodItems = filtered.filter((n) => n.sentiment === 'good');

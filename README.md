@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Impact Terminal — Financial News Dashboard & Telegram Integration
 
-## Getting Started
+โปรเจกต์นี้คือระบบหน้าต่างข้อมูลข่าวสารทางการเงินแบบ Real-time (Financial News Terminal) ที่ใช้เฟรมเวิร์ก Next.js ในการแสดงผลหน้าเว็บ และรวมระบบแจ้งเตือนข่าวสารฉุกเฉิน (Breaking News) แบบทันท่วงที ทั้งบนตัวหน้าเว็บเอง (In-app Browser Notification) และส่งตรงเข้าบัญชี Telegram ของผู้ใช้ผ่านทาง **Telegram Bot**
 
-First, run the development server:
+---
 
+## 🚀 ฟีเจอร์หลัก (Key Features)
+* **Real-time News Dashboard**: ติดตามความเคลื่อนไหวของตลาดและข่าวสารแยกตามภูมิภาค ระดับผลกระทบ (High/Medium/Low) และทัศนคติข่าว (Sentiment)
+* **Watchlist & Ticker Tracking**: ติดตามความเคลื่อนไหวของหุ้นที่สนใจเป็นรายตัว (เช่น AAPL, TSLA, MSFT, GOOGL, NVDA)
+* **Live In-app Notification**: แสดงป๊อปอัพแจ้งเตือนและระบบกระดิ่งที่มุมขวาบนทันทีเมื่อเกิดข่าวที่มีระดับผลกระทบสูง (High Impact) หรือเกี่ยวข้องกับหุ้นใน Watchlist
+* **Telegram Bot Integration**: บอทแจ้งเตือนข่าวฉุกเฉินแบบ Real-time ส่งตรงเข้าแชต Telegram ของคุณทันทีที่มีข่าวตรงตามเกณฑ์ของ Watchlist หรือข่าว High Impact
+* **Background Auto News Simulator**: ระบบจำลองการยิงข่าวสารฉุกเฉินแบบอัตโนมัติเบื้องหลังทุกๆ 35 วินาที เพื่อจำลองสภาพการทำงานของตลาดจริง
+
+---
+
+## 🛠️ ขั้นตอนการติดตั้งและการเริ่มใช้งาน (Setup Guide)
+
+### 1. ติดตั้ง Dependencies
+ใช้คำสั่งต่อไปนี้เพื่อดาวน์โหลดและติดตั้งโมดูลที่เกี่ยวข้องในเครื่องของคุณ:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. ตั้งค่าตัวแปรสภาพแวดล้อม (Environment Variables)
+1. คัดลอกไฟล์ `.env.example` ไปเป็นชื่อ `.env.local`:
+   ```bash
+   cp .env.example .env.local
+   ```
+2. เปิดไฟล์ `.env.local` ขึ้นมาแก้ไข และระบุ Token ของ Telegram Bot ของคุณ:
+   ```env
+   TELEGRAM_BOT_TOKEN="รหัส_TOKEN_จาก_BOTFATHER"
+   ```
+   *(หากคุณยังไม่มีบอท สามารถเข้าไปสร้างและรับ Token ได้ที่แชตแอป Telegram ไปที่บอท [@BotFather](https://t.me/BotFather) พิมพ์คำสั่ง `/newbot` แล้วทำตามขั้นตอน)*
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. เปิดรันระบบเว็บแอปพลิเคชัน (Next.js Server)
+เปิดหน้าเว็บสำหรับเข้าใช้งาน Dashboard (ปกติจะอยู่ที่พอร์ต 3000):
+```bash
+npm run dev
+```
+เปิดเบราว์เซอร์ไปที่: [http://localhost:3000](http://localhost:3000)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. เปิดรันระบบบอทของ Telegram (Standalone Bot script)
+เปิด Terminal แท็บใหม่เพื่อรันไฟล์สคริปต์สำหรับการคอยตรวจจับคำสั่งและการเชื่อมโยงลิ้งก์จาก Telegram Chat:
+```bash
+node bot.mjs
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🤖 วิธีการเชื่อมต่อ Telegram Bot กับหน้าเว็บ (Connection Steps)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+เพื่อรับข่าวสารแจ้งเตือนตรงเข้า Telegram คุณต้องเชื่อมโยงบัญชีตามขั้นตอนดังต่อไปนี้:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **เข้าหน้าเชื่อมต่อบนหน้าเว็บ**:
+   * คลิกที่เมนู **"Watchlist"** ในแถบเมนูด้านซ้ายมือของหน้าจอ Dashboard 
+   * คุณจะเจอกล่องเชื่อมต่อระบุว่า **"Telegram Integration"**
+2. **สร้างรหัสความปลอดภัย (PIN)**:
+   * กดปุ่ม **"Connect Telegram"**
+   * ระบบจะแสดงรหัส PIN 6 หลักบนหน้าจอเว็บ (รหัสนี้มีอายุใช้งาน 10 นาที) พร้อมปุ่ม Copy 
+3. **ส่งรหัส PIN ไปที่บอท**:
+   * เปิดแอปพลิเคชัน Telegram แล้วค้นหาชื่อบอทของคุณ (หรือกดจากลิงก์ที่ระบุในหน้าจอ)
+   * กดปุ่ม **Start** (หรือพิมพ์คำสั่ง `/start`)
+   * พิมพ์คำสั่งเพื่อยืนยันตัวตนในห้องแชตบอท:
+     ```text
+     /link รหัสPIN6หลัก
+     ```
+     *ตัวอย่างเช่น:* `/link 849302`
+4. **สำเร็จการเชื่อมต่อ**:
+   * บอทใน Telegram จะส่งข้อความยืนยันความสำเร็จกลับมาว่า: `✅ Successfully linked!`
+   * สถานะการแสดงผลในหน้าเว็บจะเปลี่ยนเป็นสีเขียวระบุว่า **"Connected"** พร้อมแสดงชื่อและรูปโปรไฟล์ Telegram ของคุณโดยอัตโนมัติ
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📈 วิธีการทำงานของระบบแจ้งเตือน (How it works)
+* **เกณฑ์การส่งแจ้งเตือน**: 
+  ระบบจะส่งข้อมูลแจ้งเตือนพร้อมกันทั้งทางเบราว์เซอร์และ Telegram ก็ต่อเมื่อข่าวสารใหม่นั้น:
+  1. มีหุ้นชาร์ตหรือข่าวที่เกี่ยวข้องเป็นหุ้นที่อยู่ภายในรายการ **Watchlist** ของผู้ใช้งาน
+  2. **หรือ** ข่าวชิ้นนั้นได้รับการประเมินระดับผลกระทบเป็นระดับสูง (**High Impact**)
+* **ข้อมูลอัปเดตตรงกัน**:
+  * เมื่อคุณกดเพิ่ม (Add) หุ้นเข้ามาใน Watchlist บนหน้าเว็บ ระบบจะซิงก์ข้อมูลไปอัปเดตในฐานข้อมูลของบอท Telegram ทันที
+  * เมื่อคุณกดลบ (Remove) หุ้นจากหน้าเว็บ ระบบจะถอดการติดตามในบอทออกเพื่อหยุดส่งข่าวของหุ้นตัวนั้น ๆ ในทันที

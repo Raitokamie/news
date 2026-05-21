@@ -2,7 +2,6 @@
 
 import { useMemo } from 'react';
 import Image from 'next/image';
-import { mockNews } from '@/lib/api';
 import { useTerminalStore } from '@/lib/store';
 import { NewsItem } from '@/lib/types';
 import { timeAgo } from '@/lib/utils';
@@ -97,12 +96,12 @@ function BreakingCard({ item, large = false }: { item: NewsItem; large?: boolean
 }
 
 export default function BreakingNews() {
-  const { activeCategory } = useTerminalStore();
+  const { news, activeCategory } = useTerminalStore();
 
   const breakingItems = useMemo(() => {
     const now = new Date();
     const cutoff = new Date(now.getTime() - HOURS_24);
-    let items = mockNews
+    let items = news
       .filter((n) => n.impact === 'high' && new Date(n.publishedAt) >= cutoff);
 
     if (activeCategory !== 'all') {

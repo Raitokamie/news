@@ -2,7 +2,6 @@
 
 import { useMemo } from 'react';
 import { useTerminalStore } from '@/lib/store';
-import { mockNews } from '@/lib/api';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
 const trendStyle = {
@@ -13,33 +12,34 @@ const trendStyle = {
 
 type RankedTicker = { symbol: string; name: string; score: number };
 
-function buildRankedTickers(): RankedTicker[] {
-  const latestMap = new Map<string, { name: string; score: number; time: number }>();
-
-  for (const news of mockNews) {
-    const time = new Date(news.publishedAt).getTime();
-    for (const ticker of news.tickers) {
-      const existing = latestMap.get(ticker.symbol);
-      if (!existing || time > existing.time) {
-        latestMap.set(ticker.symbol, { name: ticker.name, score: ticker.sentimentScore, time });
-      }
-    }
-  }
-
-  return Array.from(latestMap.entries())
-    .sort((a, b) => {
-      const scoreDiff = Math.abs(b[1].score) - Math.abs(a[1].score);
-      if (scoreDiff !== 0) return scoreDiff;
-      return a[0].localeCompare(b[0]);
-    })
-    .slice(0, 5)
-    .map(([symbol, { name, score }]) => ({ symbol, name, score }));
-}
 
 export default function TickerCloud() {
   const setTicker = useTerminalStore((s) => s.setTicker);
   const activeTicker = useTerminalStore((s) => s.activeTicker);
-  const tickers = useMemo(() => buildRankedTickers(), []);
+  const news = useTerminalStore((s) => s.news);
+
+  const tickers = useMemo(() => {
+    const latestMap = new Map<string, { name: string; score: number; time: number }>();
+
+    for (const item of news) {
+      const time = new Date(item.publishedAt).getTime();
+      for (const ticker of item.tickers) {
+        const existing = latestMap.get(ticker.symbol);
+        if (!existing || time > existing.time) {
+          latestMap.set(ticker.symbol, { name: ticker.name, score: ticker.sentimentScore, time });
+        }
+      }
+    }
+
+    return Array.from(latestMap.entries())
+      .sort((a, b) => {
+        const scoreDiff = Math.abs(b[1].score) - Math.abs(a[1].score);
+        if (scoreDiff !== 0) return scoreDiff;
+        return a[0].localeCompare(b[0]);
+      })
+      .slice(0, 5)
+      .map(([symbol, { name, score }]) => ({ symbol, name, score }));
+  }, [news]);
 
   return (
     <div className="bg-[#111722] border border-[#222F44] rounded-xl overflow-hidden">
